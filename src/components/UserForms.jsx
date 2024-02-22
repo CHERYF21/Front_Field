@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from 'styled-components';
 import { crearUsuario, saveUser } from "../service/userService";
-//mport Container from '@material-ui/core/Container';
+
 
 
 function UserForm() {
@@ -165,11 +165,11 @@ function UserForm() {
 export default UserForm;
 
 const FormContainer = styled.form`
-    width: 70%; /* Reduce el ancho del formulario */
-  margin: 140px auto; /* Ajusta el margen superior para bajar el formulario */
-  position: absolute; /* Establece posicionamiento absoluto */
-  top: 50px; /* Alinea el formulario al centro verticalmente */
-  left: 60%; /* Alinea el formulario al centro horizontalmente */
+  width: 80%; 
+  margin: 90px auto; 
+  position: absolute;
+  top: 30px; 
+  left: 0%; 
   transform: translate(-50%, -50%); 
   background-color: rgba(129, 124, 124, 0.8); 
   padding: 15px; 
@@ -181,7 +181,7 @@ const FormGroup = styled.div`
 `;
 
 const Label = styled.label`
-  font-family: Arial, sans-serif; /* Cambia la tipografía */
+  font-family: Arial, sans-serif; 
   font-size: 1rem;
   color: #333;
   display: block;
@@ -191,10 +191,9 @@ const Label = styled.label`
 const Input = styled.input`
   width: 75%;
   padding: 0.5rem;
-  border: 1px solid #ccc; /* Bordes grises */
-  border-radius: 5px; /* Radio */
-  font-family: Arial, sans-serif; /* Cambia la tipografía */
-  font-size: 1rem;
+  border: 1px solid #ccc; 
+  border-radius: 5px; 
+  font-family: Arial, sans-serif; 
 `;
 
 const Select = styled.select`
