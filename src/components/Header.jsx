@@ -63,6 +63,10 @@ export const Header = ({
                                 {allProducts.map(product => (
                                     <div className='cart-product' key={product.id}>
                                         <div className='info-cart-product'>
+                                        <figure>
+                                             {console.log(`Intentando cargar imagen: ./img/${product.img}`)}
+                                             <img src={`./assets/img/${product.img}`} alt={product.title} />
+                                        </figure>
                                             <span className='cantidad-producto-carrito'>
                                                 {product.quantity}
                                             </span>

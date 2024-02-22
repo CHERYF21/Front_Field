@@ -15,6 +15,7 @@ const ProductList = ({
         const fetchProducts = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/api/products/listProducts');
+                console.log('API Response:', response.data); // Agrega esta línea para imprimir en la consola
                 setApiProducts(response.data);
             } catch (error) {
                 console.error('Error al obtener la lista de productos desde la API', error);
@@ -45,8 +46,9 @@ const ProductList = ({
         <div className='container-items'>
             {apiProducts.map(product => (
                 <div className='item' key={product.id}>
-                    <figure>
-                        <img src={product.img} alt={product.nameProduct} />
+                     <figure>
+                         {console.log(`Intentando cargar imagen: ${product.img.startsWith('http') ? product.img : './assets/img/' + product.img}`)}
+                        <img src={product.img.startsWith('http') ? product.img : './assets/img/' + product.img} alt={product.title} />
                     </figure>
                     <div className='info-product'>
                     
