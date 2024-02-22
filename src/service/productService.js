@@ -8,7 +8,11 @@ export const createProducts = (NewProduct) => axios.post(PRODUCT_BACK + "/create
 
 export const listProductS = () => axios.get(PRODUCT_BACK + "/listProducts");
 
+export const updateProducts =({id}) => axios.put(PRODUCT_BACK + "/{id}/update"); 
 
+export const deleteProducts =({id}) => axios.delete(PRODUCT_BACK + "/{id}/delete");
+
+export const getProductById =({id}) => axios.get(PRODUCT_BACK + "/{id}/get");
 
 
 

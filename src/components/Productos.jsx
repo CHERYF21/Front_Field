@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { Header } from './Header';
-import { ProductList } from './Product.List';
+import ProductList from './Product.List';
 
 
 function Productos() {
 	const [allProducts, setAllProducts] = useState([]);
 	const [total, setTotal] = useState(0);
 	const [countProducts, setCountProducts] = useState(0);
+
+  
 
 	return (
 		<>
