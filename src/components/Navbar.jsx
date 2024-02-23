@@ -1,70 +1,71 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import imagenes from '../assets/imagenes';
 
 function Navbar() {
-  const [clicked, setClicked] = useState(false);
-
-  const handleClick = () => {
-    setClicked(!clicked);
-  };
-
   return (
-    <>
-      <NavContainer>
-        <div>
-          {/* Agrega el logo */}
-          <img src={imagenes.logo} alt="Imagen" className="img" />
-          <nav>
-            <ul>
-              <li>
-                <Link to="/">Inicio</Link>
-              </li>
-              <li>
-                <Link to="helpsupport">Ayuda/Soporte</Link>
-              </li>
-              <li>
-                <Link to="/contact">Contacto</Link>
-              </li>
-              <li>
-                <Link to="/addproduct">Agregar Productos</Link>
-              </li>
-              <li>
-                <Link to="/productos">Productos</Link>
-              </li>
-              <li>
-                <Link to="/login">Login</Link>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </NavContainer>
-    </>
+    <NavContainer>
+      <LogoContainer>
+        <Title>
+          Field <Span>Market</Span>
+        </Title>
+        <Logo src={imagenes.logo} alt="Logo" />   
+      </LogoContainer>
+      <NavLinks>
+        <NavLink to="/">Inicio</NavLink>
+        <NavLink to="/helpsupport">Ayuda/Soporte</NavLink>
+        <NavLink to="/contact">Contacto</NavLink>
+        <NavLink to="/addproduct">Agregar Productos</NavLink>
+        <NavLink to="/productos">Productos</NavLink>
+        <NavLink to="/login">Login</NavLink>
+      </NavLinks>
+    </NavContainer>
   );
 }
 
 export default Navbar;
 
 const NavContainer = styled.nav`
-  padding: 0.4rem;
+  padding: 1rem;
   background-color: #333;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  width: 100%;
+`;
 
-  img {
-    width: 80px;
-    margin-right: 1rem; 
-  }
+const LogoContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
 
-  .ul{
-    color: white;
-    text-decoration: none;
-    margin-right: 1rem;
-  }
+const Title = styled.h2`
+  color: #fff;
+  font-family: inherit;
+`;
 
-  @media (max-width: 768px) {
-    /* Agrega estilos específicos para pantallas más pequeñas si es necesario */
+const Span = styled.span`
+  color: #1fc271;
+`;
+
+const Logo = styled.img`
+  height: auto;
+  width: 80px;
+  margin-left: 1rem;
+  border-radius: 50%; 
+`;
+
+const NavLinks = styled.div`
+  display: flex;
+`;
+
+const NavLink = styled(Link)`
+  color: #fff;
+  text-decoration: none;
+  margin-left: 1.5rem;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #ddd;
   }
 `;
