@@ -9,8 +9,7 @@ function Navbar() {
       <LogoContainer>
         <Title>
           Field <Span>Market</Span>
-        </Title>
-        <Logo src={imagenes.logo} alt="Logo" />   
+        </Title>  
       </LogoContainer>
       <NavLinks>
         <NavLink to="/">Inicio</NavLink>

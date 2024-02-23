@@ -1,32 +1,47 @@
 import React from 'react';
-import styled from 'styled-components';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import imagenes from '../assets/imagenes';
-import UserForm from './UserForms';
+import UserFormModal from './UserForms';
+import RightSidebar from './RightSidebar';
+import styled, { keyframes } from 'styled-components';
+
+
+ 
 
 function Main() {
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000,
+  };
+
   return (
     <MainContainer>
+      <CarouselContainer>
+        <Slider {...settings}>
+          <img src={imagenes.img1} alt="carousel" />
+          <img src={imagenes.img2} alt="carousel" />
+          <img src={imagenes.img3} alt="carousel" />
+          <img src={imagenes.img4} alt="carousel" />
+          <img src={imagenes.img5} alt="carousel" />
+        </Slider>
+      </CarouselContainer>
       <ImageContainer>
-        <img src={imagenes.img} alt="Imagen" className="img" />
+        <ZoomImage src={imagenes.imagen} alt="" />
       </ImageContainer>
-      <UserFormContainer>
-        <UserForm />
+    <UserFormContainer>
+      <UserFormModal />
       </UserFormContainer>
-      
-      <section>
-      <img src={imagenes.img1} alt="carrousel" />
-      <img src={imagenes.img2} alt="carrousel" />
-      <img src={imagenes.img3} alt="carrousel" />
-      <img src={imagenes.img4} alt="carrousel" />
-      <img src={imagenes.img5} alt="carrousel" />
-    </section>
-    
-   
-
-  
+      <RightSidebarContainer>
+        <RightSidebar />
+      </RightSidebarContainer>
     </MainContainer>
-  
-  
   );
 }
 
@@ -34,48 +49,60 @@ export default Main;
 
 const MainContainer = styled.div`
   background-color: #333;
+  position: relative;
+  height: 100vh;
   display: flex;
-  flex-direction: row;
-  height: 2000px;
-  section{
-  display: flex;
-  width: 600px;
-  height: 430px;
-}
-section img{
-  width: 0px;
-  flex-grow: 1;
-  object-fit: cover;
-  opacity: .8;
-  transition: .5s ease;
-}
-section img:hover{
-  cursor: crosshair;
-  width: 300px;
-  opacity: 1;
-  filter: contrast(120%);
-}
-
-
-
-
+  justify-content: space-between;
 `;
 
-const ImageContainer = styled.div`
-  width: 60%;
-  border-radius: 20px;
-  overflow: hidden;
-  position: relative;
+const ContentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const CarouselContainer = styled.div`
+  width: 50%;
+  height: 130px;
  
+  img {
+    border-radius: 15px;
+  }
 `;
 
 const UserFormContainer = styled.div`
   width: 30%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(238, 229, 229, 0.7);
   padding: 10px;
   border-radius: 20px;
+  margin-top: 40px;
+
+`;
+
+const RightSidebarContainer = styled.div`
+ width: 100%; 
+  padding: 10px;
+  border-radius: 20px;
+  margin-top: 370px;
+  margin-left: -1000px;
+
+`;
+const ImageContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: -217px;
+  margin-right: -490px;
+  
+`;
+
+const zoomIn = keyframes`
+  from {
+    transform: scale(0.7);
+  }
+  to {
+    transform: scale(1.2);
+  }
+`;
+
+const ZoomImage = styled.img`
+  animation: ${zoomIn} 0.5s ease-in-out;
 `;

@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from 'styled-components';
 import { crearUsuario, saveUser } from "../service/userService";
 
-
-
-function UserForm() {
+function UserFormModal() {
     const [newUser, setNewUser] = useState({
         nombre: '',
         apellido: '',
@@ -16,9 +14,8 @@ function UserForm() {
         password: '',
         rol: 'Agricultor'
     });
-    
 
-    const [rolOption, setRolOption] = useState('Agricultor');
+    const [showModal, setShowModal] = useState(false);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -26,40 +23,45 @@ function UserForm() {
             ...newUser,
             [name]: value
         });
-
-        console.log(newUser);
     };
 
     const handleRoleChange = (e) => {
         const { value } = e.target;
-        setRolOption(value);
         setNewUser({
+            ...newUser,
             rol: value
         });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         if (!newUser.nombre || !newUser.apellido || !newUser.edad || !newUser.email || !newUser.telefono || !newUser.direccion || !newUser.fechaRegistro || !newUser.password || !newUser.rol) {
             return;
         }
         try {
-            console.log(newUser)
             await crearUsuario(newUser);
-            alert('Usuaraio Registrado');
+            alert('Usuario Registrado');
         } catch (error) {
             console.log('Error al Registrar: ', error);
             alert(error.message);
         };
     };
+
     useEffect(() => {
         saveUser();
-    })
+    }, []);
+
     return (
-        <FormContainer onSubmit={handleSubmit}>
-            <Title>Registrar</Title>
-            <FormGroup>
+        <>
+            <ModalBackground show={showModal}>
+                <ModalContent>
+                    <ModalHeader>
+                        <CloseButton onClick={() => setShowModal(false)}>X</CloseButton>
+                    </ModalHeader>
+                    <ModalBody>
+                        <FormContainer onSubmit={handleSubmit}>
+                            <Title>Registrarme</Title>
+                            <FormGroup>
                 <Label htmlFor="nombre">Nombre:</Label>
                 <Input
                     type="text"
@@ -77,17 +79,6 @@ function UserForm() {
                     id="apellido"
                     name="apellido"
                     value={newUser.apellido}
-                    onChange={handleInputChange}
-                    required
-                />
-            </FormGroup>
-            <FormGroup>
-                <Label htmlFor="edad">Edad:</Label>
-                <Input
-                    type="number"
-                    id="edad"
-                    name="edad"
-                    value={newUser.edad}
                     onChange={handleInputChange}
                     required
                 />
@@ -125,18 +116,6 @@ function UserForm() {
                     required
                 />
             </FormGroup>
-
-            <FormGroup>
-                <Label htmlFor="fechaRegistro">Fecha de Registro:</Label>
-                <Input
-                    type="date"
-                    id="fechaRegistro"
-                    name="fechaRegistro"
-                    value={newUser.fechaRegistro}
-                    onChange={handleInputChange}
-                    required
-                />
-            </FormGroup>
             <FormGroup>
                 <Label htmlFor="password">Contraseña:</Label>
                 <Input
@@ -155,78 +134,117 @@ function UserForm() {
                     <option value="Comprador">Comprador</option>
                 </Select>
             </FormGroup>
-
-            <Button type="submit">Registrarme</Button>
-
-        </FormContainer>
+                            <Button type="submit">Registrarme</Button>
+                        </FormContainer>
+                    </ModalBody>
+                </ModalContent>
+            </ModalBackground>
+            <OpenModalButton onClick={() => setShowModal(true)}>¡Quiero registrarme YA!</OpenModalButton>
+        </>
     );
 }
 
-export default UserForm;
+export default UserFormModal;
+
+const ModalBackground = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: ${({ show }) => (show ? 'block' : 'none')};
+`;
+const ModalContent = styled.div`
+  position: fixed;
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%); 
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 80%;
+  max-height: 80%; 
+  overflow: auto; 
+`;
+
+const ModalHeader = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const ModalBody = styled.div`
+  margin-top: 20px;
+`;
+
+const CloseButton = styled.button`
+  background-color: #006400; 
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+`;
+
+const OpenModalButton = styled.button`
+  background-color: #006400; 
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 300px;
+  margin-left: 30px;
+`;
 
 const FormContainer = styled.form`
-  width: 80%; 
-  margin: 90px auto; 
-  position: absolute;
-  top: 30px; 
-  left: 0%; 
-  transform: translate(-50%, -50%); 
-  background-color: rgba(129, 124, 124, 0.8); 
-  padding: 15px; 
-  border-radius: 10px; 
+  background-color: #f0f8f0; 
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  margin: 0 auto;
+`;
+
+const Title = styled.h2`
+  color: #006400; 
+  text-align: center;
 `;
 
 const FormGroup = styled.div`
-  margin-bottom: rem;
+  margin-bottom: 15px;
 `;
 
 const Label = styled.label`
-  font-family: Arial, sans-serif; 
-  font-size: 1rem;
-  color: #333;
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 5px;
+  color: #006400; 
 `;
 
 const Input = styled.input`
-  width: 75%;
-  padding: 0.5rem;
-  border: 1px solid #ccc; 
-  border-radius: 5px; 
-  font-family: Arial, sans-serif; 
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 `;
 
 const Select = styled.select`
-  width: 50%;
-  padding: 0.5rem;
-  border: 2px solid #ccc; 
-  border-radius: 5px; 
-  font-family: Arial, sans-serif; 
-  font-size: 1rem;
-`;
-
-const Title = styled.h1`
-  font-family: Arial, sans-serif; 
-  font-size: 1.5rem;
-  color: #333;
-  margin-bottom: 1rem;
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 `;
 
 const Button = styled.button`
-  background-color: #2E8B57;
-  color: white;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-family: Arial, sans-serif;
-  font-size: 1rem;
-  transition: background-color 0.3s;
+  width: 100%;
   padding: 10px;
-  
-
+  background-color: #006400; 
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
   
   &:hover {
-    background-color: #555; 
+    background-color: #004d00; 
   }
 `;
