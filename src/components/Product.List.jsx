@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import imagenes from '../assets/imagenes';
 
 const ProductList = ({
     allProducts,
@@ -10,12 +11,13 @@ const ProductList = ({
     setTotal,
 }) => {
     const [apiProducts, setApiProducts] = useState([]);
+    const [failedImages, setFailedImages] = useState([]);
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/api/products/listProducts');
-                console.log('API Response:', response.data); // Agrega esta línea para imprimir en la consola
+                console.log('API Response:', response.data);
                 setApiProducts(response.data);
             } catch (error) {
                 console.error('Error al obtener la lista de productos desde la API', error);
@@ -42,27 +44,39 @@ const ProductList = ({
         setAllProducts([...allProducts, product]);
     };
 
+    const handleImageError = (e, product) => {
+        const reserveImage = imagenes['manzana.png'];
+        if (!failedImages.includes(product.id)) {
+            e.target.src = reserveImage;
+            setFailedImages(prev => [...prev, product.id]);
+        }
+    };
+
     return (
         <div className='container-items'>
             {apiProducts.map(product => (
                 <div className='item' key={product.id}>
-                     <figure>
-                         {console.log(`Intentando cargar imagen: ${product.img.startsWith('http') ? product.img : './assets/img/' + product.img}`)}
-                        <img src={product.img.startsWith('http') ? product.img : './assets/img/' + product.img} alt={product.title} />
+                    <figure>
+                        <img
+                            src={imagenes[product.img] || product.img}
+                            alt={product.title}
+                            onError={(e) => handleImageError(e, product)}
+                        />
+                        <figcaption>
+                            <div className='info-product'>
+                                <p className='title'>{product.title}</p>
+                                <p className='availability'>{product.availability ? 'Disponible' : 'No disponible'}</p>
+                                <p className='price'>{product.price}</p>
+                                <p className='category'>{product.category}</p>
+                                <p className='description'>{product.description}</p>
+                                <p className='opinion'>{product.opinion}</p>
+                                <p className='rating'>{product.rating}</p>
+                                <button onClick={() => onAddProduct(product)}>
+                                    Añadir al carrito
+                                </button>
+                            </div>
+                        </figcaption>
                     </figure>
-                    <div className='info-product'>
-                    
-                        <p className='title'>${product.title}</p>
-                        <p className='availability'>${product.availability}</p>
-                        <p className='price'>${product.price}</p>
-                        <p className='category'>{product.category}</p>
-                        <p className='description'>{product.description}</p>
-                        <p className='opinion'>{product.opinion}</p>
-                        <p className='rating'>{product.rating}</p>
-                        <button onClick={() => onAddProduct(product)}>
-                            Añadir al carrito
-                        </button>
-                    </div>
                 </div>
             ))}
         </div>

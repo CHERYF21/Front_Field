@@ -1,20 +1,27 @@
-import registro_fondo from './img/registro _fondo.jpeg'
-import login from './img/logo.png'
-import img1 from './img/img1.jpg' 
-import img2 from './img/img2.jpg'
-import img3 from './img/img3.jpg'
-import img4 from './img/img4.jpg'
-import img5 from './img/img5.jpg'
+// imagenes.js
 
-export default{
-    "img": registro_fondo,
-    "logo": login,
-    "img1": img1,
-    "img2": img2,
-    "img3": img3,
-    "img4": img4,
-    "img5": img5
+import registro_fondo from './img/registro _fondo.jpg';
+import login from './img/logo.png';
+import img1 from './img/img1.jpg';
+import img2 from './img/img2.jpg';
+import img3 from './img/img3.jpg';
+import img4 from './img/img4.jpg';
+import img5 from './img/img5.jpg';
+import melon from './img/melon.png';        // Ruta ajustada: '../img/melon.png'
+import manzana from './img/manzana.png';    // Ruta ajustada: '../img/manzana.png'
+import zanahoria from './img/zanahoria.png';// Ruta ajustada: '../img/zanahoria.png'
 
+const imagenes = {
+  "img": registro_fondo,
+  "logo": login,
+  "img1": img1,
+  "img2": img2,
+  "img3": img3,
+  "img4": img4,
+  "img5": img5,
+  "melon": melon,
+  "manzana": manzana,
+  "zanahoria": zanahoria
+};
 
-    
-}
+export default imagenes;
