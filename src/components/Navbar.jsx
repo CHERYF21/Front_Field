@@ -1,23 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import imagenes from '../assets/imagenes';
+import { NavLink, NavLink as RouterNavLink } from 'react-router-dom';  
 
 function Navbar() {
   return (
     <NavContainer>
-      <LogoContainer>
-        <Title>
-          Field <Span>Market</Span>
-        </Title>  
-      </LogoContainer>
+      <Title>
+        Field <Span>Market</Span>
+      </Title> 
       <NavLinks>
-        <NavLink to="/">Inicio</NavLink>
-        <NavLink to="/helpsupport">Ayuda/Soporte</NavLink>
-        <NavLink to="/contact">Contacto</NavLink>
-        <NavLink to="/addproduct">Agregar Productos</NavLink>
-        <NavLink to="/productos">Productos</NavLink>
-        <NavLink to="/login">Login</NavLink>
+        <StyledNavLink to="/helpsupport">Ayuda/Soporte</StyledNavLink>
+        <StyledNavLink to="/contact">Contacto</StyledNavLink>
+        <StyledNavLink to="/addproduct">Agregar Productos</StyledNavLink>
+        <StyledNavLink to="/productos">Productos</StyledNavLink>
+        
       </NavLinks>
     </NavContainer>
   );
@@ -30,13 +26,12 @@ const NavContainer = styled.nav`
   background-color: #333;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
+  z-index: 1000;
+  margin-top: 50px; 
 `;
 
-const LogoContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
 
 const Title = styled.h2`
   color: #fff;
@@ -47,24 +42,20 @@ const Span = styled.span`
   color: #1fc271;
 `;
 
-const Logo = styled.img`
-  height: auto;
-  width: 80px;
-  margin-left: 1rem;
-  border-radius: 50%; 
-`;
-
 const NavLinks = styled.div`
   display: flex;
 `;
 
-const NavLink = styled(Link)`
+const StyledNavLink = styled(RouterNavLink)`
   color: #fff;
   text-decoration: none;
-  margin-left: 1.5rem;
-  transition: color 0.3s ease;
+  margin-left: 1rem;
 
   &:hover {
-    color: #ddd;
+    color: #1fc271;
+  }
+
+  &.active {
+    font-weight: bold;
   }
 `;

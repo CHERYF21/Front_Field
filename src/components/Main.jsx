@@ -6,7 +6,7 @@ import imagenes from '../assets/imagenes';
 import UserFormModal from './UserForms';
 import RightSidebar from './RightSidebar';
 import styled, { keyframes } from 'styled-components';
-
+import Login from './Login';
 
  
 
@@ -38,9 +38,13 @@ function Main() {
     <UserFormContainer>
       <UserFormModal />
       </UserFormContainer>
+      <LoginContainer>
+        <Login />
+      </LoginContainer>
       <RightSidebarContainer>
         <RightSidebar />
       </RightSidebarContainer>
+
     </MainContainer>
   );
 }
@@ -89,8 +93,10 @@ const ImageContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: -217px;
-  margin-right: -490px;
+  margin-top: 25px;
+  margin-left: 600px;
+  position: absolute;
+;
   
 `;
 
@@ -105,4 +111,11 @@ const zoomIn = keyframes`
 
 const ZoomImage = styled.img`
   animation: ${zoomIn} 0.5s ease-in-out;
+`;
+const LoginContainer = styled.div`
+  width: 30%;
+  padding: 10px;
+  border-radius: 20px;
+  margin-top: 40px;
+  margin-right: -290px;
 `;

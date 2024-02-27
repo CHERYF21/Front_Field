@@ -154,6 +154,7 @@ const ModalBackground = styled.div`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: ${({ show }) => (show ? 'block' : 'none')};
+ 
 `;
 const ModalContent = styled.div`
   position: fixed;
