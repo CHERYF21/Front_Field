@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import imagenes from '../assets/imagenes';
+
 
 export const Header = ({
     allProducts,
@@ -7,23 +9,22 @@ export const Header = ({
     countProducts,
     setCountProducts,
     setTotal,
-}) => {
+  }) => {
     const [active, setActive] = useState(false);
-
-    const onDeleteProduct = product => {
-        const results = allProducts.filter(
-            item => item.id !== product.id
-        );
-
-        setTotal(total - product.price * product.quantity);
-        setCountProducts(countProducts - product.quantity);
-        setAllProducts(results);
+  
+    const onDeleteProduct = (product) => {
+      const results = allProducts.filter((item) => item.id !== product.id);
+  
+      setTotal(total - product.price * product.quantity);
+      setCountProducts(countProducts - product.quantity);
+      setAllProducts(results);
+      console.log('Cantidad de productos en el carrito después de eliminar:', results.length);
     };
-
+  
     const onCleanCart = () => {
-        setAllProducts([]);
-        setTotal(0);
-        setCountProducts(0);
+      setAllProducts([]);
+      setTotal(0);
+      setCountProducts(0);
     };
 
     return (
@@ -33,14 +34,14 @@ export const Header = ({
                     className='container-cart-icon'
                     onClick={() => setActive(!active)}
                 >
-                    <svg
-                        xmlns='http://www.w3.org/2000/svg'
+                   <svg
+                         xmlns='http://www.w3.org/2000/svg'
                         fill='none'
                         viewBox='0 0 24 24'
                         strokeWidth='1.5'
-                        stroke='currentColor'
-                        className='icon-cart'
-                    >
+                        stroke='none'  // Corrige aquí, debe ser 'none'
+                         className='icon-cart'
+                     >
                         <path
                             strokeLinecap='round'
                             strokeLinejoin='round'
@@ -64,9 +65,11 @@ export const Header = ({
                                     <div className='cart-product' key={product.id}>
                                         <div className='info-cart-product'>
                                         <figure>
-                                             {console.log(`Intentando cargar imagen: ./img/${product.img}`)}
-                                             <img src={`./assets/img/${product.img}`} alt={product.title} />
-                                        </figure>
+                                            
+                                         {product.img && (
+                                             <img src={imagenes[product.img]} alt={product.title} />
+                                                 )}
+                                            </figure>
                                             <span className='cantidad-producto-carrito'>
                                                 {product.quantity}
                                             </span>
@@ -76,7 +79,6 @@ export const Header = ({
                                             <span className='precio-producto-carrito'>
                                                 ${product.price}
                                             </span>
-                                
                                         </div>
                                         <svg
                                             xmlns='http://www.w3.org/2000/svg'

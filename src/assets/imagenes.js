@@ -12,7 +12,7 @@ import manzana from './img/manzana.png';    // Ruta ajustada: '../img/manzana.pn
 import zanahoria from './img/zanahoria.png';// Ruta ajustada: '../img/zanahoria.png'
 
 const imagenes = {
-  "img": registro_fondo,
+  "registro_fondo": registro_fondo,
   "logo": login,
   "img1": img1,
   "img2": img2,
@@ -23,5 +23,6 @@ const imagenes = {
   "manzana": manzana,
   "zanahoria": zanahoria
 };
+
 
 export default imagenes;

@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Header } from './Header';
 import ProductList from './Product.List';
 import AddProduct from './AddProduct';
-
 
 function Productos() {
   const [allProducts, setAllProducts] = useState([]);
@@ -13,15 +12,33 @@ function Productos() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/products');
-        setAllProducts(response.data);
+        const response = await axios.get('http://localhost:8080/api/products/listProducts');
+        // No establezcas allProducts directamente aquí, para evitar cargar automáticamente en el carrito
+         setAllProducts(response.data);  
       } catch (error) {
         console.error('Error al obtener la lista de productos:', error);
       }
     };
 
     fetchProducts();
-  }, []); // Asegúrate de tener un arreglo vacío como segundo argumento de useEffect
+  }, []);
+
+  
+  const handleProductAdded = (newProduct) => {
+    setAllProducts([...allProducts, newProduct]);
+    setCountProducts(countProducts + 1);
+    setTotal(total + newProduct.price);
+  };
+
+  const handleProductDeleted = (productId) => {
+    const updatedProducts = allProducts.filter((product) => product.id !== productId);
+    setAllProducts(updatedProducts);
+    setCountProducts(countProducts - 1);
+    // Calcula el total nuevamente si es necesario
+    // forceUpdate(); // No es necesario si estás actualizando el estado directamente
+    const newTotal = updatedProducts.reduce((acc, product) => acc + product.price * product.quantity, 0);
+    setTotal(newTotal);
+  };
 
   return (
     <>
@@ -33,7 +50,7 @@ function Productos() {
         countProducts={countProducts}
         setCountProducts={setCountProducts}
       />
-      <AddProduct setAllProducts={setAllProducts} />
+      <AddProduct onProductAdded={handleProductAdded} />
       <ProductList
         allProducts={allProducts}
         setAllProducts={setAllProducts}
@@ -41,6 +58,7 @@ function Productos() {
         setTotal={setTotal}
         countProducts={countProducts}
         setCountProducts={setCountProducts}
+        onProductDeleted={handleProductDeleted}
       />
     </>
   );
