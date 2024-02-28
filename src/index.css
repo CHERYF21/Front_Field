@@ -41,7 +41,7 @@ header {
 
 .container-icon {
 	position: absolute;
-	top: 15%;
+	top: 10;
 	right: 75px;
 	z-index: 3; 
 	background-color: #fff;
@@ -72,7 +72,6 @@ header {
 	position: absolute;
 	top: 50px;
 	right: 0;
-
 	background-color: #fff;
 	width: 400px;
 	z-index: 1;
@@ -92,6 +91,7 @@ header {
 	display: flex;
 	justify-content: space-between;
 	flex: 0.8;
+
 }
 
 .titulo-producto-carrito {
@@ -148,8 +148,8 @@ header {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
 	gap: 20px;
+	padding: 20px;
 }
-
 .item {
 	border-radius: 10px;
 	overflow: hidden;
@@ -194,7 +194,7 @@ header {
 	background: none;
 	background-color:#47B360;
 	color: #fff;
-	padding: 15px 10px;
+	padding: 10px 10px;
 	cursor: pointer;
 }
 

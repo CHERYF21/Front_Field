@@ -27,17 +27,20 @@ export const ProductList = ({
     };
 
     return (
+
+
+
         <div className='container-items'>
+          
             {data.map(product => (
                 <div className='item' key={product.id}>
                     <figure>
                         <img src={product.img} alt={product.nameProduct} />
                     </figure>
                     <div className='info-product'>
-                        <h2>{product.nameProduct}</h2>
-                        <p className='price'>${product.price}</p>
-                        <p className='category'>${product.category}</p>
-                        <p className='description'>${product.description}</p>
+                        <h1 className='price'>${product.price}</h1>
+                        <h4>{product.nameProduct}</h4>
+                        <h5 className='description'>{product.description}</h5>
                         <button onClick={() => onAddProduct(product)} >
                             Añadir al carrito
                         </button>

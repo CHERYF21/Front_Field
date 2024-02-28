@@ -9,11 +9,12 @@ function Navbar() {
         Field <Span>Market</Span>
       </Title> 
       <NavLinks>
+          <StyledNavLink to="/inicio">Inicio</StyledNavLink>
         <StyledNavLink to="/helpsupport">Ayuda/Soporte</StyledNavLink>
         <StyledNavLink to="/contact">Contacto</StyledNavLink>
-        <StyledNavLink to="/addproduct">Agregar Productos</StyledNavLink>
         <StyledNavLink to="/productos">Productos</StyledNavLink>
-        
+        <StyledNavLink to="/listproduct">Listar Productos</StyledNavLink>
+      
       </NavLinks>
     </NavContainer>
   );
@@ -30,8 +31,13 @@ const NavContainer = styled.nav`
   width: 100%;
   z-index: 1000;
   margin-top: 50px; 
-`;
 
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0.5rem;
+  }
+`;
 
 const Title = styled.h2`
   color: #fff;
@@ -44,6 +50,11 @@ const Span = styled.span`
 
 const NavLinks = styled.div`
   display: flex;
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    margin-top: 1rem;
+  }
 `;
 
 const StyledNavLink = styled(RouterNavLink)`
@@ -57,5 +68,10 @@ const StyledNavLink = styled(RouterNavLink)`
 
   &.active {
     font-weight: bold;
+  }
+
+  @media screen and (max-width: 768px) {
+    margin-left: 0;
+    margin-bottom: 0.5rem;
   }
 `;

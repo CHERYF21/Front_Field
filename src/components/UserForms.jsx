@@ -158,15 +158,15 @@ const ModalBackground = styled.div`
 `;
 const ModalContent = styled.div`
   position: fixed;
-  top: 50%; 
+  top: 30%; 
   left: 50%; 
-  transform: translate(-50%, -50%); 
+  transform: translate(-40%, -50%); 
   background-color: white;
   padding: 20px;
   border-radius: 8px;
   max-width: 80%;
   max-height: 80%; 
-  overflow: auto; 
+ 
 `;
 
 const ModalHeader = styled.div`
@@ -175,7 +175,7 @@ const ModalHeader = styled.div`
 `;
 
 const ModalBody = styled.div`
-  margin-top: 20px;
+  margin-top: 5px;
 `;
 
 const CloseButton = styled.button`
