@@ -34,24 +34,6 @@ Del campo a tú mesa
 ###Descripción
 Nuestró proyecto esta enfocado en ayudar a la agricultura, especialmente a productos agrícolas de primera mano, queremos evitar el medio de intermediario ya que actualmente en nuestra industria agrícola colombiana, esta población se ve vulnerable debido a sus ganancias
 
-### Instrucciones De Instalación
-------------
-Para abrir Field Market necesitarás:
-
-Comando Git “entre otros”
-Clonar los repositorios Front & Back
-Tener Apache 12.5 con las versiones y configuraciones actualizadas.
-Ejecutar el proyecto en Spring Boot
-Crear la base de datos correspondiente a la de Spring Boot
-Ejecutar la carpeta Front en Visual Studio Code
-Abrir la terminal de Visual Studio Code
-Agregar las dependencias
-(Instalar la carpeta. Node-Modueles)
-$ npm install node_modules
-(Libreria de JavasCript para hacer solicitudes HTTP)
-$ npm i axios --save
-(Abrir el proyecto en React)
-$ npm react start
 
 #### Estructura del proyecto
 ------------
