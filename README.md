@@ -1,7 +1,7 @@
 
 #Field Market 
 > Del campo a tú mesa
-###Descripción
+ ###Descripción
 Nuestró proyecto esta enfocado en ayudar a la agricultura, especialmente a productos agrícolas de primera mano, queremos evitar el medio de intermediario ya que actualmente en nuestra industria agrícola colombiana, esta población se ve vulnerable debido a sus ganancias 
     
 ------------
@@ -34,6 +34,7 @@ Del campo a tú mesa
 Nuestró proyecto esta enfocado en ayudar a la agricultura, especialmente a productos agrícolas de primera mano, queremos evitar el medio de intermediario ya que actualmente en nuestra industria agrícola colombiana, esta población se ve vulnerable debido a sus ganancias
 
 ### Instrucciones De Instalación
+------------
 Para abrir Field Market necesitarás:
 
 Comando Git “entre otros”
@@ -50,12 +51,16 @@ $ npm install node_modules
 $ npm i axios --save
 (Abrir el proyecto en React)
 $ npm react start
+
 #### Estructura del proyecto
+------------
 src/: Este directorio contiene los archivos fuente de tu aplicación.
 public/: Aquí se encuentran los recursos estáticos accesibles públicamente, como imágenes, archivos CSS y HTML.
 components/: Acá almacenamos todos los componentes de nuestro proyecto todas las vistas como Navbar,Login,Register
 “entre otros”
+
 ### Forma de usar Field Market 
+------------
 Field Market es una plataforma que se caracteriza por su gestión de dos tipos de usuarios: Agricultores y Compradores. Antes de comenzar a utilizar nuestra plataforma, es importante entender cómo elegir el rol al que deseas pertenecer durante el proceso de registro.
 
 ####  Registro 
@@ -72,6 +77,7 @@ Field Market Ofrece Una Experiencia Intuitiva Y Completa Para Ambos Tipos De Usu
 
 
 #### Estado del proyecto 
+------------
 El proyecto actualmente se encuentra en plena ejecución, con todas las actividades y tareas en marcha según lo planificado en el cronograma. Se han realizado progresos significativos en diversas áreas, y el equipo está trabajando de manera colaborativa y coordinada para alcanzar los objetivos establecidos.
 
 Principales Aspectos:
