@@ -37,14 +37,15 @@ export const ProductList = ({
                     <figure>
                         <img src={product.img} alt={product.nameProduct} />
                     </figure>
-                    <div className='info-product'>
-                        <h1 className='price'>${product.price}</h1>
-                        <h4>{product.nameProduct}</h4>
-                        <h5 className='description'>{product.description}</h5>
-                        <button onClick={() => onAddProduct(product)} >
-                            Añadir al carrito
-                        </button>
-                    </div>
+                        <div className='info-product'>
+                      <h1 className='price'>${product.price.toFixed(3)}</h1>
+                      <h4>{product.nameProduct}</h4>
+                       <h5 className='description'>{product.description}</h5>
+                    <button onClick={() => onAddProduct(product)} >
+                        Añadir al carrito
+                   </button>
+    </div>
+
                 </div>
             ))}
         </div>

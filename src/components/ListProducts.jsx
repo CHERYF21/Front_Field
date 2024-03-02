@@ -142,6 +142,8 @@ const Button = styled.button`
   border-radius: 4px;
   cursor: pointer;
   margin-right: 5px;
+  box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.5);
+
 `;
 
 const SearchInput = styled.input`

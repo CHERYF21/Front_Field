@@ -176,4 +176,5 @@ const OpenModalButton = styled.button`
   cursor: pointer;
   margin-top: 300px;
   margin-left: 30px;
+  box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.5);
 `;

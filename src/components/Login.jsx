@@ -120,11 +120,12 @@ const OpenModalButton = styled.button`
   background-color: #006400; 
   color: white;
   border: none;
-  padding: 12px;
+  padding: 8px 12px;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 298px;
-  margin-left: -90px;
+  margin-top: 250px;
+  margin-left: -80px;
+  box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.5);
 `;
 
 const FormContainer = styled.form`

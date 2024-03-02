@@ -57,6 +57,7 @@ const MainContainer = styled.div`
   height: 100vh;
   display: flex;
   justify-content: space-between;
+  margin-top: 40px;
 `;
 
 const ContentContainer = styled.div`
@@ -79,6 +80,8 @@ const UserFormContainer = styled.div`
   border-radius: 20px;
   margin-top: 40px;
 
+
+
 `;
 
 const RightSidebarContainer = styled.div`
@@ -94,7 +97,7 @@ const ImageContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 25px;
-  margin-left: 600px;
+  margin-left: 680px;
   position: absolute;
 ;
   
