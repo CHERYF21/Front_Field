@@ -46,6 +46,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@types/react-router-dom": "^5.3.3",
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.35",
     "source-map-loader": "^5.0.0",

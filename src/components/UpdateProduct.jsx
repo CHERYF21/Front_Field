@@ -1,8 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
+import { updateProducts } from './../service/productService';
 
-const UpdateProduct = ({ productId, onUpdate }) => {
+const UpdateProduct = ({  productId, onUpdate, closeModal, allProducts, setAllProducts }) => {
   const [updatedProduct, setUpdatedProduct] = useState({
     category: '',
     quantity: '',
@@ -15,197 +17,246 @@ const UpdateProduct = ({ productId, onUpdate }) => {
     ratings: '',
   });
 
-  const [ setShowDetails] = useState(false);
-
+  const PRODUCT_BACK = "http://localhost:8080";
+  const [products, setProducts] = useState([]);
+  const [showDetails, setShowDetails] = useState(false);  // Agrega esta línea
   useEffect(() => {
-  const fetchProductDetails = async () => {
-    try {
-      if (productId) {
-        const response = await axios.get(`http://localhost:8080/api/products/${productId}`);
-        setUpdatedProduct(response.data);
+    const fetchProductDetails = async () => {
+      try {
+        if (productId) {
+          const response = await axios.get(`${PRODUCT_BACK}/api/products/${productId}`);
+          setUpdatedProduct(response.data);
+        }
+      } catch (error) {
+        console.error('Error al obtener detalles del producto:', error);
       }
-    } catch (error) {
-      console.error('Error al obtener detalles del producto:', error);
-    }
-  };
+    };
 
-  fetchProductDetails();
-}, [productId]);
+    fetchProductDetails();
+  }, [productId]);
 
-
+//GTP
   const handleChange = (e) => {
-    const { name, type } = e.target;
-
+    const { name, value, type } = e.target;
+  
     if (type === 'file') {
       const file = e.target.files[0];
-
       setUpdatedProduct({
         ...updatedProduct,
-        img: file,
+        [name]: file,
         imgPreview: URL.createObjectURL(file),
       });
     } else {
-      setUpdatedProduct({ ...updatedProduct, [name]: e.target.value });
+      setUpdatedProduct({
+        ...updatedProduct,
+        [name]: value,
+      });
     }
   };
+  
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  //Fin
+  
+  
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+        console.log('Submitting update...');
 
-    try {
         const formData = new FormData();
-        formData.append('file', updatedProduct.img);
+        if( updatedProduct.file){
+          console.log('Before FormData creation');
+          console.log('FormData content:', formData);
+          formData.append('file', updatedProduct.file);
+        }
         formData.append('title', updatedProduct.title);
         formData.append('category', updatedProduct.category);
         formData.append('quantity', updatedProduct.quantity);
         formData.append('price', updatedProduct.price);
         formData.append('description', updatedProduct.description);
-        formData.append('availability', updatedProduct.availability);
+        formData.append('availability', updatedProduct.availability.toString());  // Convierte a string
         formData.append('opinion', updatedProduct.opinion);
         formData.append('ratings', updatedProduct.ratings);
 
-      const response = await axios.put(
-        `http://localhost:8080/api/products/${productId}`,
-        formData,  // Utiliza el FormData para enviar la información del producto
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        console.log('Producto actualizado con éxito:', response.data);
-        onUpdate(response.data);
-      } else {
-        console.error('Error al actualizar el producto:', response.data);
-      }
-    } catch (error) {
-      console.error('Error al realizar la solicitud:', error);
-    }
-  };
-  return (
-    <div>
-      <Container>
-        <ModalHeader>
-          <h2>Actualizar Producto</h2>
-          <CloseButton onClick={() => setShowDetails(false)}>&times;</CloseButton>
-        </ModalHeader>
-
+        console.log('FormData content:', formData);
+    
+        console.log('After FormData creation');
+    
+        const response = await updateProducts(productId, formData);
+    
+        console.log('Update Response:', response);
         
+        console.log('Updated Product Object:', updatedProduct);
 
-        <FormContainer onSubmit={handleSubmit} encType="multipart/form-data">
-          <FormGroup>
-            <Label htmlFor="category">Categoría:</Label>
-            <Select
-              id="category"
-              name="category"
-              value={updatedProduct.category}
-              onChange={handleChange}
-            >
-              <option value="fruta">Fruta</option>
-              <option value="verdura">Verdura</option>
-            </Select>
-          </FormGroup>
-          <FormGroup>
-            <Label htmlFor="quantity">Cantidad:</Label>
-            <Input
-              type="number"
-              id="quantity"
-              name="quantity"
-              value={updatedProduct.quantity}
-              onChange={handleChange}
-              required
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label htmlFor="price">Precio:</Label>
-            <Input
-              type="number"
-              id="price"
-              name="price"
-              value={updatedProduct.price}
-              onChange={handleChange}
-              step="0.01"
-              min="0.01"
-              required
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label htmlFor="img">Imagen:</Label>
-            <Input
-              type="file"
-              id="img"
-              name="img"
-              accept="image/png, image/jpeg"
-              onChange={handleChange}
-              required
-            />
-           
-          </FormGroup>
-          <FormGroup>
-            <Label htmlFor="title">Título:</Label>
-            <Input
-              type="text"
-              id="title"
-              name="title"
-              value={updatedProduct.title}
-              onChange={handleChange}
-              required
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label htmlFor="description">Descripción:</Label>
-            <Input
-              type="text"
-              id="description"
-              name="description"
-              value={updatedProduct.description}
-              onChange={handleChange}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label htmlFor="availability">Disponibilidad:</Label>
-            <Select
-              id="availability"
-              name="availability"
-              value={updatedProduct.availability}
-              onChange={handleChange}
-            >
-              <option value={true}>Disponible</option>
-              <option value={false}>No disponible</option>
-            </Select>
-          </FormGroup>
-          <FormGroup>
-            <Label htmlFor="opinion">Opinión:</Label>
-            <Input
-              type="text"
-              id="opinion"
-              name="opinion"
-              value={updatedProduct.opinion}
-              onChange={handleChange}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label htmlFor="ratings">Calificación:</Label>
-            <Input
-              type="number"
-              id="ratings"
-              name="ratings"
-              value={updatedProduct.ratings}
-              onChange={handleChange}
-              min="1"
-              max="5"
-            />
-          </FormGroup>
-          <SubmitButton type="submit">Actualizar Producto</SubmitButton>
-        </FormContainer>
 
-        <Line />
-      </Container>
-    </div>
-  );
+        if (response.status === 200) {
+          const updatedProductData = {
+            ...response.data,
+            price: Number(response.data.price),
+            ratings: Number(response.data.ratings),
+            quantity: Number(response.data.quantity),
+              
+          };
+          
+          console.log(updatedProduct);
+          
+          // Actualiza la lista de productos local directamente
+          const updatedProducts = allProducts.map((product) =>
+            product.id === productId ? { ...product, ...updatedProductData } : product
+          );
+
+
+          onUpdate(updatedProductData);
+          closeModal();
+          handleGetProducts();
+          setAllProducts(updatedProducts);
+        } else {
+          console.error('Error al actualizar el producto:', response.data);
+          console.log('Update response:', response);
+        }
+      } catch (error) {
+        console.error('Error al realizar la solicitud PUT:', error);
+     }
 };
+
+
+    const handleGetProducts = async () => {
+      try {
+        console.log('Fetching updated products...');
+    
+        const updatedProducts = await axios.get(`${PRODUCT_BACK}/api/products/listProducts`, {
+          headers: {
+            'Cache-Control': 'no-cache',
+          },
+        });
+    
+        console.log('Updated products:', updatedProducts.data);
+        setProducts(updatedProducts.data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+    
+
+
+
+
+    return (
+        <Container>
+        <form onSubmit={handleSubmit}>
+          <ModalHeader>
+            <h2>Actualizar Producto</h2>
+            <CloseButton onClick={() => setShowDetails(false)}>&times;</CloseButton>
+          </ModalHeader>
+
+              <Label htmlFor="category">Categoría:</Label>
+              <Select
+                id="category"
+                name="category"
+                value={updatedProduct.category}
+                onChange={handleChange}
+              >
+                <option value="fruta">Fruta</option>
+                <option value="verdura">Verdura</option>
+              </Select>
+        
+            <FormGroup>
+              <Label htmlFor="quantity">Cantidad:</Label>
+              <Input
+                type="number"
+                id="quantity"
+                name="quantity"
+                value={updatedProduct.quantity}
+                onChange={handleChange}
+                required
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label htmlFor="price">Precio:</Label>
+              <Input
+                type="number"
+                id="price"
+                name="price"
+                value={updatedProduct.price}
+                onChange={handleChange}
+                step="0.01"
+                min="0.01"
+                required
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label htmlFor="img">Imagen:</Label>
+              <Input
+                type="file"
+                id="img"
+                name="img"
+                accept="image/png, image/jpeg"
+                onChange={handleChange}
+              />
+            
+            </FormGroup>
+            <FormGroup>
+              <Label htmlFor="title">Título:</Label>
+              <Input
+                type="text"
+                id="title"
+                name="title"
+                value={updatedProduct.title}
+                onChange={handleChange}
+                required
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label htmlFor="description">Descripción:</Label>
+              <Input
+                type="text"
+                id="description"
+                name="description"
+                value={updatedProduct.description}
+                onChange={handleChange}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label htmlFor="availability">Disponibilidad:</Label>
+              <Select
+                id="availability"
+                name="availability"
+                value={updatedProduct.availability}
+                onChange={handleChange}
+              >
+                <option value={true}>Disponible</option>
+                <option value={false}>No disponible</option>
+              </Select>
+            </FormGroup>
+            <FormGroup>
+              <Label htmlFor="opinion">Opinión:</Label>
+              <Input
+                type="text"
+                id="opinion"
+                name="opinion"
+                value={updatedProduct.opinion}
+                onChange={handleChange}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label htmlFor="ratings">Calificación:</Label>
+              <Input
+                type="number"
+                id="ratings"
+                name="ratings"
+                value={updatedProduct.ratings}
+                onChange={handleChange}
+                min="1"
+                max="5"
+              />
+            </FormGroup>
+            <SubmitButton type="submit">Actualizar Producto</SubmitButton>
+          </form>
+
+          <Line />
+        </Container>
+    );
+  };
 
 const Container = styled.div`
   position: fixed;
@@ -245,10 +296,7 @@ const Line = styled.div`
   left: 0;
 `;
 
-const FormContainer = styled.form`
-  display: grid;
-  grid-gap: 9px;
-`;
+
 
 const FormGroup = styled.div`
   display: flex;

@@ -15,6 +15,7 @@ const ProductList = ({
   const [failedImages, setFailedImages] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState('');
+  const [updatedProducts, setUpdatedProducts] = useState([]);
 
   const onAddProduct = (product) => {
     const existingProduct = allProducts.find((item) => item.id === product.id);
@@ -54,25 +55,41 @@ const ProductList = ({
     }
   };
 
-  const handleUpdateProduct = (productId, e) => {
-    console.log('Botón Actualizar clicado');
-    e.preventDefault();
-    setSelectedProductId(productId);
-    setShowModal(true);
-  };
+  const handleUpdateProduct = async (productId, e) => {
+  e.preventDefault();
+  console.log('Botón Actualizar clicado');
+  setSelectedProductId(productId);
+  setShowModal(true);
+};
 
-  const closeModal = () => {
+const closeModal = () => {
+  setShowModal(false);
+ 
+};
+  
+ // Agrega una función para actualizar los productos en el estado local
+const updateProductsLocally = (updatedProduct) => {
+  setAllProducts((prevProducts) =>
+    prevProducts.map((product) =>
+      product.id === updatedProduct.id ? { ...product, ...updatedProduct } : product
+    )
+  );
+};
+
+// Agrega una función para manejar la actualización del producto en el componente ProductList
+const handleProductUpdated = (updatedProduct) => {
+  try {
+    // Actualiza el estado local de los productos
+    updateProductsLocally(updatedProduct);
+
+    // Cierra el modal
     setShowModal(false);
-  };
+  } catch (error) {
+    console.error('Error al actualizar el producto:', error);
+  }
+};
 
-  const handleProductUpdated = (updatedProduct) => {
-    const updatedProducts = allProducts.map((product) =>
-      product.id === updatedProduct.id ? updatedProduct : product
-    );
-    setAllProducts(updatedProducts);
-    setShowModal(false);
-  };
-
+  
   const handleImageError = (e, productId) => {
     const reserveImage = imagenes['manzana.png'];
 
@@ -81,32 +98,33 @@ const ProductList = ({
       setFailedImages((prev) => [...prev, productId]);
     }
   };
-
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get('http://localhost:8080/api/products/listProducts');
         setAllProducts(response.data);
+        setUpdatedProducts(response.data); // Añade esta línea
       } catch (error) {
         console.error('Error al obtener la lista de productos desde la API', error);
       }
     };
-
+  
     fetchProducts();
-  }, [setAllProducts]);
+  }, []);
+  
 
   return (
-    <form encType="multipart/form-data">
       <div className='container-items'>
         {allProducts.map((product) => (
+          
           <div key={product.id} className='item'>
             <figure>
-              <img
-                src={product.img}
-                alt={product.title}
-                data-product-id={product.id}
-                onError={(e) => handleImageError(e, product.id)}
-              />
+            <img
+        src={`data:image/jpeg;base64,${product.base64Image}`}
+        alt={product.title}
+        data-product-id={product.id}
+        onError={(e) => handleImageError(e, product.id)}
+      />
               <figcaption>
                 <div className='info-product'>
                   <p className='title'>{product.title}</p>
@@ -133,15 +151,14 @@ const ProductList = ({
             </figure>
           </div>
         ))}
-        {showModal && (
-          <Modal
-            closeModal={closeModal}
-            productId={selectedProductId}
-            onUpdate={handleProductUpdated}
-          />
-        )}
+       {showModal && (
+     <Modal
+         closeModal={closeModal}
+         productId={selectedProductId}
+         onUpdate={handleProductUpdated}
+        />
+      )}
       </div>
-    </form>
   );
 };
 

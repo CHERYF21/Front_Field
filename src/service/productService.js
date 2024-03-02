@@ -8,7 +8,8 @@ export const createProducts = (NewProduct) => axios.post(PRODUCT_BACK + "/create
 
 export const listProductS = () => axios.get(PRODUCT_BACK + "/listProducts");
 // Corregir la función updateProducts
-export const updateProducts = (id, updatedProduct) => axios.put(`${PRODUCT_BACK}/${id}/update`, updatedProduct);
+export const updateProducts = (id, updatedProduct) => axios.put(`${PRODUCT_BACK}/api/products/${id}/update`, updatedProduct);
+
 
 // Corregir la función deleteProducts
 export const deleteProducts = (id) => axios.delete(`${PRODUCT_BACK}/${id}/delete`);
