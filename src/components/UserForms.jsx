@@ -6,11 +6,9 @@ function UserFormModal() {
     const [newUser, setNewUser] = useState({
         nombre: '',
         apellido: '',
-        edad: '',
         email: '',
         telefono: '',
         direccion: '',
-        fechaRegistro: '',
         password: '',
         rol: 'Agricultor'
     });
@@ -19,10 +17,18 @@ function UserFormModal() {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setNewUser({
-            ...newUser,
-            [name]: value
-        });
+        if (name === "password") {
+            // para que no se llene el campo validar contra automaticamente
+            setNewUser({
+                ...newUser,
+                [name]: value
+            });
+        } else {
+            setNewUser({
+                ...newUser,
+                [name]: value
+            });
+        }
     };
 
     const handleRoleChange = (e) => {
@@ -35,7 +41,10 @@ function UserFormModal() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!newUser.nombre || !newUser.apellido || !newUser.edad || !newUser.email || !newUser.telefono || !newUser.direccion || !newUser.fechaRegistro || !newUser.password || !newUser.rol) {
+        if (!validatePassword()) { // Validar la contraseña antes de enviar el formulario
+            return;
+        }
+        if (!newUser.nombre || !newUser.apellido || !newUser.email || !newUser.telefono || !newUser.direccion || !newUser.password || !newUser.rol) {
             return;
         }
         try {
@@ -47,9 +56,19 @@ function UserFormModal() {
         };
     };
 
+    const validatePassword = () => {
+        if(newUser.password !== newUser.confirmPassword){
+            alert("Las contraeñas no coinciden")
+            return false;
+        }
+        return true;
+    };
+
     useEffect(() => {
         saveUser();
     }, []);
+
+    console.log(newUser);
 
     return (
         <>
@@ -123,6 +142,17 @@ function UserFormModal() {
                     id="password"
                     name="password"
                     value={newUser.password}
+                    onChange={handleInputChange}
+                    required
+                />
+            </FormGroup>
+            <FormGroup>
+                <Label htmlFor="confirmPassword">Validar Contraseña:</Label>
+                <Input
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    value={newUser.confirmPassword}
                     onChange={handleInputChange}
                     required
                 />
@@ -248,3 +278,4 @@ const Button = styled.button`
     background-color: #004d00; 
   }
 `;
+

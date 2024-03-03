@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import imagenes from '../assets/imagenes';
+
+
+//import imagenes from '../assets/imagenes';
 
 function Navbar() {
   return (
@@ -12,7 +14,7 @@ function Navbar() {
         </Title>  
       </LogoContainer>
       <NavLinks>
-        <NavLink to="/">Inicio</NavLink>
+        <NavLink to="/inicio">Inicio</NavLink>
         <NavLink to="/helpsupport">Ayuda/Soporte</NavLink>
         <NavLink to="/contact">Contacto</NavLink>
         <NavLink to="/addproduct">Agregar Productos</NavLink>
@@ -47,12 +49,12 @@ const Span = styled.span`
   color: #1fc271;
 `;
 
-const Logo = styled.img`
-  height: auto;
-  width: 80px;
-  margin-left: 1rem;
-  border-radius: 50%; 
-`;
+// const Logo = styled.img`
+//   height: auto;
+//   width: 80px;
+//   margin-left: 1rem;
+//   border-radius: 50%; 
+// `;
 
 const NavLinks = styled.div`
   display: flex;
