@@ -23,7 +23,7 @@ const ProductList = ({
     if (existingProduct) {
       const updatedProducts = allProducts.map((item) =>
         item.id === product.id
-          ? { ...item, quantity: item.quantity + 1 }
+          ? { ...item, quantity: item.quantity + 0 }
           : item
       );
   
@@ -127,15 +127,13 @@ const handleProductUpdated = (updatedProduct) => {
       />
               <figcaption>
                 <div className='info-product'>
-                  <p className='title'>{product.title}</p>
+                <h1 className='price'>${product.price.toFixed(3)}</h1>
+                <h2>{product.title}</h2>
+                <h4 className='description'>{product.description}</h4>
                   <p className='availability'>
                     {product.availability ? 'Disponible' : 'No disponible'}
                   </p>
-                  <p className='price'>{product.price}</p>
                   <p className='category'>{product.category}</p>
-                  <p className='description'>{product.description}</p>
-                  <p className='opinion'>{product.opinion}</p>
-                  <p className='rating'>{product.rating}</p>
                   <button onClick={() => onAddProduct(product)}>
                     Añadir al carrito
                   </button>

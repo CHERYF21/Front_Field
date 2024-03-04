@@ -12,8 +12,6 @@ const AddProduct = ({ setAllProducts, allProducts }) => {
     title: '',
     description: '',
     availability: true,
-    opinion: '',
-    ratings: '',
   });
   const [showForm, setShowForm] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -50,8 +48,6 @@ const AddProduct = ({ setAllProducts, allProducts }) => {
       img: '',
       title: '',
       description: '',
-      opinion: '',
-      ratings: '',
     });
   };
 
@@ -103,22 +99,13 @@ const AddProduct = ({ setAllProducts, allProducts }) => {
     }
   
     const formData = new FormData();
-     formData.append('file', producto.file); // Usa 'file' en lugar de 'img'
+     formData.append('file', producto.img); // Usa 'file' en lugar de 'img'
     formData.append('title', producto.title);
     formData.append('description', producto.description);
     formData.append('price', producto.price);
     formData.append('category', producto.category);
     formData.append('availability', producto.availability);
     formData.append('quantity', producto.quantity);
-    formData.append('opinion', producto.opinion);
-    formData.append('ratings', producto.ratings);
-  
-    if (producto.opinion) {
-      formData.append('opinion', producto.opinion);
-    }
-    if (producto.ratings) {
-      formData.append('ratings', producto.ratings);
-    }
   
     try {
       const response = await axios.post(
@@ -144,8 +131,6 @@ const AddProduct = ({ setAllProducts, allProducts }) => {
           img: '',
           title: '',
           description: '',
-          opinion: '',
-          ratings: '',
         });
         setShowForm(false);
       } else {
@@ -278,30 +263,6 @@ const AddProduct = ({ setAllProducts, allProducts }) => {
               <option value={true}>Disponible</option>
               <option value={false}>No disponible</option>
             </Select>
-          </FormGroup>
-
-          <FormGroup>
-            <Label htmlFor="opinion">Opinión:</Label>
-            <Input
-              type="text"
-              id="opinion"
-              name="opinion"
-              value={producto.opinion}
-              onChange={handleChange}
-            />
-          </FormGroup>
-
-          <FormGroup>
-            <Label htmlFor="ratings">Calificación:</Label>
-            <Input
-              type="number"
-              id="ratings"
-              name="ratings"
-              value={producto.ratings}
-              onChange={handleChange}
-              min="1"
-              max="5"
-            />
           </FormGroup>
 
           <SubmitButton type="submit">

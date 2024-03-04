@@ -32,10 +32,18 @@ const Contact = () => {
                     <p><FontAwesomeIcon icon={faLocationDot} /> 30 Grant Ave San Francisco CA 94108-5834</p>
                 </Data>
                 <Links>
-                <a href="#"><FontAwesomeIcon icon={faFacebookF} /></a>
-                <a href="#"><FontAwesomeIcon icon={faInstagram} /></a>
-                <a href="#"><FontAwesomeIcon icon={faTwitter} /></a>
-                <a href="#"><FontAwesomeIcon icon={faLinkedin} /></a>
+                <a href="https://www.facebook.com/" target="_blank">
+  <FontAwesomeIcon icon={faFacebookF} />
+</a>
+<a href="https://www.instagram.com/" target="_blank">
+  <FontAwesomeIcon icon={faInstagram} />
+</a>
+<a href="https://twitter.com/" target="_blank">
+  <FontAwesomeIcon icon={faTwitter} />
+</a>
+<a href="https://www.linkedin.com/" target="_blank">
+  <FontAwesomeIcon icon={faLinkedin} />
+</a>
                 </Links>
             </BoxInfo>
             <form>
@@ -57,7 +65,7 @@ const Contact = () => {
                 <Button type='submit'>Enviar mensaje</Button>
             </form>
                  <ImageContainer>
-               <ZoomImage src={imagenes.opinion} alt="" />
+               <ZoomImage src={imagenes.imagen} alt="" />
               </ImageContainer>
         </Container>
         

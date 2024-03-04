@@ -13,8 +13,6 @@ const UpdateProduct = ({  productId, onUpdate, closeModal, allProducts, setAllPr
     title: '',
     description: '',
     availability: true,
-    opinion: '',
-    ratings: '',
   });
 
   const PRODUCT_BACK = "http://localhost:8080";
@@ -75,8 +73,6 @@ const UpdateProduct = ({  productId, onUpdate, closeModal, allProducts, setAllPr
         formData.append('price', updatedProduct.price);
         formData.append('description', updatedProduct.description);
         formData.append('availability', updatedProduct.availability.toString());  // Convierte a string
-        formData.append('opinion', updatedProduct.opinion);
-        formData.append('ratings', updatedProduct.ratings);
 
         console.log('FormData content:', formData);
     
@@ -227,28 +223,6 @@ const UpdateProduct = ({  productId, onUpdate, closeModal, allProducts, setAllPr
                 <option value={true}>Disponible</option>
                 <option value={false}>No disponible</option>
               </Select>
-            </FormGroup>
-            <FormGroup>
-              <Label htmlFor="opinion">Opinión:</Label>
-              <Input
-                type="text"
-                id="opinion"
-                name="opinion"
-                value={updatedProduct.opinion}
-                onChange={handleChange}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label htmlFor="ratings">Calificación:</Label>
-              <Input
-                type="number"
-                id="ratings"
-                name="ratings"
-                value={updatedProduct.ratings}
-                onChange={handleChange}
-                min="1"
-                max="5"
-              />
             </FormGroup>
             <SubmitButton type="submit">Actualizar Producto</SubmitButton>
           </form>
