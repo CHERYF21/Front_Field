@@ -48,6 +48,7 @@ const SaleList = () => {
         <thead>
           <tr>
             <th>Id</th>
+            <th>Comprador</th>
             <th>Fecha Venta</th>
             <th>Total</th>
             <th>Pagado</th>

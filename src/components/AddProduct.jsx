@@ -79,9 +79,11 @@ const AddProduct = ({ setAllProducts, allProducts }) => {
       }));
     }
   };
+  console.log(producto);
+  
 
   const handleSubmit = async (e) => {
-    window.location.reload();
+    // window.location.reload();
   
     if (
       !producto.category ||
@@ -109,7 +111,7 @@ const AddProduct = ({ setAllProducts, allProducts }) => {
   
     try {
       const response = await axios.post(
-        'http://localhost:8080/api/products/createProduct',
+        'http://localhost:8080/user/createProduct',
         formData,
         {
           headers: {
@@ -156,7 +158,7 @@ const AddProduct = ({ setAllProducts, allProducts }) => {
     const handleDelete = async () => {
       try {
         if (productId) {
-          await axios.delete(`http://localhost:8080/api/products/${productId}`);
+          await axios.delete(`http://localhost:8080/user/${productId}`);
           onDelete(productId);
         } else {
           console.error('El productId es undefined o null');

@@ -59,7 +59,7 @@ const UpdateProduct = ({closeModal, productId, onUpdate, allProducts = [], setAl
   
   
     const handleSubmit = async (e) => {
-      window.location.reload();
+      //window.location.reload();
       try {
         console.log('Submitting update...');
 
