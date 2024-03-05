@@ -4,7 +4,7 @@ import axios from 'axios';
 import styled from 'styled-components';
 import { updateProducts } from './../service/productService';
 
-const UpdateProduct = ({  productId, onUpdate, closeModal, allProducts, setAllProducts }) => {
+const UpdateProduct = ({closeModal, productId, onUpdate, allProducts = [], setAllProducts = () => {} }) => {
   const [updatedProduct, setUpdatedProduct] = useState({
     category: '',
     quantity: '',
@@ -13,8 +13,6 @@ const UpdateProduct = ({  productId, onUpdate, closeModal, allProducts, setAllPr
     title: '',
     description: '',
     availability: true,
-    opinion: '',
-    ratings: '',
   });
 
   const PRODUCT_BACK = "http://localhost:8080";
@@ -35,18 +33,20 @@ const UpdateProduct = ({  productId, onUpdate, closeModal, allProducts, setAllPr
     fetchProductDetails();
   }, [productId]);
 
-//GTP
+
   const handleChange = (e) => {
     const { name, value, type } = e.target;
   
     if (type === 'file') {
       const file = e.target.files[0];
+      console.log('File selected:', file);
       setUpdatedProduct({
         ...updatedProduct,
         [name]: file,
         imgPreview: URL.createObjectURL(file),
       });
     } else {
+      console.log('Field changed:', name, value);
       setUpdatedProduct({
         ...updatedProduct,
         [name]: value,
@@ -55,30 +55,30 @@ const UpdateProduct = ({  productId, onUpdate, closeModal, allProducts, setAllPr
   };
   
 
-  //Fin
+  
   
   
     const handleSubmit = async (e) => {
-      e.preventDefault();
+      window.location.reload();
       try {
         console.log('Submitting update...');
 
         const formData = new FormData();
-        if( updatedProduct.file){
+
+        if (updatedProduct.img) {
           console.log('Before FormData creation');
           console.log('FormData content:', formData);
-          formData.append('file', updatedProduct.file);
+          formData.append('file', updatedProduct.img);
         }
+        
         formData.append('title', updatedProduct.title);
         formData.append('category', updatedProduct.category);
-        formData.append('quantity', updatedProduct.quantity);
+        formData.append('quantity', parseInt(updatedProduct.quantity, 10));
         formData.append('price', updatedProduct.price);
         formData.append('description', updatedProduct.description);
-        formData.append('availability', updatedProduct.availability.toString());  // Convierte a string
-        formData.append('opinion', updatedProduct.opinion);
-        formData.append('ratings', updatedProduct.ratings);
-
+        formData.append('availability', updatedProduct.availability === "true");
         console.log('FormData content:', formData);
+        
     
         console.log('After FormData creation');
     
@@ -100,15 +100,14 @@ const UpdateProduct = ({  productId, onUpdate, closeModal, allProducts, setAllPr
           
           console.log(updatedProduct);
           
-          // Actualiza la lista de productos local directamente
-          const updatedProducts = allProducts.map((product) =>
-            product.id === productId ? { ...product, ...updatedProductData } : product
-          );
+          const updatedProducts = allProducts ? allProducts.map((product) =>
+      product.id === productId ? { ...product, ...updatedProductData, availability: updatedProductData.availability === "true" } : product
+      ) : [];
 
 
           onUpdate(updatedProductData);
-          closeModal();
           handleGetProducts();
+          console.log(typeof setAllProducts); // Debería imprimir "function"
           setAllProducts(updatedProducts);
         } else {
           console.error('Error al actualizar el producto:', response.data);
@@ -136,6 +135,12 @@ const UpdateProduct = ({  productId, onUpdate, closeModal, allProducts, setAllPr
         console.error('Error fetching products:', error);
       }
     };
+
+    const handleClose = () => {
+      // Cierra el modal sin realizar ninguna acción adicional
+      closeModal();
+    };
+  
     
 
 
@@ -146,7 +151,7 @@ const UpdateProduct = ({  productId, onUpdate, closeModal, allProducts, setAllPr
         <form onSubmit={handleSubmit}>
           <ModalHeader>
             <h2>Actualizar Producto</h2>
-            <CloseButton onClick={() => setShowDetails(false)}>&times;</CloseButton>
+            <CloseButton onClick={handleClose}>&times;</CloseButton>
           </ModalHeader>
 
               <Label htmlFor="category">Categoría:</Label>
@@ -227,28 +232,6 @@ const UpdateProduct = ({  productId, onUpdate, closeModal, allProducts, setAllPr
                 <option value={true}>Disponible</option>
                 <option value={false}>No disponible</option>
               </Select>
-            </FormGroup>
-            <FormGroup>
-              <Label htmlFor="opinion">Opinión:</Label>
-              <Input
-                type="text"
-                id="opinion"
-                name="opinion"
-                value={updatedProduct.opinion}
-                onChange={handleChange}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label htmlFor="ratings">Calificación:</Label>
-              <Input
-                type="number"
-                id="ratings"
-                name="ratings"
-                value={updatedProduct.ratings}
-                onChange={handleChange}
-                min="1"
-                max="5"
-              />
             </FormGroup>
             <SubmitButton type="submit">Actualizar Producto</SubmitButton>
           </form>

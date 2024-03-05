@@ -23,7 +23,7 @@ const ProductList = ({
     if (existingProduct) {
       const updatedProducts = allProducts.map((item) =>
         item.id === product.id
-          ? { ...item, quantity: item.quantity + 1 }
+          ? { ...item, quantity: item.quantity + 0 }
           : item
       );
   
@@ -40,21 +40,22 @@ const ProductList = ({
   const handleDeleteProduct = async (productId) => {
     try {
       const deletedProduct = allProducts.find((product) => product.id === productId);
-
+  
       if (deletedProduct) {
-        await axios.delete(`http://localhost:8080/api/products/${productId}`);
+        // Elimina el producto de la lista local
         setAllProducts((prevProducts) =>
-          prevProducts.filter((product) => product.id !== productId)  
+          prevProducts.filter((product) => product.id !== productId)
         );
-         // Vuelve a cargar la lista de productos después de la eliminación
-         const response = await axios.get('http://localhost:8080/api/products/listProducts');
-         setAllProducts(response.data);
+  
+        // Envía la solicitud DELETE al servidor
+        await axios.delete(`http://localhost:8080/api/products/${productId}`);
       }
     } catch (error) {
       console.error('Error al eliminar el producto:', error);
     }
   };
 
+  
   const handleUpdateProduct = async (productId, e) => {
   e.preventDefault();
   console.log('Botón Actualizar clicado');
@@ -63,10 +64,10 @@ const ProductList = ({
 };
 
 const closeModal = () => {
+  console.log('closeModal is called');
   setShowModal(false);
- 
 };
-  
+
  // Agrega una función para actualizar los productos en el estado local
 const updateProductsLocally = (updatedProduct) => {
   setAllProducts((prevProducts) =>
@@ -127,15 +128,13 @@ const handleProductUpdated = (updatedProduct) => {
       />
               <figcaption>
                 <div className='info-product'>
-                  <p className='title'>{product.title}</p>
+                <h1 className='price'>${product.price.toFixed(3)}</h1>
+                <h2>{product.title}</h2>
+                <h4 className='description'>{product.description}</h4>
                   <p className='availability'>
                     {product.availability ? 'Disponible' : 'No disponible'}
                   </p>
-                  <p className='price'>{product.price}</p>
                   <p className='category'>{product.category}</p>
-                  <p className='description'>{product.description}</p>
-                  <p className='opinion'>{product.opinion}</p>
-                  <p className='rating'>{product.rating}</p>
                   <button onClick={() => onAddProduct(product)}>
                     Añadir al carrito
                   </button>

@@ -10,9 +10,14 @@ import img5 from './img/img5.jpg';
 import melon from './img/melon.png';        // Ruta ajustada: '../img/melon.png'
 import manzana from './img/manzana.png';    // Ruta ajustada: '../img/manzana.png'
 import zanahoria from './img/zanahoria.png';// Ruta ajustada: '../img/zanahoria.png'
+import imagen from './img/imagen.png';
+import imagen_fondo from './img/imagen_fondo.jpg';
+
 
 const imagenes = {
   "registro_fondo": registro_fondo,
+  "imagen_fondo": imagen_fondo,
+  "imagen":imagen,
   "logo": login,
   "img1": img1,
   "img2": img2,

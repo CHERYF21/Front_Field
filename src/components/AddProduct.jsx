@@ -12,13 +12,11 @@ const AddProduct = ({ setAllProducts, allProducts }) => {
     title: '',
     description: '',
     availability: true,
-    opinion: '',
-    ratings: '',
-  });
-  const [showForm, setShowForm] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+   });
+    const [showForm, setShowForm] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
 
-  const [cart, setCart] = useState(() => {
+    const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem('cart');
     return savedCart ? JSON.parse(savedCart) : [];
   });
@@ -50,8 +48,6 @@ const AddProduct = ({ setAllProducts, allProducts }) => {
       img: '',
       title: '',
       description: '',
-      opinion: '',
-      ratings: '',
     });
   };
 
@@ -85,7 +81,7 @@ const AddProduct = ({ setAllProducts, allProducts }) => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    window.location.reload();
   
     if (
       !producto.category ||
@@ -103,22 +99,13 @@ const AddProduct = ({ setAllProducts, allProducts }) => {
     }
   
     const formData = new FormData();
-     formData.append('file', producto.file); // Usa 'file' en lugar de 'img'
+    formData.append('file', producto.img); // Usa 'file' en lugar de 'img'
     formData.append('title', producto.title);
     formData.append('description', producto.description);
     formData.append('price', producto.price);
     formData.append('category', producto.category);
     formData.append('availability', producto.availability);
     formData.append('quantity', producto.quantity);
-    formData.append('opinion', producto.opinion);
-    formData.append('ratings', producto.ratings);
-  
-    if (producto.opinion) {
-      formData.append('opinion', producto.opinion);
-    }
-    if (producto.ratings) {
-      formData.append('ratings', producto.ratings);
-    }
   
     try {
       const response = await axios.post(
@@ -133,21 +120,29 @@ const AddProduct = ({ setAllProducts, allProducts }) => {
   
       if (response.status === 201) {
         console.log('Producto agregado con éxito:', response.data);
-        setAllProducts([...allProducts, response.data]);
-        // Agregar el producto al carrito al agregarlo a la lista de productos
-        addToCart(response.data);
-        // Restablecer campos y cerrar el formulario
-        setProducto({
+
+       
+          // Agregar mensajes de depuración
+      console.log('Tipo de setAllProducts:', typeof setAllProducts);
+      console.log('Valor de setAllProducts:', setAllProducts);
+
+
+        
+      // Actualiza el estado y fuerza el re-renderizado
+      setAllProducts((prevProducts) => {
+        console.log('Previos Productos:', prevProducts);
+        return [...prevProducts, response.data];
+      });
+
+         // Restablecer campos y cerrar el formulario
+         setProducto({
           category: '',
           quantity: '',
           price: '',
           img: '',
           title: '',
           description: '',
-          opinion: '',
-          ratings: '',
         });
-        setShowForm(false);
       } else {
         console.error('Error al agregar el producto. Estado:', response.status, 'Datos:', response.data);
       }
@@ -155,6 +150,7 @@ const AddProduct = ({ setAllProducts, allProducts }) => {
       console.error('Error al realizar la solicitud:', error);
     }
   };
+  
 
   const DeleteProduct = ({ productId, onDelete }) => {
     const handleDelete = async () => {
@@ -278,30 +274,6 @@ const AddProduct = ({ setAllProducts, allProducts }) => {
               <option value={true}>Disponible</option>
               <option value={false}>No disponible</option>
             </Select>
-          </FormGroup>
-
-          <FormGroup>
-            <Label htmlFor="opinion">Opinión:</Label>
-            <Input
-              type="text"
-              id="opinion"
-              name="opinion"
-              value={producto.opinion}
-              onChange={handleChange}
-            />
-          </FormGroup>
-
-          <FormGroup>
-            <Label htmlFor="ratings">Calificación:</Label>
-            <Input
-              type="number"
-              id="ratings"
-              name="ratings"
-              value={producto.ratings}
-              onChange={handleChange}
-              min="1"
-              max="5"
-            />
           </FormGroup>
 
           <SubmitButton type="submit">
