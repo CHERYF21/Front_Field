@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import EditProductModal from './Editar_Producto';
-import AddProduct from './AddProduct'; // Importa el componente AddProduct aquí
-
+import AddProduct from './AddProduct'; 
+import AddCategory from './AddCategory'; 
 const ListProduct = () => {
   const [productos, setProductos] = useState([]);
   const [filtroNombre, setFiltroNombre] = useState('');
@@ -43,7 +43,6 @@ const ListProduct = () => {
       <Title>
         <h2>Listado de productos Field <Span>Market</Span></h2>
       </Title>
-    
       <SearchInput
         type="text"
         value={filtroNombre}
@@ -52,9 +51,14 @@ const ListProduct = () => {
       />
       <Button bgColor="#006400" onClick={() => setFiltroNombre('')}>Limpiar</Button>
       <Button bgColor="#006400">Buscar</Button>
-       <AddContainer>
-       <AddProduct />
-       </AddContainer>
+      <AddContainerWrapper>
+      <AddContainer>
+        <AddProduct />
+      </AddContainer>
+      <AddContainer>
+        <AddCategory />
+      </AddContainer>
+    </AddContainerWrapper>
       <StyledTable>
         <thead>
           <tr>
@@ -95,15 +99,17 @@ export default ListProduct;
 
 
 const TableContainer = styled.div`
+  padding: 10px;
   max-width: 800px;
   margin: 0 auto;
+  margin-top: 50px;
 `;
 
 const Title = styled.h2`
   color: #fff;
   font-family: inherit;
   font-size: 15px;
-  margin-top: 15px;
+  margin-top: 10px;
 `;
 
 const Span = styled.span`
@@ -155,10 +161,14 @@ const SearchInput = styled.input`
   margin-left: 400px;
   margin-right: 2px; 
 `;
+const AddContainerWrapper = styled.div`
+  display: flex;
+  gap: 1px; 
+  margin-top: -300px;
+`;
+
 const AddContainer = styled.div`
-  width: 30%;
+  width: 25%; 
   padding: 10px;
   border-radius: 20px;
-  margin-top: -300px;
-  margin-right: -400px;
 `;

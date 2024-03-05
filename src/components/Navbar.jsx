@@ -7,19 +7,16 @@ function Navbar() {
   return (
     <NavContainer>
       <ImageNavbar>
-        <img src={imagenes.logo} alt="" />
+        <img src={imagenes.logo} alt="Logo" />
       </ImageNavbar> 
       <Title>
         Field <Span>Market</Span>
       </Title>
       <NavLinks>
         <StyledNavLink to="/inicio">Inicio</StyledNavLink>
-        <StyledNavLink to="/helpsupport">Ayuda/Soporte</StyledNavLink>
         <StyledNavLink to="/contact">Contacto</StyledNavLink>
         <StyledNavLink to="/productos">Productos</StyledNavLink>
-        <StyledNavLink to="/listproduct">Listar Productos</StyledNavLink>
-        <StyledNavLink to="/admin">Admin</StyledNavLink>
-      
+        <StyledNavLink to="/funciones">Funciones</StyledNavLink>
       </NavLinks>
     </NavContainer>
   );
@@ -39,22 +36,23 @@ const NavContainer = styled.nav`
 
   @media screen and (max-width: 768px) {
     flex-direction: column;
-    align-items: flex-start;
-    padding: 0.5rem;
+    padding: 20px;
   }
 `;
-
-  
 
 const Title = styled.h2`
   color: #fff;
   font-family: inherit;
   margin-left: 70px;
+
+  @media screen and (max-width: 768px) {
+    margin-left: 0;
+    margin-top: 0.5rem;
+  }
 `;
 
 const Span = styled.span`
-  color: #1DD848 ;
-
+  color: #1DD848;
 `;
 
 const NavLinks = styled.div`
@@ -84,6 +82,7 @@ const StyledNavLink = styled(RouterNavLink)`
     margin-bottom: 0.5rem;
   }
 `;
+
 const ImageNavbar = styled.div`
   display: flex;
   justify-content: center;
@@ -93,4 +92,12 @@ const ImageNavbar = styled.div`
   position: absolute;
   width: 60px;
 
+  img {
+    max-width: 100%;
+  }
+
+  @media screen and (max-width: 768px) {
+    margin: 0 auto;
+    margin-bottom: 1rem;
+  }
 `;
