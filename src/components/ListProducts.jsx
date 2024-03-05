@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import EditProductModal from './Editar_Producto';
-import AddProduct from './AddProduct'; 
 import AddCategory from './AddCategory'; 
 const ListProduct = () => {
   const [productos, setProductos] = useState([]);
@@ -52,9 +51,6 @@ const ListProduct = () => {
       <Button bgColor="#006400" onClick={() => setFiltroNombre('')}>Limpiar</Button>
       <Button bgColor="#006400">Buscar</Button>
       <AddContainerWrapper>
-      <AddContainer>
-        <AddProduct />
-      </AddContainer>
       <AddContainer>
         <AddCategory />
       </AddContainer>

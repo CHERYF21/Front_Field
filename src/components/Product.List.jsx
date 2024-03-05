@@ -40,22 +40,21 @@ const ProductList = ({
   const handleDeleteProduct = async (productId) => {
     try {
       const deletedProduct = allProducts.find((product) => product.id === productId);
-  
+
       if (deletedProduct) {
-        // Elimina el producto de la lista local
-        setAllProducts((prevProducts) =>
-          prevProducts.filter((product) => product.id !== productId)
-        );
-  
-        // Envía la solicitud DELETE al servidor
         await axios.delete(`http://localhost:8080/api/products/${productId}`);
+        setAllProducts((prevProducts) =>
+          prevProducts.filter((product) => product.id !== productId)  
+        );
+         // Vuelve a cargar la lista de productos después de la eliminación
+         const response = await axios.get('http://localhost:8080/api/products/listProducts');
+         setAllProducts(response.data);
       }
     } catch (error) {
       console.error('Error al eliminar el producto:', error);
     }
   };
 
-  
   const handleUpdateProduct = async (productId, e) => {
   e.preventDefault();
   console.log('Botón Actualizar clicado');
@@ -64,10 +63,10 @@ const ProductList = ({
 };
 
 const closeModal = () => {
-  console.log('closeModal is called');
   setShowModal(false);
+ 
 };
-
+  
  // Agrega una función para actualizar los productos en el estado local
 const updateProductsLocally = (updatedProduct) => {
   setAllProducts((prevProducts) =>
@@ -162,3 +161,4 @@ const handleProductUpdated = (updatedProduct) => {
 };
 
 export default ProductList;
+  
