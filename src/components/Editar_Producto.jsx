@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import imagenes from './../assets/imagenes';
 function EditProductModal({ isOpen, onClose, product }) {
   const [editedProduct, setEditedProduct] = useState({
     nombre: product.nombre,
@@ -50,7 +51,7 @@ function EditProductModal({ isOpen, onClose, product }) {
               </FormField>
               <FormField>
                 <Label>Imagen:</Label>
-                <Input type="text" name="imagen" value={editedProduct.imagen} onChange={handleInputChange} />
+                <Input type="text" name="imagen" value={editedProduct.imagenes} onChange={handleInputChange} />
               </FormField>
               <Button type="submit">Guardar cambios</Button>
             </Form>

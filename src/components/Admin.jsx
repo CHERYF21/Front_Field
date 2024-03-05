@@ -12,7 +12,7 @@ const Admin= () => {
       <div className="cards-container">
         <Link  to={"/listproducts"}>
         <StyledCard>
-          <img src={imagenes.img} alt="Agregar productos" />
+          <img src={imagenes.imagen_fondo} alt="Agregar productos" />
           <h2>Agregar Productos</h2>
         </StyledCard>
         
@@ -34,7 +34,7 @@ const StyledCard = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 30px;
   box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
   transition: box-shadow 0.3s ease-in-out;
 
@@ -43,8 +43,9 @@ const StyledCard = styled.div`
   }
 
   img {
-    width: 80px;
-    border-radius: 50%;
+    padding:10px;
+    width: 100%;
+    border-radius: 30%;
     margin-bottom: 10px;
   }
 `;
