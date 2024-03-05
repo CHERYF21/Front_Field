@@ -17,6 +17,8 @@ const Modal = ({ closeModal, productId, onUpdate }) => {
     // ... otras propiedades según tu formulario ...
   });
 
+  
+
   const handleUpdate = async () => {
     console.log('Handle Update is called');
     try {
@@ -29,6 +31,8 @@ const Modal = ({ closeModal, productId, onUpdate }) => {
       console.error('Error en la actualización:', error);
     }
   };
+
+
 
   return (
     <ModalOverlay>

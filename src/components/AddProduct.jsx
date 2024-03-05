@@ -17,30 +17,161 @@ const Modal = ({ isOpen, onClose, children }) => {
 const AddProduct = () => {
   const [modalAbierto, setModalAbierto] = useState(false);
   const [producto, setProducto] = useState({
-    tipo: '',
-    cantidad: '',
-    precio: '',
-    imagen: '',
-    nombre: '',
-    descripcion: ''
+    category: '',
+    quantity: '',
+    price: '',
+    img: '',
+    title: '',
+    description: '',
+    availability: true,
+   });
+    const [showForm, setShowForm] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+
+    const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem('cart');
+    return savedCart ? JSON.parse(savedCart) : [];
   });
+
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
+
+
+ 
+  const openForm = () => {
+    setShowForm(true);
+  };
+
+  const addToCart = (product) => {
+    setCart((prevCart) => {
+      const newCart = [...prevCart, product];
+      localStorage.setItem('cart', JSON.stringify(newCart));
+      return newCart;
+    });
+  };
+
+  const closeForm = () => {
+    setShowForm(false);
+    setProducto({
+      category: '',
+      quantity: '',
+      price: '',
+      img: '',
+      title: '',
+      description: '',
+    });
+  };
+
+  const openUpdateModal = (productId) => {
+    const productToUpdate = allProducts.find((product) => product.id === productId);
+    setSelectedProduct(productToUpdate);
+    setShowForm(true);
+  };
+
+  const closeUpdateModal = () => {
+    setSelectedProduct(null);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProducto({ ...producto, [name]: value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Producto:', producto);
-    setProducto({
-      tipo: '',
-      cantidad: '',
-      precio: '',
-      imagen: '',
-      nombre: '',
-      ubicacion: ''
-    });
+  const handleSubmit = async (e) => {
+    window.location.reload();
+  
+    if (
+      !producto.category ||
+      !producto.quantity ||
+      !producto.price ||
+      !producto.img ||
+      !producto.title ||
+      !producto.description ||
+      producto.availability === null || // Modificado para incluir null
+      producto.availability === undefined
+    ) {
+      console.error('Todos los campos obligatorios deben ser completados');
+      console.error('Valores del producto:', producto);
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('file', producto.img); // Usa 'file' en lugar de 'img'
+    formData.append('title', producto.title);
+    formData.append('description', producto.description);
+    formData.append('price', producto.price);
+    formData.append('category', producto.category);
+    formData.append('availability', producto.availability);
+    formData.append('quantity', producto.quantity);
+  
+    try {
+      const response = await axios.post(
+        'http://localhost:8080/api/products/createProduct',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+  
+      if (response.status === 201) {
+        console.log('Producto agregado con éxito:', response.data);
+
+       
+          // Agregar mensajes de depuración
+      console.log('Tipo de setAllProducts:', typeof setAllProducts);
+      console.log('Valor de setAllProducts:', setAllProducts);
+
+
+        
+      // Actualiza el estado y fuerza el re-renderizado
+      setAllProducts((prevProducts) => {
+        console.log('Previos Productos:', prevProducts);
+        return [...prevProducts, response.data];
+      });
+
+         // Restablecer campos y cerrar el formulario
+         setProducto({
+          category: '',
+          quantity: '',
+          price: '',
+          img: '',
+          title: '',
+          description: '',
+        });
+      } else {
+        console.error('Error al agregar el producto. Estado:', response.status, 'Datos:', response.data);
+      }
+    } catch (error) {
+      console.error('Error al realizar la solicitud:', error);
+    }
+  };
+  
+
+  const DeleteProduct = ({ productId, onDelete }) => {
+    const handleDelete = async () => {
+      try {
+        if (productId) {
+          await axios.delete(`http://localhost:8080/api/products/${productId}`);
+          onDelete(productId);
+        } else {
+          console.error('El productId es undefined o null');
+        }
+      } catch (error) {
+        console.error('Error al eliminar el producto:', error);
+      }
+    };
+
+    return (
+      <button onClick={handleDelete}>Eliminar</button>
+    );
+  };
+
+  const handleDelete = (productId) => {
+    setAllProducts((prevList) => prevList.filter((product) => product.id !== productId));
+    setCart((prevCart) => prevCart.filter((product) => product.id !== productId));
   };
 
   return (
