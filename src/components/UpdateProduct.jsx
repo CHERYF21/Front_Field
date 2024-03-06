@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
@@ -22,7 +21,7 @@ const UpdateProduct = ({closeModal, productId, onUpdate, allProducts = [], setAl
     const fetchProductDetails = async () => {
       try {
         if (productId) {
-          const response = await axios.get(`${PRODUCT_BACK}/api/products/${productId}`);
+          const response = await axios.get(`${PRODUCT_BACK}/user/${productId}`);
           setUpdatedProduct(response.data);
         }
       } catch (error) {
@@ -151,7 +150,7 @@ const UpdateProduct = ({closeModal, productId, onUpdate, allProducts = [], setAl
         <form onSubmit={handleSubmit}>
           <ModalHeader>
             <h2>Actualizar Producto</h2>
-            <CloseButton onClick={handleClose}>&times;</CloseButton>
+            <CloseButton onClick={handleClose}>X</CloseButton>
           </ModalHeader>
 
               <Label htmlFor="category">Categoría:</Label>
@@ -263,12 +262,10 @@ const ModalHeader = styled.div`
 `;
 
 const CloseButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-  color: #333333;
-`;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  `;
 
 const Line = styled.div`
   position: absolute;

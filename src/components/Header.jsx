@@ -13,7 +13,9 @@ export const Header = ({
     const [active, setActive] = useState(false);
   
     const onDeleteProduct = (product) => {
+        console.log('Eliminando producto:', product);
       const results = allProducts.filter((item) => item.id !== product.id);
+      
   
       setTotal(total - product.price * product.quantity);
       setCountProducts(countProducts - product.quantity);
@@ -67,7 +69,12 @@ export const Header = ({
                                         <figure>
                                             
                                          {product.img && (
-                                             <img src={imagenes[product.img]} alt={product.title} />
+                                             <img
+                                             src={`data:image/jpeg;base64,${product.base64Image}`}
+                                             alt={product.title}
+                                             data-product-id={product.id}
+                                             style={{ maxWidth: '100%', maxHeight: '100%', width: '70px', height: 'auto' }}
+                                           />
                                                  )}
                                             </figure>
                                             <span className='cantidad-producto-carrito'>

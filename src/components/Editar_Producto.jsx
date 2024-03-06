@@ -1,14 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import imagenes from './../assets/imagenes';
-function EditProductModal({ isOpen, onClose, product }) {
+import axios from 'axios';
+
+
+function EditProductModal({ isOpen, onClose, product,reloadProductList  }) {
   const [editedProduct, setEditedProduct] = useState({
-    nombre: product.nombre,
-    precio: product.precio,
-    categoria: product.categoria,
-    descripcion: product.descripcion,
-    imagen: product.imagen
+    title: '',
+    price: 0,
+    quantity:'',
+    category: '',
+    description: '',
+    base64Image: ''
   });
+
+  useEffect(() => {
+    // Actualizar el estado cuando el producto cambie
+    setEditedProduct({
+      title: product.title,
+      price: product.price,
+      quantity: product.quantity,
+      category: product.category,
+      description: product.description,
+      base64Image: product.base64Image
+    });
+  }, [product]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -19,11 +34,23 @@ function EditProductModal({ isOpen, onClose, product }) {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+   
+    console.log('ID del producto:', product.id);
     // Enviar al backend
-    console.log('Datos editados:', editedProduct);
-    onClose();
+    axios.put(`/user/${product.id}/update`, editedProduct)
+      .then(response => {
+        window.location.reload();
+        console.log('Producto actualizado en el backend:', response.data);
+        onClose(); // Cerrar modal después de la actualización
+        // Recargar la lista de productos
+        reloadProductList();
+      })
+      .catch(error => {
+        console.error('Error al actualizar el producto en el backend:', error);
+      });
   };
+
+  
 
   return (
     <>
@@ -35,23 +62,23 @@ function EditProductModal({ isOpen, onClose, product }) {
             <Form onSubmit={handleSubmit}>
               <FormField>
                 <Label>Nombre:</Label>
-                <Input type="text" name="nombre" value={editedProduct.nombre} onChange={handleInputChange} />
+                <Input type="text" name="title" value={editedProduct.title} onChange={handleInputChange} />
               </FormField>
               <FormField>
                 <Label>Precio:</Label>
-                <Input type="number" name="precio" value={editedProduct.precio} onChange={handleInputChange} />
+                <Input type="number" name="price" value={editedProduct.price} onChange={handleInputChange} />
+              </FormField>
+              <FormField>
+                <Label>Cantidad:</Label>
+                <Input type="number" name="quantity" value={editedProduct.quantity} onChange={handleInputChange} />
               </FormField>
               <FormField>
                 <Label>Categoría:</Label>
-                <Input type="text" name="categoria" value={editedProduct.categoria} onChange={handleInputChange} />
-              </FormField>
+                <Input type="text" name="category" value={editedProduct.category} onChange={handleInputChange} />
+              </FormField>  
               <FormField>
                 <Label>Descripción:</Label>
-                <TextArea name="descripcion" value={editedProduct.descripcion} onChange={handleInputChange} />
-              </FormField>
-              <FormField>
-                <Label>Imagen:</Label>
-                <Input type="text" name="imagen" value={editedProduct.imagenes} onChange={handleInputChange} />
+                <TextArea name="description" value={editedProduct.description} onChange={handleInputChange} />
               </FormField>
               <Button type="submit">Guardar cambios</Button>
             </Form>
@@ -63,6 +90,7 @@ function EditProductModal({ isOpen, onClose, product }) {
 }
 
 export default EditProductModal;
+
 const ModalContainer = styled.div`
   position: fixed;
   top: 0;
@@ -118,14 +146,14 @@ const TextArea = styled.textarea`
 const Button = styled.button`
   width: 100%;
   padding: 10px;
-  background-color: #006400; 
+  background-color: #006400;
   color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s;
-  
+
   &:hover {
-    background-color: #004d00; 
+    background-color: #004d00;
   }
 `;
