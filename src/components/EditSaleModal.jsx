@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { updateSale } from '../service/saleService';
+
+
 
 function EditSaleModal({ isOpen, onClose, sale }) {
   const [editedSale, setEditedSale] = useState({
-    fechaVenta: sale ? sale.fechaVenta : '',
-    total: sale ? sale.total : 0,
-    pagado: sale ? sale.pagado : false,
-    vendedor: sale ? sale.vendedor : ''
+    date_sale: sale ? sale.date_sale : '',
+    total_paid: sale ? sale.total_paid : 0,
+    // pagado: sale ? sale.pagado : false,
+    //usuario: sale ? sale.usuario : ''
   });
 
   const handleInputChange = (e) => {
@@ -17,11 +20,17 @@ function EditSaleModal({ isOpen, onClose, sale }) {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    window.location.reload();
     e.preventDefault();
-    // Enviar al backend
-    console.log('Datos editados:', editedSale);
-    onClose();
+    try{
+      console.log("Datos Actualizados con exito: " ,editedSale)
+      await updateSale(sale.id_sale, editedSale);
+      console.log('Ventan actualizada con exito');
+      onClose();
+    } catch (error){
+      console.log('Error al actualizar la venta', error);
+    }
   };
 
   return (
@@ -34,23 +43,35 @@ function EditSaleModal({ isOpen, onClose, sale }) {
             <Form onSubmit={handleSubmit}>
               <FormField>
                 <Label>Fecha de Venta:</Label>
-                <Input type="text" name="fechaVenta" value={editedSale.fechaVenta} onChange={handleInputChange} />
+                <Input 
+                  type="text" 
+                  name="date_sale" 
+                  value={editedSale.date_sale} 
+                  onChange={handleInputChange} />
               </FormField>
               <FormField>
                 <Label>Total:</Label>
-                <Input type="number" name="total" value={editedSale.total} onChange={handleInputChange} />
+                <Input 
+                  type="number" 
+                  name="total_paid" 
+                  value={editedSale.total_paid} 
+                  onChange={handleInputChange} />
               </FormField>
-              <FormField>
+              {/* <FormField>
               <Label>Pagado:</Label>
                  <Select name="pagado" value={editedSale.pagado} onChange={handleInputChange}>
                        <option value="Si">Si</option>
                        <option value="No">No</option>
                    </Select>
-                 </FormField>
-              <FormField>
+                 </FormField> */}
+              {/* <FormField>
                 <Label>Vendedor:</Label>
-                <Input type="text" name="vendedor" value={editedSale.vendedor} onChange={handleInputChange} />
-              </FormField>
+                <Input 
+                  type="text" 
+                  name="usuario" 
+                  value={editedSale.usuario} 
+                  onChange={handleInputChange} />
+              </FormField> */}
               <Button type="submit">Guardar cambios</Button>
             </Form>
           </ModalContent>

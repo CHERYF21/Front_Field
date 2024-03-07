@@ -1,28 +1,69 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import styled from 'styled-components';
 import axios from 'axios'; // Importar axios
 import EditSaleModal from './EditSaleModal';
+import { listSale, updateSale } from '../service/saleService'; 
 
 const SaleList = () => {
-  const [ventas, setVentas] = useState([
-    { id: 1, fechaVenta: '2024-03-15', total: 150, pagado: true, vendedor: 'Juan' },
-    { id: 2, fechaVenta: '2024-03-16', total: 200, pagado: false, vendedor: 'María' },
-    { id: 3, fechaVenta: '2024-03-17', total: 100, pagado: true, vendedor: 'Pedro' },
-  ]);
-  const [filtroNombre, setFiltroNombre] = useState('');
-  const [ventaSeleccionada, setVentaSeleccionada] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
 
-  const eliminarVenta = (id) => {
-    axios.delete(`/api/ventas/${id}`)
+  const [sales, setSales] = useState([]); 
+
+ 
+
+  const [modalOpen, setModalOpen] = useState(false); 
+
+  const [ventaSeleccionada, setVentaSeleccionada] = useState(null); 
+
+  //lista ventas
+  useEffect(() => {
+    async function fetchSales(){
+      try{
+        const response = await listSale();
+        setSales(response.data);
+      } catch (error){
+        console.error('Error al obtener la lista de ventas', error);
+      }
+    }
+
+    fetchSales();
+  }, []);
+
+   //kate 
+  //eliminar
+  const eliminarVenta = (id_sale) => {
+    axios.delete(`/user/deleteSale/${id_sale}`)
       .then(response => {
-        setVentas(ventas.filter(venta => venta.id !== id));
+        setSales(sales.filter(sale => sale.id_sale !== id_sale)); 
         console.log('Venta eliminada con éxito');
       })
       .catch(error => {
         console.error('Error al eliminar la venta:', error);
       });
   };
+
+  //actualizar ventas
+  const actualzarVenta = async(ventaActualizada) => {
+    try{
+      const response = await updateSale(ventaActualizada.id_sale, ventaActualizada);
+      console.log('Venta Actualizada', response.data);
+     
+      
+
+      const updateSales = sales.map(sale => {
+        if(sale.id_sale === ventaActualizada.id_sale){
+          return response.data;
+        }
+        return sale;
+      });
+
+      setSales(updateSales);
+      setModalOpen(false);
+    } catch (error) {
+      console.log('Error al actualizar venta' , error);
+    }
+  }
+
+ 
 
   const abrirModalEditarVenta = (venta) => {
     setVentaSeleccionada(venta);
@@ -36,37 +77,34 @@ const SaleList = () => {
   return (
     <Container>
       <Title>Lista de Ventas Field <Span>Market</Span></Title>
-      <SearchInput
+      {/* <SearchInput
         type="text"
         value={filtroNombre}
         onChange={(e) => setFiltroNombre(e.target.value)}
         placeholder="Buscar por nombre..."
       />
       <Button bgColor="#006400" onClick={() => setFiltroNombre('')}>Limpiar</Button>
-      <Button bgColor="#006400">Buscar</Button>
+      <Button bgColor="#006400">Buscar</Button> */}
       <Table>
         <thead>
           <tr>
-            <th>Id</th>
-            <th>Comprador</th>
+            <th>Id_sale</th>
             <th>Fecha Venta</th>
-            <th>Total</th>
-            <th>Pagado</th>
-            <th>Vendedor</th>
-            <th>Acciones</th>
+            <th>Total a pagar</th>
+            <th>Usuario</th>
+            <th>Acciones</th> 
           </tr>
         </thead>
         <tbody>
-          {ventas.map(venta => (
-            <tr key={venta.id}>
-              <td>{venta.id}</td>
-              <td>{venta.fechaVenta}</td>
-              <td>${venta.total}</td>
-              <td>{venta.pagado ? 'Sí' : 'No'}</td>
-              <td>{venta.vendedor}</td>
+          {sales.map(sale => (
+            <tr key={sale.id_sale}>
+              <td>{sale.id_sale}</td>
+              <td>{sale.date_sale}</td>
+              <td>{sale.total_paid}</td>
+              <td>{sale.usuario}</td>
               <td>
-                <Button bgColor="#2dafeb" onClick={() => abrirModalEditarVenta(venta)}>Editar</Button>
-                <Button bgColor="#ee2738" onClick={() => eliminarVenta(venta.id)}>Eliminar</Button>
+                <Button bgColor="#2dafeb" onClick={() => abrirModalEditarVenta(sale)}>Editar</Button> 
+                <Button bgColor="#ee2738" onClick={() => eliminarVenta(sale.id_sale)}>Eliminar</Button>
               </td>
             </tr>
           ))}
