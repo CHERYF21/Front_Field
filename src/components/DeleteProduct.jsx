@@ -7,8 +7,9 @@ const DeleteProduct = ({ productId, onDelete }) => {
     const handleDelete = async () => {
         try {
             if (productId !== undefined && productId !== null) {
+                window.location.reload();
                 // Lógica para eliminar un producto en el backend
-                await axios.delete(`http://localhost:8080/api/products/${productId}`);
+                await axios.delete(`http://localhost:8080/user/${productId}`);
                 console.log('Producto eliminado con ID:', productId); // Nuevo log
                 onDelete(productId); // Notifica al componente padre que se ha eliminado el producto
             } else {

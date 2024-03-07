@@ -12,7 +12,7 @@ function Productos() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/products/listProducts');
+        const response = await axios.get('http://localhost:8080/user/listProducts');
         // No establezcas allProducts directamente aquí, para evitar cargar automáticamente en el carrito
          setAllProducts(response.data);  
       } catch (error) {

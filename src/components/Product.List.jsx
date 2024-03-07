@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DeleteProduct from './DeleteProduct';
 import imagenes from '../assets/imagenes';  
-import Modal from './Modal';
+import Modal from './ModalUpdate';
 
 const ProductList = ({
   allProducts,
@@ -42,12 +42,12 @@ const ProductList = ({
       const deletedProduct = allProducts.find((product) => product.id === productId);
 
       if (deletedProduct) {
-        await axios.delete(`http://localhost:8080/api/products/${productId}`);
+        await axios.delete(`http://localhost:8080/user/${productId}`);
         setAllProducts((prevProducts) =>
           prevProducts.filter((product) => product.id !== productId)  
         );
          // Vuelve a cargar la lista de productos después de la eliminación
-         const response = await axios.get('http://localhost:8080/api/products/listProducts');
+         const response = await axios.get('http://localhost:8080/user/listProducts');
          setAllProducts(response.data);
       }
     } catch (error) {
@@ -101,7 +101,7 @@ const handleProductUpdated = (updatedProduct) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/products/listProducts');
+        const response = await axios.get('http://localhost:8080/user/listProducts');
         setAllProducts(response.data);
         setUpdatedProducts(response.data); // Añade esta línea
       } catch (error) {

@@ -1,6 +1,6 @@
 import axios from "./axios";
 
-const PRODUCT_BACK = "http://localhost:8080/api/products"; // Cambié la URL base
+const PRODUCT_BACK = "http://localhost:8080"; // Cambié la URL base
 
 // CRUD Durango
 
