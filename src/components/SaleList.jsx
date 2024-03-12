@@ -42,8 +42,6 @@ const SaleList = () => {
     try{
       const response = await updateSale(ventaActualizada.id_sale, ventaActualizada);
       console.log('Venta Actualizada', response.data);
-     
-      
 
       const updateSales = sales.map(sale => {
         if(sale.id_sale === ventaActualizada.id_sale){
