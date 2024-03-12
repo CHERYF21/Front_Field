@@ -33,7 +33,7 @@ function Main() {
         </Slider>
       </CarouselContainer>
       <ImageContainer>
-        <ZoomImage src={imagenes.imagen} alt="" />
+        <ZoomImage src={imagenes.imagen_gif} alt="" />
       </ImageContainer>
     <UserFormContainer>
       <UserFormModal />

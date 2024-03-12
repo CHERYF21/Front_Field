@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DeleteProduct from './DeleteProduct';
 import imagenes from '../assets/imagenes';  
-import Modal from './ModalUpdate';
+
 
 const ProductList = ({
   allProducts,
@@ -14,15 +14,15 @@ const ProductList = ({
 }) => {
   const [failedImages, setFailedImages] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedProductId, setSelectedProductId] = useState('');
+  const [selectedid_product, setSelectedid_product] = useState('');
   const [updatedProducts, setUpdatedProducts] = useState([]);
 
   const onAddProduct = (product) => {
-    const existingProduct = allProducts.find((item) => item.id === product.id);
+    const existingProduct = allProducts.find((item) => item.id === product.id_product);
   
     if (existingProduct) {
       const updatedProducts = allProducts.map((item) =>
-        item.id === product.id
+        item.id === product.id_product
           ? { ...item, quantity: item.quantity + 0 }
           : item
       );
@@ -37,14 +37,14 @@ const ProductList = ({
     }
   };
 
-  const handleDeleteProduct = async (productId) => {
+  const handleDeleteProduct = async (id_product) => {
     try {
-      const deletedProduct = allProducts.find((product) => product.id === productId);
+      const deletedProduct = allProducts.find((product) => product.id_product === id_product);
 
       if (deletedProduct) {
-        await axios.delete(`http://localhost:8080/user/${productId}`);
+        await axios.delete(`http://localhost:8080/user/${id_product}/delete`);
         setAllProducts((prevProducts) =>
-          prevProducts.filter((product) => product.id !== productId)  
+          prevProducts.filter((product) => product.id_product !== id_product)  
         );
          // Vuelve a cargar la lista de productos después de la eliminación
          const response = await axios.get('http://localhost:8080/user/listProducts');
@@ -55,10 +55,10 @@ const ProductList = ({
     }
   };
 
-  const handleUpdateProduct = async (productId, e) => {
+  const handleUpdateProduct = async (id_product, e) => {
   e.preventDefault();
   console.log('Botón Actualizar clicado');
-  setSelectedProductId(productId);
+  setSelectedid_product(id_product);
   setShowModal(true);
 };
 
@@ -90,12 +90,12 @@ const handleProductUpdated = (updatedProduct) => {
 };
 
   
-  const handleImageError = (e, productId) => {
+  const handleImageError = (e, id_product) => {
     const reserveImage = imagenes['manzana.png'];
 
-    if (!failedImages.includes(productId)) {
+    if (!failedImages.includes(id_product)) {
       e.target.src = reserveImage;
-      setFailedImages((prev) => [...prev, productId]);
+      setFailedImages((prev) => [...prev, id_product]);
     }
   };
   useEffect(() => {
@@ -117,31 +117,29 @@ const handleProductUpdated = (updatedProduct) => {
       <div className='container-items'>
         {allProducts.map((product) => (
           
-          <div key={product.id} className='item'>
+          <div key={product.id_product} className='item'>
             <figure>
             <img
-        src={`data:image/jpeg;base64,${product.base64Image}`}
+        src={`data:image/jpeg;base64,${product.img}`}
         alt={product.title}
-        data-product-id={product.id}
-        onError={(e) => handleImageError(e, product.id)}
+        data-product-id={product.id_product}
+        onError={(e) => handleImageError(e, product.id_product)}
       />
               <figcaption>
                 <div className='info-product'>
                 <h1 className='price'>${product.price.toFixed(3)}</h1>
                 <h2>{product.title}</h2>
                 <h4 className='description'>{product.description}</h4>
-                  <p className='availability'>
-                    {product.availability ? 'Disponible' : 'No disponible'}
-                  </p>
-                  <p className='category'>{product.category}</p>
+              
+                  <p className='category'>{product.id_category}</p>
                   <button onClick={() => onAddProduct(product)}>
                     Añadir al carrito
                   </button>
                   <DeleteProduct
-                    productId={product.id}
-                    onDelete={() => handleDeleteProduct(product.id)}
+                    id_product={product.id_product}
+                    onDelete={() => handleDeleteProduct(product.id_product)}
                   />
-                  <button onClick={(e) => handleUpdateProduct(product.id, e)}>
+                  <button onClick={(e) => handleUpdateProduct(product.id_product, e)}>
                      Actualizar
                 </button>
                 </div>
@@ -152,7 +150,7 @@ const handleProductUpdated = (updatedProduct) => {
        {showModal && (
      <Modal
          closeModal={closeModal}
-         productId={selectedProductId}
+         id_product={selectedid_product}
          onUpdate={handleProductUpdated}
         />
       )}

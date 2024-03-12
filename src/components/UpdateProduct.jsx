@@ -3,7 +3,7 @@ import axios from 'axios';
 import styled from 'styled-components';
 import { updateProducts } from './../service/productService';
 
-const UpdateProduct = ({closeModal, productId, onUpdate, allProducts = [], setAllProducts = () => {} }) => {
+const UpdateProduct = ({closeModal, id_product, onUpdate, allProducts = [], setAllProducts = () => {} }) => {
   const [updatedProduct, setUpdatedProduct] = useState({
     category: '',
     quantity: '',
@@ -20,8 +20,8 @@ const UpdateProduct = ({closeModal, productId, onUpdate, allProducts = [], setAl
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
-        if (productId) {
-          const response = await axios.get(`${PRODUCT_BACK}/user/${productId}`);
+        if (id_product) {
+          const response = await axios.get(`${PRODUCT_BACK}/user/${id_product}`);
           setUpdatedProduct(response.data);
         }
       } catch (error) {
@@ -30,7 +30,7 @@ const UpdateProduct = ({closeModal, productId, onUpdate, allProducts = [], setAl
     };
 
     fetchProductDetails();
-  }, [productId]);
+  }, [id_product]);
 
 
   const handleChange = (e) => {
@@ -81,7 +81,7 @@ const UpdateProduct = ({closeModal, productId, onUpdate, allProducts = [], setAl
     
         console.log('After FormData creation');
     
-        const response = await updateProducts(productId, formData);
+        const response = await updateProducts(id_product, formData);
     
         console.log('Update Response:', response);
         
@@ -100,7 +100,7 @@ const UpdateProduct = ({closeModal, productId, onUpdate, allProducts = [], setAl
           console.log(updatedProduct);
           
           const updatedProducts = allProducts ? allProducts.map((product) =>
-      product.id === productId ? { ...product, ...updatedProductData, availability: updatedProductData.availability === "true" } : product
+      product.id === id_product ? { ...product, ...updatedProductData, availability: updatedProductData.availability === "true" } : product
       ) : [];
 
 
@@ -122,7 +122,7 @@ const UpdateProduct = ({closeModal, productId, onUpdate, allProducts = [], setAl
       try {
         console.log('Fetching updated products...');
     
-        const updatedProducts = await axios.get(`${PRODUCT_BACK}/api/products/listProducts`, {
+        const updatedProducts = await axios.get(`${PRODUCT_BACK}/user/listProducts`, {
           headers: {
             'Cache-Control': 'no-cache',
           },

@@ -27,7 +27,7 @@ const ListProduct = () => {
 
   const eliminarProducto = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/user/${id}`);
+      await axios.delete(`http://localhost:8080/user/${id}delete`);
       fetchProductos();
     } catch (error) {
       console.error('Error al eliminar el producto:', error);

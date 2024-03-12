@@ -7,11 +7,7 @@ import { listSale, updateSale } from '../service/saleService';
 const SaleList = () => {
 
   const [sales, setSales] = useState([]); 
-
- 
-
   const [modalOpen, setModalOpen] = useState(false); 
-
   const [ventaSeleccionada, setVentaSeleccionada] = useState(null); 
 
   //lista ventas
@@ -28,7 +24,7 @@ const SaleList = () => {
     fetchSales();
   }, []);
 
-   //kate 
+  //kate 
   //eliminar
   const eliminarVenta = (id_sale) => {
     axios.delete(`/user/deleteSale/${id_sale}`)

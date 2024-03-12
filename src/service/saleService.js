@@ -4,7 +4,7 @@ const SALE_BACK = "http://localhost:8080";
 
 export const createSale = (saleData)=> axios.post(SALE_BACK + "/user/createSale",saleData);
 
-export const listSale = ()=> axios.get(SALE_BACK + "/user/listSale");
+export const listSale = () => axios.get(SALE_BACK + "/user/listSale");
 
 //export const updateSale = (id_sale, editedSale) => axios.put(SALE_BACK + "/user/updateSale" + id_sale,  editedSale);
 export const updateSale = (id_sale, editedSale) => axios.put(`${SALE_BACK}/user/updateSale/${id_sale}`, editedSale);

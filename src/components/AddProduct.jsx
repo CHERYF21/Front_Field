@@ -1,403 +1,212 @@
-import React, { useState,useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
-import Modal from './ModalUpdate';
+import { createProducts } from '../service/productService';
+import { listarCategory } from '../service/categoryService';
 
+const Modal = ({ isOpen, onClose, children }) => {
+  if (!isOpen) return null;
 
+  return (
+    <ModalOverlay>
+      <ModalContent>
+        {children}
+        <CloseButton onClick={onClose}>X</CloseButton>
+      </ModalContent>
+    </ModalOverlay>
+  );
+};
 
-const AddProduct = ({ setAllProducts, allProducts }) => {
+const AddProduct = () => {
+  const [modalAbierto, setModalAbierto] = useState(false);
   const [producto, setProducto] = useState({
-    category: '',
+    id_category: '',
     quantity: '',
     price: '',
     img: '',
     title: '',
-    description: '',
-    availability: true,
-   });
-    const [showForm, setShowForm] = useState(false);
-    const [selectedProduct, setSelectedProduct] = useState(null);
-
-    const [cart, setCart] = useState(() => {
-    const savedCart = localStorage.getItem('cart');
-    return savedCart ? JSON.parse(savedCart) : [];
+    descripcion: '',
+    id:'2ee24aac-829b-4e9a-a347-c8a27f8c87f7'
   });
 
+  //llamar las categorias del back
+  const [categorias, setCategorias] = useState([]);
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart));
-  }, [cart]);
-
-
- 
-  const openForm = () => {
-    setShowForm(true);
-  };
-
-  const addToCart = (product) => {
-    setCart((prevCart) => {
-      const newCart = [...prevCart, product];
-      localStorage.setItem('cart', JSON.stringify(newCart));
-      return newCart;
-    });
-  };
-
-  const closeForm = () => {
-    setShowForm(false);
-    setProducto({
-      category: '',
-      quantity: '',
-      price: '',
-      img: '',
-      title: '',
-      description: '',
-    });
-  };
-
-  const openUpdateModal = (productId) => {
-    const productToUpdate = allProducts.find((product) => product.id === productId);
-    setSelectedProduct(productToUpdate);
-    setShowForm(true);
-  };
-
-  const closeUpdateModal = () => {
-    setSelectedProduct(null);
-  };
+    async function fetchCategorias(){
+      try{
+        const response = await listarCategory();
+        setCategorias(response.data);
+      } catch (error) {
+        console.error('Error al obtener las categorias: ', error)
+      }
+    }
+    fetchCategorias();
+  }, []);
+  //Fin categorias
 
   const handleChange = (e) => {
-    const { name, type } = e.target;
-
-    if (type === 'file') {
-      const file = e.target.files[0];
-
-      setProducto((prevProducto) => ({
-        ...prevProducto,
-        img: file,
-        imgPreview: URL.createObjectURL(file),
-      }));
+    const { name, value, files } = e.target;
+    if(name === 'img'){
+      setProducto({ ...producto, img: files[0] });
     } else {
-      setProducto((prevProducto) => ({
-        ...prevProducto,
-        [name]: e.target.value,
-      }));
+      setProducto({...producto, [name]: value});
     }
   };
 
   const handleSubmit = async (e) => {
-    window.location.reload();
-  
-    if (
-      !producto.category ||
-      !producto.quantity ||
-      !producto.price ||
-      !producto.img ||
-      !producto.title ||
-      !producto.description ||
-      producto.availability === null || // Modificado para incluir null
-      producto.availability === undefined
-    ) {
-      console.error('Todos los campos obligatorios deben ser completados');
-      console.error('Valores del producto:', producto);
-      return;
-    }
-  
+    e.preventDefault();
+
     const formData = new FormData();
-    formData.append('file', producto.img); // Usa 'file' en lugar de 'img'
-    formData.append('title', producto.title);
-    formData.append('description', producto.description);
-    formData.append('price', producto.price);
-    formData.append('category', producto.category);
-    formData.append('availability', producto.availability);
+    formData.append('id_category', producto.id_category);
     formData.append('quantity', producto.quantity);
-  
-    try {
-      const response = await axios.post(
-        'http://localhost:8080/user/createProduct',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
-  
-      if (response.status === 201) {
-        console.log('Producto agregado con éxito:', response.data);
+    formData.append('price', producto.price);
+    formData.append('img', producto.img);
+    formData.append('title', producto.title);
+    formData.append('descripcion', producto.descripcion);
+    //formData.append('id', '2ee24aac-829b-4e9a-a347-c8a27f8c87f7');
 
-       
-          // Agregar mensajes de depuración
-      console.log('Tipo de setAllProducts:', typeof setAllProducts);
-      console.log('Valor de setAllProducts:', setAllProducts);
-
-
-        
-      // Actualiza el estado y fuerza el re-renderizado
-      setAllProducts((prevProducts) => {
-        console.log('Previos Productos:', prevProducts);
-        return [...prevProducts, response.data];
+    try{
+      const response = await createProducts(formData);
+      console.log('Producto creado con exito', response.data);
+      setProducto({
+        id_category: '',
+        quantity: '',
+        price: '',
+        img: null,
+        title: '',
+        descripcion: ''
       });
-
-         // Restablecer campos y cerrar el formulario
-         setProducto({
-          category: '',
-          quantity: '',
-          price: '',
-          img: '',
-          title: '',
-          description: '',
-        });
-      } else {
-        console.error('Error al agregar el producto. Estado:', response.status, 'Datos:', response.data);
-      }
-    } catch (error) {
-      console.error('Error al realizar la solicitud:', error);
+    } catch (error){
+      console.error('Error al crear producto: ',error);
+      console.log(producto);
     }
-  };
-  
-
-  const DeleteProduct = ({ productId, onDelete }) => {
-    const handleDelete = async () => {
-      try {
-        if (productId) {
-          await axios.delete(`http://localhost:8080/user/${productId}`);
-          onDelete(productId);
-        } else {
-          console.error('El productId es undefined o null');
-        }
-      } catch (error) {
-        console.error('Error al eliminar el producto:', error);
-      }
-    };
-
-    return (
-      <button onClick={handleDelete}>Eliminar</button>
-    );
-  };
-
-  const handleDelete = (productId) => {
-    setAllProducts((prevList) => prevList.filter((product) => product.id !== productId));
-    setCart((prevCart) => prevCart.filter((product) => product.id !== productId));
-  };
-
-  const openAddModal = () => {
-    setShowForm(true);
-    setSelectedProduct(null); // Asegúrate de que no haya un producto seleccionado
   };
 
   return (
     <>
-        <AddButton onClick={openAddModal}>Agregar Producto</AddButton>
-
-{showForm && (
-  <ModalOverlay>
-    <ModalContent>
-      <FormContainer onSubmit={handleSubmit} encType="multipart/form-data">
-
-        <CancelButton onClick={closeForm}>X</CancelButton>
-
-        <FormGroup>
-          <Label htmlFor="category">Categoría</Label>
-          <Select
-            id="category"
-            name="category"
-            value={producto.category}
-            onChange={handleChange}
-          >
-            <option value="fruta">Fruta</option>
-            <option value="verdura">Verdura</option>
+   <OpenModalButton onClick={() => setModalAbierto(true)}>Agregar Productos</OpenModalButton>
+      <Modal isOpen={modalAbierto} onClose={() => setModalAbierto(false)}>
+        <FormContainer onSubmit={handleSubmit}>
+          <Title>Agregar Producto</Title>
+          <FormGroup>
+          <Label htmlFor="tipo">Categoria</Label>
+          <Select id="id_category" name="id_category" value={producto.id_category} onChange={handleChange}>
+            <option value="">Seleccione una categoria</option>
+            {categorias.map(categoria => (
+              <option key={categoria.id_category} value={categoria.id_category}>{categoria.category}</option>
+            ))}
           </Select>
         </FormGroup>
-
         <FormGroup>
-          <Label htmlFor="quantity">Cantidad:</Label>
-          <Input
-            type="number"
-            id="quantity"
-            name="quantity"
-            value={producto.quantity}
-            onChange={handleChange}
-            required
-          />
+          <Label htmlFor="cantidad">Cantidad:</Label>
+          <Input type="number" id="quantity" name="quantity" value={producto.quantity} onChange={handleChange} required />
         </FormGroup>
-
         <FormGroup>
-          <Label htmlFor="price">Precio:</Label>
-          <Input
-            type="number"
-            id="price"
-            name="price"
-            value={producto.price}
-            onChange={handleChange}
-            step="0.01"
-            min="0.01"
-            required
-          />
+          <Label htmlFor="precio">Precio:</Label>
+          <Input type="number" id="price" name="price" value={producto.price} onChange={handleChange} step="0.01" min="0.01" required />
         </FormGroup>
-
         <FormGroup>
-          <Label htmlFor="img">Imagen:</Label>
-          <Input
-            type="file"
-            id="img"
-            name="file"
-            accept="image/png, image/jpeg"
-            
-            onChange={handleChange}
-            required
-          />
-          {producto.imgPreview && (
- 
-            <PreviewImage src={producto.imgPreview} alt="Vista previa"
-            style={{ maxWidth: '100%', maxHeight: '100%', width: '200px', height: '150px' }}
-            />
-          )}
+          <Label htmlFor="imagen">Imagen:</Label>
+          <Input type="file" id="img" name="img" accept="image/png, image/jpeg" onChange={handleChange} required />
         </FormGroup>
-
         <FormGroup>
-          <Label htmlFor="title">Título:</Label>
-          <Input
-            type="text"
-            id="title"
-            name="title"
-            value={producto.title}
-            onChange={handleChange}
-            required
-          />
+          <Label htmlFor="nombre">Titulo:</Label>
+          <Input type="text" id="title" name="title" value={producto.title} onChange={handleChange} required />
         </FormGroup>
-
         <FormGroup>
-          <Label htmlFor="description">Descripción:</Label>
-          <Input
-            type="text"
-            id="description"
-            name="description"
-            value={producto.description}
-            onChange={handleChange}
-          />
+          <Label htmlFor="descripcion">Descripción:</Label>
+          <Input type="text" id="descripcion" name="descripcion" value={producto.descripcion} onChange={handleChange} />
         </FormGroup>
-
-        <FormGroup>
-          <Label htmlFor="availability">Disponibilidad:</Label>
-          <Select
-            id="availability"
-            name="availability"
-            value={producto.availability}
-            onChange={handleChange}
-          >
-            <option value={true}>Disponible</option>
-            <option value={false}>No disponible</option>
-          </Select>
-        </FormGroup>
-
         <SubmitButton type="submit">Agregar</SubmitButton>
-      </FormContainer>
-    </ModalContent>
-  </ModalOverlay>
-)}
-
-{allProducts &&
-  allProducts.map((product) => (
-    <ProductCard key={product.id}>
-      {/* Contenido de tus tarjetas de productos */}
-    </ProductCard>
-  ))}
-</>
-);
+        </FormContainer>
+      </Modal>
+    </>
+  );
 };
 
-const ProductCard = styled.div`
-  // Estilos de la tarjeta de producto
-`;const FormContainer = styled.form`
-background-color: #f0f8f0;
-padding: 20px;
-border-radius: 8px;
-max-width: 400px;
-margin: 0 auto;
-position: relative;
-z-index: 1002; /* Asegúrate de que sea mayor que el z-index del ModalContent */
+export default AddProduct;
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 `;
-
-const FormGroup = styled.div`
-margin-bottom: 15px;
+const ModalContent = styled.div`
+  position: fixed;
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%); 
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 80%;
+  max-height: 80%; 
+  overflow: auto; 
 `;
-
-const PreviewImage = styled.img`
-width: 250px;
-height: 200px;
-margin-top: 10px;
-`;
-
-const Label = styled.label`
-display: block;
-margin-bottom: 5px;
-color: #006400;
-`;
-
-const Input = styled.input`
-width: 100%;
-padding: 8px;
-border: 1px solid #ccc;
-border-radius: 4px;
-`;
-
-const Select = styled.select`
-width: 100%;
-padding: 8px;
-border: 1px solid #ccc;
-border-radius: 4px;
-`;
-
-const SubmitButton = styled.button`
-width: 100%;
-padding: 10px;
-background-color: #006400;
-color: #fff;
-border: none;
-border-radius: 4px;
-cursor: pointer;
-transition: background-color 0.3s;
-
-&:hover {
-  background-color: #004d00;
-}
-`;
-
-const AddButton = styled.button`
-background-color: #006400;
-color: white;
-border: none;
-padding: 8px 12px;
-border-radius: 4px;
-cursor: pointer;
-margin-top: 10px;
-margin-left: 30px;
-box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.5);
-`;
-
-const CancelButton = styled.button`
+const CloseButton = styled.button`
   position: absolute;
   top: 10px;
   right: 10px;
-  `;
-
-const ModalOverlay = styled.div`
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background: rgba(0, 0, 0, 0.5);
-display: flex;
-justify-content: center;
-align-items: center;
-z-index: 1000;
 `;
-
-const ModalContent = styled.div`
-background: white;
-border-radius: 8px;
-padding: 20px;
-position: relative;
-z-index: 1001;
+const FormContainer = styled.form`
+  background-color: #f0f8f0; 
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  margin: 0 auto;
 `;
-
-export default AddProduct;
+const Title = styled.h2`
+  color: #006400; 
+  text-align: center;
+`;
+const FormGroup = styled.div`
+  margin-bottom: 15px;
+`;
+const Label = styled.label`
+  display: block;
+  margin-bottom: 5px;
+  color: #006400; 
+`;
+const Input = styled.input`
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;
+const Select = styled.select`
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;
+const SubmitButton = styled.button`
+  width: 100%;
+  padding: 10px;
+  background-color: #006400; 
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  
+  &:hover {
+    background-color: #004d00; 
+  }
+`;
+const OpenModalButton = styled.button`
+  background-color: #006400; 
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 50px;
+  margin-left: 30px;
+  box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.5);
+`;

@@ -11,6 +11,7 @@ const SaleList = () => {
   const [filtroNombre, setFiltroNombre] = useState('');
   const [ventaSeleccionada, setVentaSeleccionada] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  
 
   const eliminarVenta = (id) => {
     axios.delete(`/api/ventas/${id}`)

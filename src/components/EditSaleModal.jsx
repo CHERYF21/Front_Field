@@ -9,7 +9,7 @@ function EditSaleModal({ isOpen, onClose, sale }) {
     date_sale: sale ? sale.date_sale : '',
     total_paid: sale ? sale.total_paid : 0,
     // pagado: sale ? sale.pagado : false,
-    //usuario: sale ? sale.usuario : ''
+    usuario: sale ? sale.id : ''
   });
 
   const handleInputChange = (e) => {

@@ -3,17 +3,17 @@ import React from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 
-const DeleteProduct = ({ productId, onDelete }) => {
+const DeleteProduct = ({ id_product, onDelete }) => {
     const handleDelete = async () => {
         try {
-            if (productId !== undefined && productId !== null) {
+            if (id_product !== undefined && id_product !== null) {
                 window.location.reload();
                 // Lógica para eliminar un producto en el backend
-                await axios.delete(`http://localhost:8080/user/${productId}`);
-                console.log('Producto eliminado con ID:', productId); // Nuevo log
-                onDelete(productId); // Notifica al componente padre que se ha eliminado el producto
+                await axios.delete(`http://localhost:8080/user/${id_product}/delete`);
+                console.log('Producto eliminado con ID:', id_product); // Nuevo log
+                onDelete(id_product); // Notifica al componente padre que se ha eliminado el producto
             } else {
-                console.error('El productId es undefined o null');
+                console.error('El id_product es undefined o null');
             }
         } catch (error) {
             console.error('Error al eliminar el producto:', error);

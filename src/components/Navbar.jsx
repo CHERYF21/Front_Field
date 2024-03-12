@@ -1,22 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { NavLink, NavLink as RouterNavLink } from 'react-router-dom';  
 import imagenes from '../assets/imagenes';
 
 function Navbar() {
+  const [isMenuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuOpen(!isMenuOpen);
+  };
+
   return (
     <NavContainer>
       <ImageNavbar>
         <img src={imagenes.logo} alt="Logo" />
-      </ImageNavbar> 
+      </ImageNavbar>
       <Title>
         Field <Span>Market</Span>
       </Title>
-      <NavLinks>
+      <MenuIcon onClick={toggleMenu}>
+        <div />
+        <div />
+        <div />
+      </MenuIcon>
+      <NavLinks open={isMenuOpen}>
         <StyledNavLink to="/inicio">Inicio</StyledNavLink>
         <StyledNavLink to="/contact">Contacto</StyledNavLink>
         <StyledNavLink to="/productos">Productos</StyledNavLink>
-        <StyledNavLink to="/funciones">Funciones</StyledNavLink>
+        <StyledNavLink to="/funciones">Mi cuenta</StyledNavLink>
+        <StyledNavLink to="/admin">Admin</StyledNavLink>
       </NavLinks>
     </NavContainer>
   );
@@ -37,6 +49,7 @@ const NavContainer = styled.nav`
   @media screen and (max-width: 768px) {
     flex-direction: column;
     padding: 20px;
+    position: relative;
   }
 `;
 
@@ -48,6 +61,7 @@ const Title = styled.h2`
   @media screen and (max-width: 768px) {
     margin-left: 0;
     margin-top: 0.5rem;
+/
   }
 `;
 
@@ -57,10 +71,10 @@ const Span = styled.span`
 
 const NavLinks = styled.div`
   display: flex;
-
   @media screen and (max-width: 768px) {
     flex-direction: column;
     margin-top: 1rem;
+    display: ${({ open }) => (open ? 'flex' : 'none')};
   }
 `;
 
@@ -85,7 +99,6 @@ const StyledNavLink = styled(RouterNavLink)`
 
 const ImageNavbar = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
   margin-top: 25px;
   margin-right: 5px; 
@@ -99,5 +112,26 @@ const ImageNavbar = styled.div`
   @media screen and (max-width: 768px) {
     margin: 0 auto;
     margin-bottom: 1rem;
+    display: none; 
+  }
+`;
+
+const MenuIcon = styled.div`
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+
+  div {
+    width: 25px;
+    height: 3px;
+    background-color: #fff;
+    margin: 3px 0;
+  }
+
+  @media screen and (max-width: 768px) {
+    display: flex;
+    position: absolute;
+    top: 15px;
+    right: 15px;
   }
 `;

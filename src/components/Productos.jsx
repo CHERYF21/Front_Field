@@ -30,8 +30,8 @@ function Productos() {
     setTotal(total + newProduct.price);
   };
 
-  const handleProductDeleted = (productId) => {
-    const updatedProducts = allProducts.filter((product) => product.id !== productId);
+  const handleProductDeleted = (id_product) => {
+    const updatedProducts = allProducts.filter((product) => product.id_product !== id_product);
     setAllProducts(updatedProducts);
     setCountProducts(countProducts - 1);
     // Calcula el total nuevamente si es necesario

@@ -9,10 +9,10 @@ export const createProducts = (newProduct) => axios.post(`${PRODUCT_BACK}/user/c
 export const listProducts = () => axios.get(`${PRODUCT_BACK}/user/listProducts`);
 
 // Corregir la función updateProducts
-export const updateProducts = (id, updatedProduct) => axios.put(`${PRODUCT_BACK}/user/${id}/update`, updatedProduct);
+export const updateProducts = (id_product, updatedProduct) => axios.put(`${PRODUCT_BACK}/user/${id_product}/update`, updatedProduct);
 
 // Corregir la función deleteProducts
-export const deleteProducts = (id) => axios.delete(`${PRODUCT_BACK}/user/${id}/delete`);
+export const deleteProducts = (id_product) => axios.delete(`${PRODUCT_BACK}/user/${id_product}/delete`);
 
 // Corregir la función getProductById
-export const getProductById = (id) => axios.get(`${PRODUCT_BACK}/user/${id}/get`);
+export const getProductById = (id_product) => axios.get(`${PRODUCT_BACK}/user/${id_product}/get`);

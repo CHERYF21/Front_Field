@@ -14,6 +14,7 @@ import SaleDetail from './components/SaleDetail.jsx';
 function App() {
   return (
     <div>
+    
       <Navbar />
 
       <Routes>
@@ -28,6 +29,7 @@ function App() {
         <Route path="*" element={<Default />} />
 
       </Routes>
+    
     </div>
   );
 }
