@@ -1,44 +1,51 @@
 import React, { useState , useEffect} from 'react';
-import styled from 'styled-components';
-import axios from 'axios'; // Importar axios
+import styled, { createGlobalStyle } from 'styled-components';
+import axios from 'axios'; 
 import EditSaleModal from './EditSaleModal';
 import { listSale, updateSale } from '../service/saleService'; 
-
+import { deleteSale } from '../service/saleService';
 const SaleList = () => {
 
   const [sales, setSales] = useState([]); 
   const [modalOpen, setModalOpen] = useState(false); 
   const [ventaSeleccionada, setVentaSeleccionada] = useState(null); 
-
-  //lista ventas
+  // Lista ventas
   useEffect(() => {
-    async function fetchSales(){
-      try{
+    async function fetchSales() {
+      try {
         const response = await listSale();
         setSales(response.data);
-      } catch (error){
+      } catch (error) {
         console.error('Error al obtener la lista de ventas', error);
+       
       }
+
     }
 
     fetchSales();
   }, []);
 
+  //Find Usuarios 
+
   //kate 
   //eliminar
-  const eliminarVenta = (id_sale) => {
-    axios.delete(`/user/deleteSale/${id_sale}`)
-      .then(response => {
+  const handleEliminarVenta= (id_sale) => {
+      
+     deleteSale(id_sale)
+      .then(response => {   
+    
         setSales(sales.filter(sale => sale.id_sale !== id_sale)); 
         console.log('Venta eliminada con éxito');
+       
       })
       .catch(error => {
         console.error('Error al eliminar la venta:', error);
       });
+    
   };
 
   //actualizar ventas
-  const actualzarVenta = async(ventaActualizada) => {
+  const actualizarVenta = async(ventaActualizada) => {
     try{
       const response = await updateSale(ventaActualizada.id_sale, ventaActualizada);
       console.log('Venta Actualizada', response.data);
@@ -92,17 +99,18 @@ const SaleList = () => {
           </tr>
         </thead>
         <tbody>
-          {sales.map(sale => (
-            <tr key={sale.id_sale}>
-              <td>{sale.id_sale}</td>
-              <td>{sale.date_sale}</td>
-              <td>{sale.total_paid}</td>
-              <td>{sale.usuario}</td>
-              <td>
-                <Button bgColor="#2dafeb" onClick={() => abrirModalEditarVenta(sale)}>Editar</Button> 
-                <Button bgColor="#ee2738" onClick={() => eliminarVenta(sale.id_sale)}>Eliminar</Button>
-              </td>
-            </tr>
+        {sales.map(sale => (
+      <tr key={sale.id_sale}>
+      <td>{sale.id_sale}</td>
+      <td>{sale.date_sale}</td>
+       <td>{sale.total_paid}</td>
+       <td>{sale.usuario?.nombre}</td> 
+      <td>
+      <Button bgColor="#2dafeb" onClick={() => abrirModalEditarVenta(sale)}>Editar</Button> 
+      <Button bgColor="#ee2738" onClick={() => handleEliminarVenta(sale.id_sale)}>Eliminar</Button>
+      </td>
+          {console.log(sale)}
+      </tr>
           ))}
         </tbody>
       </Table>
