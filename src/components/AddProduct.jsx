@@ -62,7 +62,7 @@ const AddProduct = () => {
     formData.append('img', producto.img);
     formData.append('title', producto.title);
     formData.append('descripcion', producto.descripcion);
-    //formData.append('id', '2ee24aac-829b-4e9a-a347-c8a27f8c87f7');
+    formData.append('id', '2ee24aac-829b-4e9a-a347-c8a27f8c87f7');
 
     try{
       const response = await createProducts(formData);
@@ -71,9 +71,10 @@ const AddProduct = () => {
         id_category: '',
         quantity: '',
         price: '',
-        img: null,
+        img: '',
         title: '',
-        descripcion: ''
+        descripcion: '',
+        id:'2ee24aac-829b-4e9a-a347-c8a27f8c87f7'
       });
     } catch (error){
       console.error('Error al crear producto: ',error);

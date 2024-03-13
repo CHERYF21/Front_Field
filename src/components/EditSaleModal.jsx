@@ -1,82 +1,60 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { updateSale } from '../service/saleService';
-
+import { useForm } from 'react-hook-form' //IMPORTAR LIBRERIA
 
 
 function EditSaleModal({ isOpen, onClose, sale }) {
+
+  const { register, reset, handleSubmit, formState: { errors } } = useForm(); //TRAEMOS LOS METODOS NECESARIOS
+
   const [editedSale, setEditedSale] = useState({
     date_sale: sale ? sale.date_sale : '',
     total_paid: sale ? sale.total_paid : 0,
-    // pagado: sale ? sale.pagado : false,
-    usuario: sale ? sale.id : ''
+    usuario: sale ? sale.usuario?.nombre : ''
   });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditedSale({
-      ...editedSale,
-      [name]: value
-    });
+ 
+
+  const onSubmit = async (data) => {
+    console.log("entramos en onsubmit");
+    try {
+
+
+      await updateSale(sale.id_sale, data);
+      window.location.reload();
+      console.log('Venta actualizada con éxito');
+      onClose(); // Cierra el modal
+    } catch (error) {
+      console.error('Error al actualizar la venta:', error);
+    }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!sale || !sale.id_sale) {
-      console.error('Venta o id de venta no válidos');
-      return;
-    }
-    
-    try {
-      window.location.reload();
-      console.log("Datos Actualizados con exito: ", editedSale);
-      await updateSale(sale.id_sale, editedSale);
-      console.log('Venta actualizada con éxito');
-      onClose();
-    } catch (error) {
-      console.error('Error al actualizar la venta', error);
-    }
-  };
+  console.log(sale);
 
   return (
     <>
-      {isOpen && sale && ( // Verifica que sale no sea null
+      {isOpen && sale && (
         <ModalContainer>
           <ModalContent>
             <ModalCloseButton onClick={onClose}>Cerrar</ModalCloseButton>
             <h2>Editar Venta</h2>
-            <Form onSubmit={handleSubmit}>
+            <Form onSubmit={handleSubmit((data) => onSubmit(data))}>
               <FormField>
                 <Label>Fecha de Venta:</Label>
-                <Input 
-                  type="text" 
-                  name="date_sale" 
-                  value={editedSale.date_sale} 
-                  onChange={handleInputChange} />
+                <Input
+                  type="text"
+                  {...register('data_sale', { required: true })}
+                />
+                {errors.date_sale && <p> Este campo es obligatorio </p>}
               </FormField>
               <FormField>
-                <Label>Total:</Label>
-                <Input 
-                  type="number" 
-                  name="total_paid" 
-                  value={editedSale.total_paid} 
-                  onChange={handleInputChange} />
+                <Label>Total a pagar:</Label>
+                <Input
+                  type="number"
+                  {...register('total_paid', { required: true })} />
+                {errors.date_sale && <p> Este campo es obligatorio </p>}
               </FormField>
-              {/* <FormField>
-              <Label>Pagado:</Label>
-                 <Select name="pagado" value={editedSale.pagado} onChange={handleInputChange}>
-                       <option value="Si">Si</option>
-                       <option value="No">No</option>
-                   </Select>
-                 </FormField> */}
-              {/* <FormField>
-                <Label>Vendedor:</Label>
-                <Input 
-                  type="text" 
-                  name="usuario" 
-                  value={editedSale.usuario} 
-                  onChange={handleInputChange} />
-              </FormField> */}
               <Button type="submit">Guardar cambios</Button>
             </Form>
           </ModalContent>

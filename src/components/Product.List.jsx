@@ -67,7 +67,6 @@ const closeModal = () => {
   setShowModal(false);
  
 };
-  
  // Agrega una función para actualizar los productos en el estado local
 const updateProductsLocally = (updatedProduct) => {
   setAllProducts((prevProducts) =>
@@ -148,13 +147,7 @@ const handleProductUpdated = (updatedProduct) => {
             </figure>
           </div>
         ))}
-       {showModal && (
-        <Modal
-         closeModal={closeModal}
-         id_product={selectedid_product}
-         onUpdate={handleProductUpdated}
-        />
-      )}
+      
       </div>
   );
 };
