@@ -1,13 +1,26 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { updateDetail } from '../service/detailsaleService';
+import { useForm } from 'react-hook-form';
 
 function EditDetailModal({ isOpen, onClose, sale }) {
+  const { register, handleSubmit, formState: { errors } } = useForm();
+
   const [editedSale, setEditedSale] = useState({
     cantidad: sale ? sale.cantidad : '',
-    precio: sale ? sale.precio : 0,
-    idVenta: sale ? sale.idVenta : '',
-    idProducto: sale ? sale.idProducto : ''
+    precio: sale ? sale.precio : ''
   });
+
+  const onSubmit = async (formData) => {
+    console.log("Entramos en onSubmit");
+    try {
+      await updateDetail(sale.id, formData); // Aquí se usa 'sale.id' en lugar de 'sale.id_sale'
+      console.log('Detalle de venta actualizado con éxito');
+      onClose(); // Cierra el modal
+    } catch (error) {
+      console.error('Error al actualizar el detalle de venta:', error);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -17,21 +30,14 @@ function EditDetailModal({ isOpen, onClose, sale }) {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Enviar al backend
-    console.log('Datos editados:', editedSale);
-    onClose();
-  };
-
   return (
     <>
-      {isOpen && sale && ( // Verifica que sale no sea null
+      {isOpen && sale && (
         <ModalContainer>
           <ModalContent>
             <ModalCloseButton onClick={onClose}>Cerrar</ModalCloseButton>
             <h2>Editar Detalle de Venta</h2>
-            <Form onSubmit={handleSubmit}>
+            <Form onSubmit={handleSubmit(onSubmit)}>
               <FormField>
                 <Label>Cantidad:</Label>
                 <Input type="text" name="cantidad" value={editedSale.cantidad} onChange={handleInputChange} />
@@ -39,14 +45,6 @@ function EditDetailModal({ isOpen, onClose, sale }) {
               <FormField>
                 <Label>Total de Productos (Precio):</Label>
                 <Input type="number" name="precio" value={editedSale.precio} onChange={handleInputChange} />
-              </FormField>
-              <FormField>
-                <Label>Id Venta:</Label>
-                <Input type="text" name="idVenta" value={editedSale.idVenta} onChange={handleInputChange} />
-              </FormField>
-              <FormField>
-                <Label>Id Producto:</Label>
-                <Input type="text" name="idProducto" value={editedSale.idProducto} onChange={handleInputChange} />
               </FormField>
               <Button type="submit">Guardar cambios</Button>
             </Form>

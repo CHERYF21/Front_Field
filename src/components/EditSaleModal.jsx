@@ -21,15 +21,20 @@ function EditSaleModal({ isOpen, onClose, sale }) {
   };
 
   const handleSubmit = async (e) => {
-    window.location.reload();
     e.preventDefault();
-    try{
-      console.log("Datos Actualizados con exito: " ,editedSale)
+    if (!sale || !sale.id_sale) {
+      console.error('Venta o id de venta no válidos');
+      return;
+    }
+    
+    try {
+      window.location.reload();
+      console.log("Datos Actualizados con exito: ", editedSale);
       await updateSale(sale.id_sale, editedSale);
-      console.log('Ventan actualizada con exito');
+      console.log('Venta actualizada con éxito');
       onClose();
-    } catch (error){
-      console.log('Error al actualizar la venta', error);
+    } catch (error) {
+      console.error('Error al actualizar la venta', error);
     }
   };
 

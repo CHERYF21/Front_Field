@@ -1,38 +1,73 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import axios from 'axios'; // Importar axios
+import { listDetail, deleteDetail, updateDetail } from '../service/detailsaleService'; // Importa la función listDetail, deleteDetail y updateDetail
 import EditDetailModal from './EditDetailModal';
-const SaleList = () => {
-  const [ventas, setVentas] = useState([
-    { id: 1, cantidad: '20 naranjas', precio: 150, idVenta: 101, idProducto: 201 },
-    { id: 2, cantidad: '10 manzanas', precio: 200, idVenta: 102, idProducto: 202 },
-    { id: 3, cantidad: '5 kg de plátanos', precio: 100, idVenta: 103, idProducto: 203 },
-  ]);
-  const [filtroNombre, setFiltroNombre] = useState('');
-  const [ventaSeleccionada, setVentaSeleccionada] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
-  
 
-  const eliminarVenta = (id) => {
-    axios.delete(`/api/ventas/${id}`)
-      .then(response => {
-        setVentas(ventas.filter(venta => venta.id !== id));
-        console.log('Venta eliminada con éxito');
-      })
-      .catch(error => {
-        console.error('Error al eliminar la venta:', error);
-      });
+const SaleDetail = () => {
+  const [ventas, setVentas] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [ventaSeleccionada, setVentaSeleccionada] = useState(null);
+
+  useEffect(() => {
+    async function fetchDetailSales() {
+      try {
+        const response = await listDetail(); // Utiliza directamente listDetail
+        setVentas(response.data);
+      } catch (error) {
+        console.error('Error al obtener la lista de ventas', error);
+      }
+    }
+
+    fetchDetailSales();
+  }, []);
+
+  const eliminarVenta = async (id) => {
+    try {
+      await deleteDetail(id);
+      setVentas(ventas.filter(venta => venta.id_detail !== id));
+      console.log('Venta eliminada con éxito');
+    } catch (error) {
+      console.error('Error al eliminar la venta:', error);
+    }
   };
 
   const abrirModalEditarVenta = (venta) => {
-    setVentaSeleccionada(venta);
+    setVentaSeleccionada({
+      cantidad: venta.quantity,
+      precio: venta.unit_value,
+      idVenta: venta.sale.id_sale,
+      idProducto: venta.product.id_product
+    });
     setModalOpen(true);
   };
+  
+
 
   const cerrarModal = () => {
     setModalOpen(false);
   };
 
+  const actualizarVenta = async (id, newData) => {
+    try {
+      await updateDetail(id, newData);
+      setModalOpen(false);
+      // Actualiza la lista de ventas después de la actualización
+      const updatedVentas = ventas.map(venta => {
+        if (venta.id_detail === id) {
+          return {
+            ...venta,
+            ...newData
+          };
+        }
+        return venta;
+      });
+      setVentas(updatedVentas);
+      console.log('Venta actualizada con éxito');
+    } catch (error) {
+      console.error('Error al actualizar la venta:', error);
+    }
+  };
+  
   return (
     <Container>
       <Title>Lista de Detalle de Ventas Field <Span>Market</Span></Title>
@@ -44,32 +79,32 @@ const SaleList = () => {
             <th>Cantidad</th>
             <th>Total de Productos (Precio)</th>
             <th>Id Venta</th>
-            <th>Id Producto</th>
+            <th>Nombre del Producto</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {ventas.map(venta => (
-            <tr key={venta.id}>
-              <td>{venta.id}</td>
-              <td>{venta.cantidad}</td>
-              <td>${venta.precio}</td>
-              <td>{venta.idVenta}</td>
-              <td>{venta.idProducto}</td>
+          {ventas.map(detaill => (
+            <tr key={detaill.id_detail}>
+              <td>{detaill.id_detail}</td>
+              <td>{detaill.quantity}</td>
+              <td>${detaill.unit_value.toFixed(2)}</td>
+              <td>{detaill.sale.id_sale}</td>
+              <td>{detaill.product.title}</td>
               <td>
-                <Button bgColor="#2dafeb" onClick={() => abrirModalEditarVenta(venta)}>Editar</Button>
-                <Button bgColor="#ee2738" onClick={() => eliminarVenta(venta.id)}>Eliminar</Button>
+              <Button bgColor="#2dafeb" onClick={() => abrirModalEditarVenta(detaill)}>Editar</Button>
+              <Button bgColor="#ee2738" onClick={() => eliminarVenta(detaill.id_detail)}>Eliminar</Button>
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
-      <EditDetailModal isOpen={modalOpen} onClose={cerrarModal} sale={ventaSeleccionada} />
+      <EditDetailModal isOpen={modalOpen} onClose={cerrarModal} sale={ventaSeleccionada} onSubmit={actualizarVenta} />
     </Container>
   );
 };
 
-export default SaleList;
+export default SaleDetail;
 
 const Container = styled.div`
   padding: 10px;

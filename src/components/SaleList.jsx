@@ -1,22 +1,19 @@
-import React, { useState , useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import axios from 'axios'; // Importar axios
-import EditSaleModal from './EditSaleModal';
-import { listSale, updateSale } from '../service/saleService'; 
+import axios from 'axios';
+import EditDetailModal from './EditDetailModal';
 
 const SaleList = () => {
+  const [ventas, setVentas] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [ventaSeleccionada, setVentaSeleccionada] = useState(null);
 
-  const [sales, setSales] = useState([]); 
-  const [modalOpen, setModalOpen] = useState(false); 
-  const [ventaSeleccionada, setVentaSeleccionada] = useState(null); 
-
-  //lista ventas
   useEffect(() => {
-    async function fetchSales(){
-      try{
-        const response = await listSale();
-        setSales(response.data);
-      } catch (error){
+    async function fetchSales() {
+      try {
+        const response = await axios.get('/user/listSale'); // Ruta para obtener los detalles de ventas
+        setVentas(response.data);
+      } catch (error) {
         console.error('Error al obtener la lista de ventas', error);
       }
     }
@@ -24,42 +21,16 @@ const SaleList = () => {
     fetchSales();
   }, []);
 
-  //kate 
-  //eliminar
-  const eliminarVenta = (id_sale) => {
-    axios.delete(`/user/deleteSale/${id_sale}`)
+  const eliminarVenta = (id) => {
+    axios.delete(`/user/deleteSale/${id}`)
       .then(response => {
-        setSales(sales.filter(sale => sale.id_sale !== id_sale)); 
+        setVentas(ventas.filter(venta => venta.id !== id));
         console.log('Venta eliminada con éxito');
       })
       .catch(error => {
         console.error('Error al eliminar la venta:', error);
       });
   };
-
-  //actualizar ventas
-  const actualzarVenta = async(ventaActualizada) => {
-    try{
-      const response = await updateSale(ventaActualizada.id_sale, ventaActualizada);
-      console.log('Venta Actualizada', response.data);
-     
-      
-
-      const updateSales = sales.map(sale => {
-        if(sale.id_sale === ventaActualizada.id_sale){
-          return response.data;
-        }
-        return sale;
-      });
-
-      setSales(updateSales);
-      setModalOpen(false);
-    } catch (error) {
-      console.log('Error al actualizar venta' , error);
-    }
-  }
-
- 
 
   const abrirModalEditarVenta = (venta) => {
     setVentaSeleccionada(venta);
@@ -72,41 +43,36 @@ const SaleList = () => {
 
   return (
     <Container>
-      <Title>Lista de Ventas Field <Span>Market</Span></Title>
-      {/* <SearchInput
-        type="text"
-        value={filtroNombre}
-        onChange={(e) => setFiltroNombre(e.target.value)}
-        placeholder="Buscar por nombre..."
-      />
-      <Button bgColor="#006400" onClick={() => setFiltroNombre('')}>Limpiar</Button>
-      <Button bgColor="#006400">Buscar</Button> */}
+      <Title>Lista de Detalle de Ventas Field <Span>Market</Span></Title>
+
       <Table>
         <thead>
           <tr>
-            <th>Id_sale</th>
-            <th>Fecha Venta</th>
-            <th>Total a pagar</th>
-            <th>Usuario</th>
-            <th>Acciones</th> 
+            <th>Id</th>
+            <th>Cantidad</th>
+            <th>Total de Productos (Precio)</th>
+            <th>Id Venta</th>
+            <th>Id Producto</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {sales.map(sale => (
-            <tr key={sale.id_sale}>
-              <td>{sale.id_sale}</td>
-              <td>{sale.date_sale}</td>
-              <td>{sale.total_paid}</td>
-              <td>{sale.usuario}</td>
+          {ventas.map(venta => (
+            <tr key={venta.id}>
+              <td>{venta.id}</td>
+              <td>{venta.cantidad}</td>
+              <td>${venta.total}</td>
+              <td>{venta.idVenta}</td>
+              <td>{venta.idProducto}</td>
               <td>
-                <Button bgColor="#2dafeb" onClick={() => abrirModalEditarVenta(sale)}>Editar</Button> 
-                <Button bgColor="#ee2738" onClick={() => eliminarVenta(sale.id_sale)}>Eliminar</Button>
+                <Button bgColor="#2dafeb" onClick={() => abrirModalEditarVenta(venta)}>Editar</Button>
+                <Button bgColor="#ee2738" onClick={() => eliminarVenta(venta.id)}>Eliminar</Button>
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
-      <EditSaleModal isOpen={modalOpen} onClose={cerrarModal} sale={ventaSeleccionada} />
+      <EditDetailModal isOpen={modalOpen} onClose={cerrarModal} sale={ventaSeleccionada} />
     </Container>
   );
 };
@@ -125,15 +91,6 @@ const Title = styled.h2`
   font-family: inherit;
   font-size: 25px;
   margin-top: 10px;
-`;
-const SearchInput = styled.input`
-  padding: 9px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 200px; 
-  margin-bottom: 10px;
-  margin-left: 400px;
-  margin-right: 2px; 
 `;
 
 const Span = styled.span`

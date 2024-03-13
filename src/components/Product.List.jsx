@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import DeleteProduct from './DeleteProduct';
 import imagenes from '../assets/imagenes';  
+import { Modal } from 'reactstrap';
 
 
 const ProductList = ({
@@ -148,7 +149,7 @@ const handleProductUpdated = (updatedProduct) => {
           </div>
         ))}
        {showModal && (
-     <Modal
+        <Modal
          closeModal={closeModal}
          id_product={selectedid_product}
          onUpdate={handleProductUpdated}
