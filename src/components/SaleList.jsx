@@ -76,23 +76,17 @@ const SaleList = () => {
 
   return (
     <Container>
-      <Title>Lista de Ventas Field <Span>Market</Span></Title>
-      {/* <SearchInput
-        type="text"
-        value={filtroNombre}
-        onChange={(e) => setFiltroNombre(e.target.value)}
-        placeholder="Buscar por nombre..."
-      />
-      <Button bgColor="#006400" onClick={() => setFiltroNombre('')}>Limpiar</Button>
-      <Button bgColor="#006400">Buscar</Button> */}
+      <Title>Lista de Detalle de Ventas Field <Span>Market</Span></Title>
+
       <Table>
         <thead>
           <tr>
-            <th>Id_sale</th>
-            <th>Fecha Venta</th>
-            <th>Total a pagar</th>
-            <th>Usuario</th>
-            <th>Acciones</th> 
+            <th>Id</th>
+            <th>Cantidad</th>
+            <th>Total de Productos (Precio)</th>
+            <th>Id Venta</th>
+            <th>Id Producto</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -111,7 +105,7 @@ const SaleList = () => {
           ))}
         </tbody>
       </Table>
-      <EditSaleModal isOpen={modalOpen} onClose={cerrarModal} sale={ventaSeleccionada} />
+      <EditDetailModal isOpen={modalOpen} onClose={cerrarModal} sale={ventaSeleccionada} />
     </Container>
   );
 };
@@ -130,15 +124,6 @@ const Title = styled.h2`
   font-family: inherit;
   font-size: 25px;
   margin-top: 10px;
-`;
-const SearchInput = styled.input`
-  padding: 9px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 200px; 
-  margin-bottom: 10px;
-  margin-left: 400px;
-  margin-right: 2px; 
 `;
 
 const Span = styled.span`
