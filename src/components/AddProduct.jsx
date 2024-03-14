@@ -25,6 +25,7 @@ const AddProduct = () => {
     img: '',
     title: '',
     descripcion: '',
+    sales_unit: '',
     id:'2ee24aac-829b-4e9a-a347-c8a27f8c87f7'
   });
 
@@ -62,6 +63,7 @@ const AddProduct = () => {
     formData.append('img', producto.img);
     formData.append('title', producto.title);
     formData.append('descripcion', producto.descripcion);
+    formData.append('id_saleUnit',producto.sales_unit);
     formData.append('id', '2ee24aac-829b-4e9a-a347-c8a27f8c87f7');
 
     try{
@@ -69,6 +71,7 @@ const AddProduct = () => {
       console.log('Producto creado con exito', response.data);
       setProducto({
         id_category: '',
+        sales_unit: '',
         quantity: '',
         price: '',
         img: '',
@@ -97,6 +100,14 @@ const AddProduct = () => {
             ))}
           </Select>
         </FormGroup>
+              <FormGroup>
+                <Label htmlForm="tipoUnit">Unidad de venta</Label>
+                <Select id="id_saleUnit" name="id_saleUnit" value={producto.sales_unit} onChange={handleChange}>
+                  <opinion value="">Unidad de venta</opinion>
+                  <option value={producto.sales_unit?.unidad}>{producto.sales_unit?.unidad}</option>
+
+                </Select>
+              </FormGroup>
         <FormGroup>
           <Label htmlFor="cantidad">Cantidad:</Label>
           <Input type="number" id="quantity" name="quantity" value={producto.quantity} onChange={handleChange} required />
