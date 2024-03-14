@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 //import DeleteProduct from './DeleteProduct'; 
 import { deleteProducts, listProducts } from '../service/productService';
 
+=======
+import axios from 'axios';
+import DeleteProduct from './DeleteProduct';
+import imagenes from '../assets/imagenes';  
+import { Modal } from 'reactstrap';
+>>>>>>> ad1cee6b70c3791507ce3ee538f155a72503c60a
 
 
 const ProductList = ({
