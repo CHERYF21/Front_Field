@@ -1,6 +1,5 @@
 import React, { useState , useEffect} from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-import axios from 'axios'; 
 import EditSaleModal from './EditSaleModal';
 import { listSale, updateSale } from '../service/saleService'; 
 import { deleteSale } from '../service/saleService';

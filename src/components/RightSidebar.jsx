@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from 'styled-components';
 
 function RightSidebar() {
@@ -6,17 +6,14 @@ function RightSidebar() {
       <SidebarContainer>
         <CardContainer>
           <Card>
-            
             <CardContent>
               <Header>Metodos de Pagos Seguros</Header>
               <Icon className="fas fa-lock" />
               <Description>Ofrecemos métodos de pago seguros para garantizar la seguridad de tus transacciones.</Description>
-              <br />
               <SubmitButton type="submit"> Conocé sobre nuestro metodo de pago</SubmitButton>
             </CardContent>
           </Card>
           <Card>
-     
             <CardContent>
               <Header>Tenemos Productos Frescos</Header>
               <Icon className="fas fa-leaf" />
@@ -24,7 +21,6 @@ function RightSidebar() {
             </CardContent>
           </Card>
           <Card>
-           
             <CardContent>
               <Header>Los Mejores Precios</Header>
               <Icon className="fas fa-dollar-sign" />
@@ -32,12 +28,10 @@ function RightSidebar() {
             </CardContent>
           </Card>
           <Card>
-           
             <CardContent>
               <Header>Ingresa de Forma Segura</Header>
               <Icon className="fas fa-user-shield" />
-              <Description className='descripcion'>Garantizamos la seguridad de tu cuenta y tus datos personales con medidas de protección avanzadas.</Description>
-             
+              <Description>Garantizamos la seguridad de tu cuenta y tus datos personales con medidas de protección avanzadas.</Description>
             </CardContent>
           </Card>
         </CardContainer>
@@ -61,11 +55,16 @@ function RightSidebar() {
   `;
   
   const Card = styled.div`
-   background-color: #333;
+    background-color: #333;
     border-radius: 8px;
-    padding: 50px;
-    width: 100%; /* Ajusta el ancho según tu preferencia */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 20%; 
+    margin-top: 20px;
+    box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.3);
+    transition: transform 0.3s; 
+    &:hover {
+      transform: scale(1.1); 
+    }
   `;
   
   const Icon = styled.i`
@@ -76,11 +75,6 @@ function RightSidebar() {
   
   const CardContent = styled.div`
     flex-grow: 1;
-  
-    .descripcion{
-      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    }
-    
   `;
   
   const Header = styled.h3`
@@ -89,11 +83,11 @@ function RightSidebar() {
     margin-bottom: 10px;
   `;
   
-  
   const Description = styled.p`
     color: white;
     font-size: 14px;
   `;
+  
   const SubmitButton = styled.button`
     width: 100%;
     padding: 5px;

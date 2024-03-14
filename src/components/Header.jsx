@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import imagenes from '../assets/imagenes';
-
+import { Link } from 'react-router-dom';
 
 export const Header = ({
     allProducts,
@@ -36,14 +35,14 @@ export const Header = ({
                     className='container-cart-icon'
                     onClick={() => setActive(!active)}
                 >
-                   <svg
-                         xmlns='http://www.w3.org/2000/svg'
+                    <svg
+                        xmlns='http://www.w3.org/2000/svg'
                         fill='none'
                         viewBox='0 0 24 24'
                         strokeWidth='1.5'
                         stroke='none'  // Corrige aquí, debe ser 'none'
-                         className='icon-cart'
-                     >
+                        className='icon-cart'
+                    >
                         <path
                             strokeLinecap='round'
                             strokeLinejoin='round'
@@ -66,16 +65,15 @@ export const Header = ({
                                 {allProducts.map(product => (
                                     <div className='cart-product' key={product.id}>
                                         <div className='info-cart-product'>
-                                        <figure>
-                                            
-                                         {product.img && (
-                                             <img
-                                             src={`data:image/jpeg;base64,${product.base64Image}`}
-                                             alt={product.title}
-                                             data-product-id={product.id}
-                                             style={{ maxWidth: '100%', maxHeight: '100%', width: '70px', height: 'auto' }}
-                                           />
-                                                 )}
+                                            <figure>
+                                                {product.img && (
+                                                    <img
+                                                        src={`data:image/jpeg;base64,${product.base64Image}`}
+                                                        alt={product.title}
+                                                        data-product-id={product.id}
+                                                        style={{ maxWidth: '100%', maxHeight: '100%', width: '70px', height: 'auto' }}
+                                                    />
+                                                )}
                                             </figure>
                                             <span className='cantidad-producto-carrito'>
                                                 {product.quantity}
@@ -114,6 +112,8 @@ export const Header = ({
                             <button className='btn-clear-all' onClick={onCleanCart}>
                                 Vaciar Carrito
                             </button>
+
+                            <Link to="/metodopago" className="btn-pagar">Ir a Pagar</Link> {/* Agrega el enlace al método de pago */}
                         </>
                     ) : (
                         <p className='cart-empty'>El carrito está vacío</p>
@@ -123,3 +123,5 @@ export const Header = ({
         </header>
     );
 };
+
+export default Header;

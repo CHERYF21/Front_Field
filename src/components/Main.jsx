@@ -90,7 +90,7 @@ const RightSidebarContainer = styled.div`
   border-radius: 20px;
   margin-top: 370px;
   margin-left: -1000px;
-
+  
 `;
 const ImageContainer = styled.div`
   display: flex;

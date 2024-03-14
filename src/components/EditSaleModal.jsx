@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form' //IMPORTAR LIBRERIA
 
 function EditSaleModal({ isOpen, onClose, sale }) {
 
-  const { register, reset, handleSubmit, formState: { errors } } = useForm(); //TRAEMOS LOS METODOS NECESARIOS
+  const { register, handleSubmit, formState: { errors } } = useForm(); //TRAEMOS LOS METODOS NECESARIOS
 
   const [editedSale, setEditedSale] = useState({
     date_sale: sale ? sale.date_sale : '',
@@ -44,7 +44,7 @@ function EditSaleModal({ isOpen, onClose, sale }) {
                 <Label>Fecha de Venta:</Label>
                 <Input
                   type="text"
-                  {...register('data_sale', { required: true })}
+                  {...register('data_sale', { required: false })}
                 />
                 {errors.date_sale && <p> Este campo es obligatorio </p>}
               </FormField>
@@ -52,7 +52,7 @@ function EditSaleModal({ isOpen, onClose, sale }) {
                 <Label>Total a pagar:</Label>
                 <Input
                   type="number"
-                  {...register('total_paid', { required: true })} />
+                  {...register('total_paid', { required: false})} />
                 {errors.date_sale && <p> Este campo es obligatorio </p>}
               </FormField>
               <Button type="submit">Guardar cambios</Button>
