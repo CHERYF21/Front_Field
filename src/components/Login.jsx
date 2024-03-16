@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import styled from 'styled-components';
+import { loginUser } from "../service/userService";
+import Cookies from "js-cookie";
+import { useAuth } from "../Context/AuthContext";
 
 function Login() {
+  const {setIsAuthen, setUser} = useAuth();
   const [credentials, setCredentials] = useState({
-    email: '',
+    username: '',
     password: ''
   });
 
@@ -14,20 +18,23 @@ function Login() {
     setCredentials({ ...credentials, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Credenciales:', credentials);
-    setCredentials({
-      email: '',
-      password: ''
-    });
-    // Aquí deberías llamar a algún método para iniciar sesión con las credenciales
+    try {
+      const resp = await loginUser(credentials);
+      Cookies.set("token", resp.data?.token);
+      setIsAuthen(true);
+      setUser(resp.data?.user);
+    } catch (error) {
+      console.log('Error al Loguar: ', error);
+      alert(error.message);
+    }
   };
 
   const handleClose = () => {
     setShowModal(false);
     setCredentials({
-      email: '',
+      username: '',
       password: ''
     });
   };
@@ -46,9 +53,9 @@ function Login() {
                 <Label htmlFor="email">Email:</Label>
                 <Input
                   type="email"
-                  id="email"
-                  name="email"
-                  value={credentials.email}
+                  id="username"
+                  name="username"
+                  value={credentials.username}
                   onChange={handleChange}
                   required
                 />
@@ -73,6 +80,7 @@ function Login() {
     </>
   );
 }
+
 
 export default Login;
 

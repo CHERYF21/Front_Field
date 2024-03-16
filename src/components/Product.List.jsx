@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-<<<<<<< HEAD
+
 //import DeleteProduct from './DeleteProduct'; 
 import { deleteProducts, listProducts } from '../service/productService';
-
-=======
 import axios from 'axios';
 import DeleteProduct from './DeleteProduct';
 import imagenes from '../assets/imagenes';  
 import { Modal } from 'reactstrap';
->>>>>>> ad1cee6b70c3791507ce3ee538f155a72503c60a
+import { useAuth } from '../Context/AuthContext';
+
 
 
 const ProductList = ({
@@ -22,6 +21,7 @@ const ProductList = ({
   const [showModal, setShowModal] = useState(false);
   const [selectedid_product, setSelectedid_product] = useState('');
   const [updatedProducts, setUpdatedProducts] = useState([]);
+  const {isAuthen, user} = useAuth();
 
   //carrito compra
   const onAddProduct = (product) => {
@@ -110,17 +110,18 @@ const handleProductUpdated = (updatedProduct) => {
                 <h1 className='price'> ${product.price.toFixed(3)}</h1>
                 <h4>Producto: {product.title}</h4>
                 <p className='description'>Descripcion:{product.descripcion}</p>
+                <p className='unidad'>Unidad:{product.sales_unit.unidad}</p>
               
                   <p className='category'>Categoria: {product.category.category }</p>
                   <button onClick={() => onAddProduct(product)}>
                     Añadir al carrito
                   </button>
-                  <button onClick={(e) => handleUpdateProduct(product.id_product, e)}>
+                  {user.rol == "Admin" || user.rol == "Agricultor" && <button onClick={(e) => handleUpdateProduct(product.id_product, e)}>
                      Actualizar
-                </button>
-                <button onClick={() => handleDeleteProduct(product.id_product)}>
+                </button>}
+                { user.rol == "Admin" || user.rol == "Agricultor"  && <button onClick={() => handleDeleteProduct(product.id_product)}>
                      Eliminar
-                </button>
+                </button>}
                 
                 </div>
               </figcaption>

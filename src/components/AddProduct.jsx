@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { createProducts } from '../service/productService';
 import { listarCategory } from '../service/categoryService';
+import { listUnit } from '../service/saleunitServvice';
 
 const Modal = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
@@ -25,12 +26,13 @@ const AddProduct = () => {
     img: '',
     title: '',
     descripcion: '',
-    sales_unit: '',
-    id:'2ee24aac-829b-4e9a-a347-c8a27f8c87f7'
+    id_saleUnit: '',
+    id:'040600b9-6f0e-4259-922e-5b17ea97d6ad'
   });
 
   //llamar las categorias del back
   const [categorias, setCategorias] = useState([]);
+  const [unidades, setUnidades] = useState([]);
   useEffect(() => {
     async function fetchCategorias(){
       try{
@@ -40,9 +42,21 @@ const AddProduct = () => {
         console.error('Error al obtener las categorias: ', error)
       }
     }
+
+    async function fetchUnidades(){
+      try{
+        const response = await listUnit();
+        setUnidades(response.data);
+      } catch (error){
+        console.log('Error al traer unidadses', error)
+      }
+   }
+
+    fetchUnidades();
     fetchCategorias();
   }, []);
   //Fin categorias
+
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -63,21 +77,22 @@ const AddProduct = () => {
     formData.append('img', producto.img);
     formData.append('title', producto.title);
     formData.append('descripcion', producto.descripcion);
-    formData.append('id_saleUnit',producto.sales_unit);
-    formData.append('id', '2ee24aac-829b-4e9a-a347-c8a27f8c87f7');
+    formData.append('id_saleUnit',producto.id_saleUnit);
+    formData.append('id', '040600b9-6f0e-4259-922e-5b17ea97d6ad');
 
     try{
       const response = await createProducts(formData);
+      window.location.reload();
       console.log('Producto creado con exito', response.data);
       setProducto({
         id_category: '',
-        sales_unit: '',
+        id_saleUnit: '',
         quantity: '',
         price: '',
         img: '',
         title: '',
         descripcion: '',
-        id:'2ee24aac-829b-4e9a-a347-c8a27f8c87f7'
+        id:'040600b9-6f0e-4259-922e-5b17ea97d6ad'
       });
     } catch (error){
       console.error('Error al crear producto: ',error);
@@ -95,16 +110,19 @@ const AddProduct = () => {
           <Label htmlFor="tipo">Categoria</Label>
           <Select id="id_category" name="id_category" value={producto.id_category} onChange={handleChange}>
             <option value="">Seleccione una categoria</option>
-            {categorias.map(categoria => (
-              <option key={categoria.id_category} value={categoria.id_category}>{categoria.category}</option>
+            {categorias.map(categorias => (
+              <option key={categorias.id_category} value={categorias.id_category}>{categorias.category}</option>
             ))}
           </Select>
         </FormGroup>
               <FormGroup>
                 <Label htmlForm="tipoUnit">Unidad de venta</Label>
-                <Select id="id_saleUnit" name="id_saleUnit" value={producto.sales_unit} onChange={handleChange}>
+                <Select id="id_saleUnit" name="id_saleUnit" value={producto.id_saleUnit} onChange={handleChange}>
                   <opinion value="">Unidad de venta</opinion>
-                  <option value={producto.sales_unit?.unidad}>{producto.sales_unit?.unidad}</option>
+                  {unidades.map(unidades =>(
+                    <option key={unidades.id_saleUnit} value={unidades.id_saleUnit}>{unidades.unidad}</option>
+                  ))}
+                  
 
                 </Select>
               </FormGroup>

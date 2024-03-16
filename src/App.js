@@ -10,25 +10,28 @@ import Inicio from './components/Inicio.jsx';
 import Funciones from './components/Funciones.jsx';
 import SaleList from './components/SaleList.jsx';
 import SaleDetail from './components/SaleDetail.jsx';
+import { AuthProvider } from './Context/AuthContext';
 
 function App() {
   return (
     <div>
+
+      <AuthProvider>
+        <Navbar />
+
+        <Routes>
     
-      <Navbar />
+          <Route path="/inicio" element={<Inicio />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/productos" element={<Productos />} />
+          <Route path="/listproducts" element={<ListProduct />} />
+          <Route path="/salelist" element={<SaleList />} />
+          <Route path="/detail" element={<SaleDetail />} />
+          <Route path="/funciones" element={<Funciones/>} />
+          <Route path="*" element={<Default />} />
 
-      <Routes>
-  
-        <Route path="/inicio" element={<Inicio />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/productos" element={<Productos />} />
-        <Route path="/listproducts" element={<ListProduct />} />
-        <Route path="/salelist" element={<SaleList />} />
-        <Route path="/detail" element={<SaleDetail />} />
-        <Route path="/funciones" element={<Funciones/>} />
-        <Route path="*" element={<Default />} />
-
-      </Routes>
+        </Routes>
+      </AuthProvider>
     
     </div>
   );

@@ -1,9 +1,10 @@
 /* Globales */
 /* Acá estan todos los estilos de los productos  */
 
+/* Estilos generales */
 *:focus {
 	outline: none;
-  }
+}
 * { 
 	margin: 0;
 	padding: 0;
@@ -28,7 +29,7 @@ body {
 }
 
 img {
-	max-width: 100%;
+	max-width: 100%; 
 }
  
 /* Header */
@@ -249,6 +250,28 @@ header {
   background-color: #333;
   transform: scale(1.03);
   border-radius: 0;
+}
+
+/* Estilos para pantallas más pequeñas */
+@media screen and (max-width: 768px) {
+  header {
+    padding: 20px 0 30px 0;
+  }
+
+  .container-items {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Estilos para pantallas aún más pequeñas */
+@media screen and (max-width: 576px) {
+  header {
+    padding: 15px 0 25px 0;
+  }
+
+  .container-items {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
 
 

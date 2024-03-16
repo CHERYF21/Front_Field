@@ -16,7 +16,7 @@ const Modal_Contact = ({ onClose, showModal }) => {
                 </Title>
                 <CardsContainer>
                     <StyledCard>
-                        <img src={imagenes.imagen_contacto} alt="Productos" />
+                        <img src={imagenes.imagen_gif} alt="Productos" />
                         <div className="contact-info">
                 <p><FontAwesomeIcon icon={faEnvelope} /> Correo electrónico: carlos@example.com</p>
                 <p><FontAwesomeIcon icon={faPhone} /> Teléfono: +57 333 224 4587</p>
@@ -30,7 +30,7 @@ const Modal_Contact = ({ onClose, showModal }) => {
                       
                     </StyledCard>
                     <StyledCard>
-                        <img src={imagenes.imagen_contacto} alt="Ventas" />
+                        <img src={imagenes.imagen_gif} alt="Ventas" />
                         <div className="contact-info">
                 <p><FontAwesomeIcon icon={faEnvelope} /> Correo electrónico: carlos@example.com</p>
                 <p><FontAwesomeIcon icon={faPhone} /> Teléfono: +57 333 224 4587</p>
@@ -44,7 +44,7 @@ const Modal_Contact = ({ onClose, showModal }) => {
                         
                     </StyledCard>
                     <StyledCard>
-                        <img src={imagenes.imagen_contacto} alt="Detalle de venta" />
+                        <img src={imagenes.imagen_gif} alt="Detalle de venta" />
                         <div className="contact-info">
                 <p><FontAwesomeIcon icon={faEnvelope} /> Correo electrónico: katerinebuitragoyp@gmail.com</p>
                 <p><FontAwesomeIcon icon={faPhone} /> Teléfono: +57 333 224 4587</p>

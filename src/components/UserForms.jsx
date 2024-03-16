@@ -1,24 +1,27 @@
 import React, { useEffect, useState } from "react";
 import styled, { keyframes } from 'styled-components';
 import { crearUsuario, saveUser } from "../service/userService";
+import Cookies from "js-cookie";
+import { useAuth } from "../Context/AuthContext";
 
 function UserFormModal() {
+    const {setIsAuthen, setUser} = useAuth();
     const [newUser, setNewUser] = useState({
         nombre: '',
         apellido: '',
-        email: '',
+        username: '',
         telefono: '',
         direccion: '',
         password: '',
-        rol: 'Agricultor'
+        rol: ''
     });
 
     const [showModal, setShowModal] = useState(false);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+        console.log(value)
         if (name === "password") {
-            // para que no se llene el campo validar contra automaticamente
             setNewUser({
                 ...newUser,
                 [name]: value
@@ -33,6 +36,7 @@ function UserFormModal() {
 
     const handleRoleChange = (e) => {
         const { value } = e.target;
+        console.log(value);
         setNewUser({
             ...newUser,
             rol: value
@@ -41,14 +45,12 @@ function UserFormModal() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!validatePassword()) { // Validar la contraseña antes de enviar el formulario
-            return;
-        }
-        if (!newUser.nombre || !newUser.apellido || !newUser.email || !newUser.telefono || !newUser.direccion || !newUser.password || !newUser.rol) {
-            return;
-        }
         try {
-            await crearUsuario(newUser);
+            const res = await crearUsuario(newUser);
+            console.log(res);
+            Cookies.set('token', res.data?.token);
+            setIsAuthen(true);
+            setUser(res.data?.usuario);
             alert('Usuario Registrado');
         } catch (error) {
             console.log('Error al Registrar: ', error);
@@ -56,19 +58,9 @@ function UserFormModal() {
         };
     };
 
-    const validatePassword = () => {
-        if(newUser.password !== newUser.confirmPassword){
-            alert("Las contraeñas no coinciden")
-            return false;
-        }
-        return true;
-    };
+    
+  
 
-    useEffect(() => {
-        saveUser();
-    }, []);
-
-    console.log(newUser);
 
     return (
         <> <div class="ModalBackground" style={{ display: showModal ? 'block' : 'none' }}>
@@ -107,9 +99,9 @@ function UserFormModal() {
                         <label for="email" class="Label">Email:</label>
                         <input
                             type="email"
-                            id="email"
-                            name="email"
-                            value={newUser.email}
+                            id="username"
+                            name="username"
+                            value={newUser.username}
                             onChange={handleInputChange}
                             required
                             class="Input"
@@ -150,10 +142,10 @@ function UserFormModal() {
                             required
                             class="Input"
                         />
-                    </div>
+                    </div>  
                     <div>
                         <label for="role" class="Label">Rol:</label>
-                        <select id="role" name="role" value={newUser.rol} onChange={handleRoleChange} class="Select">
+                        <select id="role" name="role" onChange={handleInputChange} class="Select">
                             <option value="Agricultor">Agricultor</option>
                             <option value="Comprador">Comprador</option>
                         </select>

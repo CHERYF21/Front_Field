@@ -1,13 +1,16 @@
+import authHeader from "./auth_Header";
 import axios from "./axios";
 
 const USER_BACK = "http://localhost:8080";
 
 //Entidad Usuario
 
-    export const crearUsuario = (user) => axios.post(USER_BACK + "/register", user);
+    export const crearUsuario = (newUser) => axios.post(USER_BACK + "/auth/register", newUser);
 
-    export const saveUser = (user) => axios.get(USER_BACK + "/lista",user);
+    export const loginUser = (credentials) => axios.post(USER_BACK + "/auth/login", credentials);
 
-    export const listUser = () => axios.get(USER_BACK+ "/user/user-rest/listUser");
+    export const listUser = () => axios.get(USER_BACK+ "/auth/user-rest/listUser");
+
+    export const verityTokenRequest = () => axios.get("/auth/verify",{headers: authHeader()});
 
     

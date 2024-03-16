@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import EditProductModal from './Editar_Producto';
 import AddCategory from './AddCategory';
 import EditarProducto from './Editar_Producto';
+import { deleteProducts, listProducts } from '../service/productService';
 
 
 const ListProduct = () => {
@@ -18,16 +19,16 @@ const ListProduct = () => {
 
   const fetchProductos = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/user/listProducts');
+      const response = await listProducts();
       setProductos(response.data);
     } catch (error) {
       console.error('Error al obtener la lista de productos:', error);
     }
   };
 
-  const eliminarProducto = async (id) => {
+  const eliminarProducto = async (id_product) => {
     try {
-      await axios.delete(`http://localhost:8080/user/${id}delete`);
+      await deleteProducts(id_product);
       fetchProductos();
     } catch (error) {
       console.error('Error al eliminar el producto:', error);
@@ -82,23 +83,22 @@ const ListProduct = () => {
             <TableHeader>Cantidad</TableHeader>
             <TableHeader> description</TableHeader>
             <TableHeader>Precio</TableHeader>
-            <TableHeader>Disponibilidad</TableHeader>
             <TableHeader>Imagen</TableHeader>
             <TableHeader>Acciones</TableHeader>
           </tr>
         </thead>
         <tbody>
           {productos.map((producto) => (
-            <TableRow key={producto.id}>
-              <TableCell>{producto.id}</TableCell>
+            <TableRow key={producto.id_product}>
+              <TableCell>{producto.id_product}</TableCell>
               <TableCell>{producto.title}</TableCell>
-              <TableCell>{producto.category}</TableCell>
+              <TableCell>{producto.category.category}</TableCell>
               <TableCell>{producto.quantity}</TableCell>
-              <TableCell>{producto.description}</TableCell>
-              <TableCell>${producto.price}</TableCell>
-              <TableCell>{producto.availability ? 'Disponible' : 'No disponible'}</TableCell>
+              <TableCell>{producto.descripcion}</TableCell>
+              <TableCell>{producto.price}</TableCell>
+
               <TableCell>
-                <img src={`data:image/jpeg;base64,${producto.base64Image}`} alt={producto.nombre} style={{ width: '300px', height: '70px' }} />
+                <img src={`data:image/jpeg;base64,${producto.img}`} style={{ width: '300px', height: '70px' }} />
               </TableCell>
               <TableCell>
               <ButtonContainer>

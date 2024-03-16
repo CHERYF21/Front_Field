@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Header } from './Header';
 import ProductList from './Product.List';
 import AddProduct from './AddProduct';
+import { listProducts } from '../service/productService';
 
 function Productos() {
   const [allProducts, setAllProducts] = useState([]);
@@ -12,7 +13,7 @@ function Productos() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/user/listProducts');
+        const response = await listProducts();
         // No establezcas allProducts directamente aquí, para evitar cargar automáticamente en el carrito
          setAllProducts(response.data);  
       } catch (error) {

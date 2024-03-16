@@ -2,35 +2,46 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { NavLink, NavLink as RouterNavLink } from 'react-router-dom';  
 import imagenes from '../assets/imagenes';
+import { useAuth } from '../Context/AuthContext';
+
 
 function Navbar() {
   const [isMenuOpen, setMenuOpen] = useState(false);
-
+  const {isAuthen, user} = useAuth();
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
   };
 
   return (
-    <NavContainer>
-      <ImageNavbar>
-        <img src={imagenes.logo} alt="Logo" />
-      </ImageNavbar>
-      <Title>
-        Field <Span>Market</Span>
-      </Title>
-      <MenuIcon onClick={toggleMenu}>
-        <div />
-        <div />
-        <div />
-      </MenuIcon>
-      <NavLinks open={isMenuOpen}>
-        <StyledNavLink to="/inicio">Inicio</StyledNavLink>
-        <StyledNavLink to="/contact">Contacto</StyledNavLink>
-        <StyledNavLink to="/productos">Productos</StyledNavLink>
-        <StyledNavLink to="/funciones">Mi cuenta</StyledNavLink>
-        <StyledNavLink to="/admin">Admin</StyledNavLink>
-      </NavLinks>
-    </NavContainer>
+    
+
+      <NavContainer>
+        <ImageNavbar>
+          <img src={imagenes.logo} alt="Logo" />
+        </ImageNavbar>
+        <Title>
+          Field <Span>Market</Span>
+        </Title>
+        <MenuIcon onClick={toggleMenu}>
+          <div />
+          <div />
+          <div />
+        </MenuIcon>
+        <NavLinks open={isMenuOpen}>
+          <StyledNavLink to="/inicio">Inicio</StyledNavLink>
+  
+          { isAuthen && 
+            <>
+              <StyledNavLink to="/contact">Contacto</StyledNavLink>
+             <StyledNavLink to="/productos">Productos</StyledNavLink>
+             <StyledNavLink to="/funciones">Mi cuenta</StyledNavLink>
+             {user.rol == "Admin" || "Agricultor" && <StyledNavLink to="/admin">Admin</StyledNavLink>}
+            </>
+          } 
+        </NavLinks>
+      </NavContainer>
+
+    
   );
 }
 

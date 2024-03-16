@@ -85,7 +85,7 @@ const SaleList = () => {
             <th>Cantidad</th>
             <th>Total de Productos (Precio)</th>
             <th>Id Venta</th>
-            <th>Id Producto</th>
+            {/* <th>Id Producto</th> */}
             <th>Acciones</th>
           </tr>
         </thead>
@@ -105,7 +105,7 @@ const SaleList = () => {
           ))}
         </tbody>
       </Table>
-      <EditDetailModal isOpen={modalOpen} onClose={cerrarModal} sale={ventaSeleccionada} />
+      <EditSaleModal isOpen={modalOpen} onClose={cerrarModal} sale={ventaSeleccionada} />
     </Container>
   );
 };
