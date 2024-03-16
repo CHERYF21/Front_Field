@@ -18,7 +18,8 @@ import  venta from './img/venta.png'
 import imagen_gif from './img/imagen.gif';
 import imagen_opinion from './img/opinion.png'
 import imagen_contacto from './img/imagen_contacto.png'
-
+import compras from './img/compras.png'
+import perfil from './img/perfil.png'
 const imagenes = {
   "registro_fondo": registro_fondo,
   "imagen_fondo": imagen_fondo,
@@ -37,7 +38,9 @@ const imagenes = {
   "venta":venta,
   "imagen_gif":imagen_gif,
   "imagen_opinion":imagen_opinion,
-  "imagen_contacto": imagen_contacto
+  "imagen_contacto": imagen_contacto,
+  "compras":compras,
+  "perfil":perfil
 
 
 };

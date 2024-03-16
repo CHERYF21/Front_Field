@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { NavLink, NavLink as RouterNavLink } from 'react-router-dom';  
+import {  NavLink as RouterNavLink } from 'react-router-dom';  
 import imagenes from '../assets/imagenes';
 import { useAuth } from '../Context/AuthContext';
 
@@ -35,7 +35,9 @@ function Navbar() {
               <StyledNavLink to="/contact">Contacto</StyledNavLink>
              <StyledNavLink to="/productos">Productos</StyledNavLink>
              <StyledNavLink to="/funciones">Mi cuenta</StyledNavLink>
-             {user.rol == "Admin" || "Agricultor" && <StyledNavLink to="/admin">Admin</StyledNavLink>}
+             <StyledNavLink to="/perfil">Mi Perfil</StyledNavLink>
+             <StyledNavLink to="/admin">Admin</StyledNavLink>
+     
             </>
           } 
         </NavLinks>
