@@ -11,6 +11,10 @@ import Funciones from './components/Funciones.jsx';
 import SaleList from './components/SaleList.jsx';
 import SaleDetail from './components/SaleDetail.jsx';
 import { AuthProvider } from './Context/AuthContext';
+import BuyersList from './components/Buyers_List.jsx';
+import User_Profile from './components/User_Profile.jsx';
+import Admin from './components/Admin.jsx';
+import UserList from './components/User_List.jsx';
 
 function App() {
   return (
@@ -28,7 +32,12 @@ function App() {
           <Route path="/salelist" element={<SaleList />} />
           <Route path="/detail" element={<SaleDetail />} />
           <Route path="/funciones" element={<Funciones/>} />
+          <Route path="/compradores" element={<BuyersList/>} />
+          <Route path="/perfil" element={<User_Profile/>} />
+          <Route path="/Admin" element={<Admin/>} />
+          <Route path="/usuario" element={<UserList/>} />
           <Route path="*" element={<Default />} />
+          <Route element={<Inicio />} /> {/* Ruta predeterminada */}
 
         </Routes>
       </AuthProvider>

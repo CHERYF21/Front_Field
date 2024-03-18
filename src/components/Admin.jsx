@@ -3,43 +3,38 @@ import styled from 'styled-components';
 import imagenes from '../assets/imagenes';
 import { Link } from 'react-router-dom';
 
-const Funciones = () => {
+const Admin= () => {
+  
   return (
     <Container>
-      <Title>
-        <h2>¿Qué quieres hacer el día de hoy?</h2>
-      </Title>
-      <CardsContainer>
-        <StyledLink to={"/listproducts"}>
-          <StyledCard>
-            <img src={imagenes.productos} alt="Productos" />
-            <h2> Productos</h2>
-          </StyledCard>
-        </StyledLink>
-        <StyledLink to={"/salelist"}>
-          <StyledCard>
-            <img src={imagenes.venta} alt="Ventas" />
-            <h2>Ventas </h2>
-          </StyledCard>
-        </StyledLink>
-        <StyledLink to={"/detail"}>
-          <StyledCard>
-            <img src={imagenes.detalle} alt="Detalle de venta" />
-            <h2>Detalle de ventas</h2>
-          </StyledCard>
-          <StyledLink to={"/compradores"}>
-          <StyledCard>
-            <img src={imagenes.compras} alt="Detalle de venta" />
-            <h2>Informe de tus compras</h2>
-          </StyledCard>
-        </StyledLink>
-        </StyledLink>
-      </CardsContainer>
-    </Container>
+        <Title>
+          <h2>Funciones de Adminstrador Field  <Span>Market</Span></h2>
+        </Title>
+        <CardsContainer>
+          <StyledLink to={"/usuario"}>
+            <StyledCard>
+              <img src={imagenes.img2} alt="Productos" />
+              <h2> Usuarios</h2>
+            </StyledCard>
+          </StyledLink>
+          <StyledLink to={"/salelist"}>
+            <StyledCard>
+              <img src={imagenes.venta} alt="Ventas" />
+              <h2>Ventas </h2>
+            </StyledCard>
+          </StyledLink>
+          <StyledLink to={"/detail"}>
+            <StyledCard>
+              <img src={imagenes.detalle} alt="Detalle de venta" />
+              <h2>Detalle de ventas</h2>
+            </StyledCard>
+          </StyledLink>
+        </CardsContainer>
+      </Container>
   );
 };
 
-export default Funciones;
+export default Admin;
 
 const Container = styled.div`
   display: flex;
@@ -52,9 +47,18 @@ const Container = styled.div`
 const Title = styled.h2`
   color: #fff;
   font-family: inherit;
+  margin-left: 70px;
   text-align: center;
-  padding: 5px;
-  text-shadow: 0 0 10px #1DD848;
+
+  @media screen and (max-width: 768px) {
+    margin-left: 0;
+    margin-top: 0.5rem;
+/
+  }
+`;
+
+const Span = styled.span`
+  color: #1DD848;
 `;
 
 const CardsContainer = styled.div`
