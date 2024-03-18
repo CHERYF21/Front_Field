@@ -9,7 +9,10 @@ export const createProducts = (newProduct) => axios.post(`${PRODUCT_BACK}/user/c
 export const listProducts = () => axios.get(`${PRODUCT_BACK}/user/listProducts`,{headers: authHeader()});
 
 // Corregir la función updateProducts
-export const updateProducts = (id_product, updatedProduct) => axios.put(`${PRODUCT_BACK}/user/${id_product}/update`, updatedProduct,{headers: authHeader()});
+export const updateProducts = async (id_product, updatedProduct) => {
+    console.log(updatedProduct);
+    await axios.put(`${PRODUCT_BACK}/user/${id_product}/update`, updatedProduct,{headers: authHeader()})};
+    
 
 // Corregir la función deleteProducts
 export const deleteProducts = (id_product) => axios.delete(`${PRODUCT_BACK}/user/${id_product}/delete`,{headers: authHeader()});

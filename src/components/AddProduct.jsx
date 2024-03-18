@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { createProducts } from '../service/productService';
 import { listarCategory } from '../service/categoryService';
 import { listUnit } from '../service/saleunitServvice';
+import { useAuth } from '../Context/AuthContext';
 
 const Modal = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
@@ -18,6 +19,7 @@ const Modal = ({ isOpen, onClose, children }) => {
 };
 
 const AddProduct = () => {
+  const {isAuthen, user} = useAuth();
   const [modalAbierto, setModalAbierto] = useState(false);
   const [producto, setProducto] = useState({
     id_category: '',
@@ -30,10 +32,11 @@ const AddProduct = () => {
     id:'040600b9-6f0e-4259-922e-5b17ea97d6ad'
   });
 
-  //llamar las categorias del back
+  
   const [categorias, setCategorias] = useState([]);
   const [unidades, setUnidades] = useState([]);
   useEffect(() => {
+    //llamar las categorias del back
     async function fetchCategorias(){
       try{
         const response = await listarCategory();
@@ -42,8 +45,8 @@ const AddProduct = () => {
         console.error('Error al obtener las categorias: ', error)
       }
     }
-
-    async function fetchUnidades(){
+    
+    async function fetchUnidades(){ // llamar unidades de venta
       try{
         const response = await listUnit();
         setUnidades(response.data);
@@ -51,11 +54,10 @@ const AddProduct = () => {
         console.log('Error al traer unidadses', error)
       }
    }
-
     fetchUnidades();
     fetchCategorias();
   }, []);
-  //Fin categorias
+
 
 
   const handleChange = (e) => {
@@ -102,7 +104,7 @@ const AddProduct = () => {
 
   return (
     <>
-   <OpenModalButton onClick={() => setModalAbierto(true)}>Agregar Productos</OpenModalButton>
+   { user.rol == "Admin" || user.rol == "Agricultor" && <OpenModalButton onClick={() => setModalAbierto(true)}>Agregar Productos</OpenModalButton>}
       <Modal isOpen={modalAbierto} onClose={() => setModalAbierto(false)}>
         <FormContainer onSubmit={handleSubmit}>
           <Title>Agregar Producto</Title>
@@ -122,8 +124,6 @@ const AddProduct = () => {
                   {unidades.map(unidades =>(
                     <option key={unidades.id_saleUnit} value={unidades.id_saleUnit}>{unidades.unidad}</option>
                   ))}
-                  
-
                 </Select>
               </FormGroup>
         <FormGroup>

@@ -35,7 +35,8 @@ function Navbar() {
               <StyledNavLink to="/contact">Contacto</StyledNavLink>
              <StyledNavLink to="/productos">Productos</StyledNavLink>
              <StyledNavLink to="/funciones">Mi cuenta</StyledNavLink>
-             {user.rol == "Admin" || "Agricultor" && <StyledNavLink to="/admin">Admin</StyledNavLink>}
+             {(user.rol == "Admin" || "Agricultor") && <StyledNavLink to="/admin">Admin</StyledNavLink> }
+             
             </>
           } 
         </NavLinks>

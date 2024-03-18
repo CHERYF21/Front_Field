@@ -1,137 +1,111 @@
 import React, { useState, useEffect } from 'react';
-
-//import DeleteProduct from './DeleteProduct'; 
-import { deleteProducts, listProducts } from '../service/productService';
-import axios from 'axios';
-import DeleteProduct from './DeleteProduct';
-import imagenes from '../assets/imagenes';  
-import { Modal } from 'reactstrap';
+import { deleteProducts, listProducts, updateProducts } from '../service/productService';
 import { useAuth } from '../Context/AuthContext';
+import UpdateProduct from './UpdateProduct';
 
+const ProductList = () => {
 
-
-const ProductList = ({
-  allProducts,
-  setAllProducts,
-  countProducts,
-  setCountProducts,
-  total,
-  setTotal,
-}) => {
-  const [showModal, setShowModal] = useState(false);
-  const [selectedid_product, setSelectedid_product] = useState('');
-  const [updatedProducts, setUpdatedProducts] = useState([]);
+  const [products, setProducts] = useState([]);
   const {isAuthen, user} = useAuth();
-
-  //carrito compra
-  const onAddProduct = (product) => {
-    const existingProduct = allProducts.find((item) => item.id === product.id_product);
-    if (existingProduct) {
-      const updatedProducts = allProducts.map((item) =>
-        item.id === product.id_product
-          ? { ...item, quantity: item.quantity + 0 }
-          : item
-      );
-      setTotal(total + product.price);
-      setCountProducts(countProducts + 1);
-      setAllProducts(updatedProducts);
-    } else {
-      setTotal(total + product.price);
-      setCountProducts(countProducts + 1);
-      setAllProducts([...allProducts, { ...product, quantity: 1 }]);
-    }
-  };
-  //fin carrito
-
-
-  const handleUpdateProduct = async (id_product, e) => {
-  e.preventDefault();
-  console.log('Botón Actualizar clicado');
-  setSelectedid_product(id_product);
-  setShowModal(true);
-};
-
-const closeModal = () => {
-  setShowModal(false);
- 
-};
-
-//eliminar producos
-const handleDeleteProduct = async (id_product) => {
-    try{
-      await deleteProducts(id_product);
-      setUpdatedProducts(allProducts.filter(product => product.id_product !== id_product));
-      console.log('Producto eliminado con exito');
-    } catch (error){
-      console.log('Error al eliminar producto: ', error)
-    }
-
-};
-//fin eliminar
-
-// actualizar
-const handleProductUpdated = (updatedProduct) => {
-  try {
-    //updateProductsLocally(updatedProduct);
-    setShowModal(false);
-  } catch (error) {
-    console.error('Error al actualizar el producto:', error);
-  }
-};
-
-  //obtener productos
+  const [modalOpen, setModalOpen] = useState(false);
+  const [productoSeleccionado, setProductoSeleccionado] = useState(null);
+//listar products
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
+    async function fetchProducts(){
+      try{
         const response = await listProducts();
-        setAllProducts(response.data);
-        setUpdatedProducts(response.data); // Añade esta línea
-      } catch (error) {
-        console.error('Error al obtener la lista de productos desde la API', error);
+        setProducts(response.data);
+      } catch(error){
+        console.error('Error al obtener la lista de productos', error);
       }
-    };
-  
+    }
     fetchProducts();
   }, []);
-  //finproductos
+//eliminar product
+  const handleEliminarProduct = (id_product) => {
+    deleteProducts(id_product)
+    .then(response => {
+      setProducts(products.filter(product => product.id_product !== id_product));
+      console.log('Venta eliminada con exito');
+    })
+    .catch(error => {
+      console.log('Error al eliminar producto', error);
+    })
+  };
+//actualizar product
+  const actualizarProduct = async(productoActualizado) =>{
+    try{
+      const response = await updateProducts(productoActualizado.id_product, {
+        title: productoActualizado.title,
+        descripcion: productoActualizado.descripcion,
+        price: productoActualizado.price,
+        quantity: productoActualizado.quantity,
+        img: productoActualizado.img
+      });
+      console.log('Producto actualizado', response.data);
+
+      const updateProducts = products.map(product => {
+        if(product.id_product === productoActualizado.id_product){
+          return response.data;
+        }
+        return product;
+      });
+      setProducts(updateProducts);
+      setModalOpen(false);
+    } catch (error) {
+      console.log('Error al actualizar producto', error);
+    }
+  }
+
+  const abrirModalUpdateProduct = (producto) =>{
+    setProductoSeleccionado(producto);
+    setModalOpen(true);
+  }
+  const cerrarModal = () =>{
+    setModalOpen(false);
+  }
+
+
 
   return (
-      <div className='container-items'>
-        {allProducts.map((product) => (
-          
-          <div key={product.id_product} className='item'>
-            <figure>
-            <img
-        src={`data:image/jpeg;base64,${product.img}`}
-        alt={product.title}
-      />
-              <figcaption>
-                <div className='info-product'>
+    <div className='container-items'>
+      {products.map((product) => (
+        <div key={product.id_product} className='item'>
+          <figure>
+            <img src={`data:image/jpeg;base64,${product.img}`} alt={product.title} />
+            <figcaption>
+              <div className='info-product'>
                 <h1 className='price'> ${product.price.toFixed(3)}</h1>
                 <h4>Producto: {product.title}</h4>
                 <p className='description'>Descripcion:{product.descripcion}</p>
                 <p className='unidad'>Unidad:{product.sales_unit.unidad}</p>
-              
-                  <p className='category'>Categoria: {product.category.category }</p>
-                  <button onClick={() => onAddProduct(product)}>
-                    Añadir al carrito
+                <p className='category'>Categoria: {product.category.category}</p>
+                {/* <button onClick={() => onAddProduct(product)}>Añadir al carrito</button> */}
+                {(user.rol === 'Admin' || user.rol === 'Agricultor') && (
+                  <button onClick={() => abrirModalUpdateProduct(product)}>
+                    Actualizar
                   </button>
-                  {user.rol == "Admin" || user.rol == "Agricultor" && <button onClick={(e) => handleUpdateProduct(product.id_product, e)}>
-                     Actualizar
-                </button>}
-                { user.rol == "Admin" || user.rol == "Agricultor"  && <button onClick={() => handleDeleteProduct(product.id_product)}>
-                     Eliminar
-                </button>}
-                
-                </div>
-              </figcaption>
-            </figure>
-          </div>
-        ))}
-      
-      </div>
+                )}
+                {(user.rol === 'Admin' || user.rol === 'Agricultor') && (
+                  <button onClick={() => handleEliminarProduct(product.id_product)}>
+                    Eliminar
+                  </button>
+                )}
+              </div>
+            </figcaption>
+          </figure>
+          <UpdateProduct isOpen={modalOpen} onClose={cerrarModal} product={productoSeleccionado}></UpdateProduct>
+        </div>
+      ))}
+
+      {/* {showUpdateModal && (
+        <UpdateProductForm
+          closeModal={() => setShowUpdateModal(false)}
+          id_product={selectedid_product}
+        />
+      )} */}
+    </div>
   );
 };
 
 export default ProductList;
-  
