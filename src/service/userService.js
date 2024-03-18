@@ -11,6 +11,8 @@ const USER_BACK = "http://localhost:8080";
 
     export const listUser = () => axios.get(USER_BACK+ "/auth/user-rest/listUser");
 
+    export const deleteUser = (id) => axios.delete(`${USER_BACK}/auth/${id}/deleteuser`,{headers: authHeader()});
+
     export const verityTokenRequest = () => axios.get("/auth/verify",{headers: authHeader()});
 
     

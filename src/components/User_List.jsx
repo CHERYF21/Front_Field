@@ -1,19 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios'; 
+import { listUser } from '../service/userService';
 
 
 const UserList = () => {
-  const [usuarios, setUsuarios] = useState([
-    { id: 1, nombre: 'Juan', apellido: 'Perez', username: 'juanito123', telefono: '123456789', direccion: 'Calle 123', password: 'contraseña1' },
-    { id: 2, nombre: 'María', apellido: 'López', username: 'marialo', telefono: '987654321', direccion: 'Avenida Principal', password: 'password123' },
-    { id: 3, nombre: 'Pedro', apellido: 'García', username: 'pedrog', telefono: '555666777', direccion: 'Calle de los Robles', password: 'segura123' },
-  ]);
+  const [usuarios, setUsuarios] = useState([]);
 
   const [filtroNombre, setFiltroNombre] = useState('');
-  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  //const [modalOpen, setModalOpen] = useState(false);
 
+  //listar usuarios
+  useEffect(() => {
+    async function fetchUsers(){
+      try{
+        const response = await listUser();
+        setUsuarios(response.data);
+      } catch (error){
+        console.error('Error al listar usuarios', error);
+      }
+    }
+    fetchUsers();
+  }, []);
+
+  //eliminar usuario
   const eliminarUsuario = (id) => {
     axios.delete(`/api/usuarios/${id}`)
       .then(response => {
