@@ -15,7 +15,6 @@ export const Header = ({
         console.log('Eliminando producto:', product);
       const results = allProducts.filter((item) => item.id !== product.id);
       
-  
       setTotal(total - product.price * product.quantity);
       setCountProducts(countProducts - product.quantity);
       setAllProducts(results);
@@ -103,12 +102,10 @@ export const Header = ({
                                     </div>
                                 ))}
                             </div>
-
                             <div className='cart-total'>
                                 <h3>Total:</h3>
                                 <span className='total-pagar'>${total}</span>
                             </div>
-
                             <button className='btn-clear-all' onClick={onCleanCart}>
                                 Vaciar Carrito
                             </button>

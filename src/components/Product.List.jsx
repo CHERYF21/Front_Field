@@ -65,8 +65,6 @@ const ProductList = () => {
     setModalOpen(false);
   }
 
-
-
   return (
     <div className='container-items'>
       {products.map((product) => (
