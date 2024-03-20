@@ -4,7 +4,7 @@ import authHeader from './auth_Header';
 const PRODUCT_BACK = "http://localhost:8080"; // Cambié la URL base
 
 
-export const createProducts = (newProduct) => axios.post(`${PRODUCT_BACK}/user/createProduct`, newProduct,{headers: authHeader()});
+export const createProducts = (newProduct) => axios.post(`${PRODUCT_BACK}/auth/createProduct`, newProduct,{headers: authHeader()});
 
 export const listProducts = () => axios.get(`${PRODUCT_BACK}/auth/listProducts`,{headers: authHeader()});
 

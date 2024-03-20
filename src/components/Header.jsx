@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ventaMercado } from '../service/mercadopago';
-import { FaShoppingCart } from 'react-icons/fa'; // Importar el icono de carrito
+import styled from 'styled-components';
+
 
 export const Header = ({ cart, onClose, handleEmptyCart }) => {
     
@@ -9,7 +10,13 @@ export const Header = ({ cart, onClose, handleEmptyCart }) => {
     const processPayment = async () => {
         try {
           if (cart.length > 0) {
-            const response = await ventaMercado(cart[0]);
+                const itemsToPay = cart.map((item) => ({
+                    id_product: item.id_product,
+                    title: item.title,
+                    quantity: item.quantity,
+                    price: item.price
+                }));
+            const response = await ventaMercado(itemsToPay);
             window.location.href = response.data; // Redirecciona a la página de pago de Mercado Pago
           } else {
             console.error('Error: El carrito está vacío');
@@ -18,6 +25,7 @@ export const Header = ({ cart, onClose, handleEmptyCart }) => {
           console.error('Error procesando el pago:', error);
         }
     };
+
 
     const calcularTotal = () =>{
        if(!cart || cart.length === 0){
@@ -31,28 +39,55 @@ export const Header = ({ cart, onClose, handleEmptyCart }) => {
     }
 
     return (
-        <div className="container-icon">
-            <FaShoppingCart className="icon-cart" onClick={onClose} />
+        <>
+            {/* <FaShoppingCart className="icon-cart" onClick={onClose} /> */}
             {cart && cart.length > 0 && (
                 <div className="cart-items">
-                    <button onClick={handleEmptyCart}>Vaciar carrito</button>
+                    <div className="container-icon">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                     <Title>
+                        Field <Span>Market</Span>
+                     </Title>
+                    </div>
                     {cart.map((product) => (
                         <div key={product.id_product} className="cart-item">
                             <div className="item-details">
-                                <p>{product.id_product}</p>
-                                <p>{product.title}</p>
-                                <p>{product.id_category}</p>
-                                <p>Cantidad: {product.quantity}</p>
-                                <p>Precio: ${product.price}</p> 
+                                <div className="imagen">
+                                    <img src={`data:image/jpeg;base64,${product.img}`} alt={product.title} />
+                                </div>
+                                <div className="text">
+                                    {/* <p>{product.id_product}</p> */}
+                                    <p>{product.title}</p>
+                                    <p>{product.id_category}</p>
+                                    <p>Cantidad: {product.quantity}</p>
+                                    <p>Precio: ${product.price}</p>
+                                </div>
                             </div>
                         </div>
                     ))}
-                    <div> Total: ${calcularTotal()} </div>
+                    <h3> Total: ${calcularTotal()} </h3>
+                    <button onClick={handleEmptyCart}>Vaciar carrito</button>
                     <button onClick={processPayment}>Pagar</button>
                 </div>
             )}
-        </div>
+        </>
     );
 };
 
 export default Header;
+
+const Title = styled.h2`
+  color: #181717;
+  font-family: inherit;
+  margin-left: 20px;
+
+  @media screen and (max-width: 768px) {
+    margin-left: 0;
+    margin-top: 0.5rem;
+/
+  }
+`;
+
+const Span = styled.span`
+  color: #1DD848;
+`;

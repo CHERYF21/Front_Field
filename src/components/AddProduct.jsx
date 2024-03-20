@@ -104,7 +104,7 @@ const AddProduct = () => {
 
   return (
     <>
-   { user.rol == "Admin" || user.rol == "Agricultor" && <OpenModalButton onClick={() => setModalAbierto(true)}>Agregar Productos</OpenModalButton>}
+   { user?.rol == "Admin" || user?.rol == "Agricultor" && <OpenModalButton onClick={() => setModalAbierto(true)}>Agregar Productos</OpenModalButton>}
       <Modal isOpen={modalAbierto} onClose={() => setModalAbierto(false)}>
         <FormContainer onSubmit={handleSubmit}>
           <Title>Agregar Producto</Title>

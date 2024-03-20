@@ -93,17 +93,17 @@ const ProductList = () => {
                 <p className='description'>Descripcion:{product.descripcion}</p>
                 <p className='unidad'>Unidad:{product.sales_unit.unidad}</p>
                 <p className='category'>Categoria: {product.category.category}</p>
-                {(user.rol === 'Admin' || user.rol === 'Agricultor') && (
+                {(user?.rol === 'Admin' || user?.rol === 'Agricultor') && (
                   <button onClick={() => abrirModalUpdateProduct(product)}>
                     Actualizar
                   </button>
                 )}
-                {(user.rol === 'Admin' || user.rol === 'Agricultor') &&  (
+                {(user?.rol === 'Admin' || user?.rol === 'Agricultor') &&  (
                   <button onClick={() => handleEliminarProduct(product.id_product)}>
                     Eliminar
                   </button>
                 )}
-               {(user.rol === 'Admin' || user.rol === 'Agricultor') && (
+               {(user?.rol === 'Admin' || user?.rol === 'Agricultor') && (
                   <button onClick={() => handleAddToCard(product)}>
                     Añadir al carrito
                   </button>

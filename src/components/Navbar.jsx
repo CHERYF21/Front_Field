@@ -36,7 +36,7 @@ function Navbar() {
              <StyledNavLink to="/productos">Productos</StyledNavLink>
              <StyledNavLink to="/funciones">Mi cuenta</StyledNavLink>
              <StyledNavLink to="/perfil">Mi Perfil</StyledNavLink>
-             <StyledNavLink to="/admin">Admin</StyledNavLink>
+              <StyledNavLink to="/admin">Admin</StyledNavLink>
      
             </>
           } 
