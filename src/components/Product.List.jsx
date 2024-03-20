@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { deleteProducts, listProducts, updateProducts } from '../service/productService';
 import { useAuth } from '../Context/AuthContext';
 import UpdateProduct from './UpdateProduct';
+import Header from './Header';
 
 const ProductList = () => {
 
   const [products, setProducts] = useState([]);
   const {isAuthen, user} = useAuth();
   const [modalOpen, setModalOpen] = useState(false);
-  const [productoSeleccionado, setProductoSeleccionado] = useState(null);
+  const [productoSeleccionado, setProductoSeleccionado] = useState(null);//para el actualizar
+  const [cart, setCart] = useState([]);
 //listar products
   useEffect(() => {
     async function fetchProducts(){
@@ -65,7 +67,20 @@ const ProductList = () => {
     setModalOpen(false);
   }
 
+  //agregar card al carrito
+  const handleAddToCard = (product) =>{
+    const productToAdd = {...product, quantity: 1};
+    setCart([...cart, productToAdd]);
+    setModalOpen(true);
+  }
+  //vaciar carrito
+  const handleEmptyCart = () =>{
+    setCart([]);
+  }
+
+
   return (
+
     <div className='container-items'>
       {products.map((product) => (
         <div key={product.id_product} className='item'>
@@ -78,30 +93,29 @@ const ProductList = () => {
                 <p className='description'>Descripcion:{product.descripcion}</p>
                 <p className='unidad'>Unidad:{product.sales_unit.unidad}</p>
                 <p className='category'>Categoria: {product.category.category}</p>
-                {/* <button onClick={() => onAddProduct(product)}>Añadir al carrito</button> */}
                 {(user.rol === 'Admin' || user.rol === 'Agricultor') && (
                   <button onClick={() => abrirModalUpdateProduct(product)}>
                     Actualizar
                   </button>
                 )}
-                {(user.rol === 'Admin' || user.rol === 'Agricultor') && (
+                {(user.rol === 'Admin' || user.rol === 'Agricultor') &&  (
                   <button onClick={() => handleEliminarProduct(product.id_product)}>
                     Eliminar
                   </button>
                 )}
+               {(user.rol === 'Admin' || user.rol === 'Agricultor') && (
+                  <button onClick={() => handleAddToCard(product)}>
+                    Añadir al carrito
+                  </button>
+                )}
+                
               </div>
             </figcaption>
           </figure>
           <UpdateProduct isOpen={modalOpen} onClose={cerrarModal} product={productoSeleccionado}></UpdateProduct>
         </div>
       ))}
-
-      {/* {showUpdateModal && (
-        <UpdateProductForm
-          closeModal={() => setShowUpdateModal(false)}
-          id_product={selectedid_product}
-        />
-      )} */}
+      {modalOpen && <Header cart={cart} onClose={() => setModalOpen(false)} handleEmptyCart={handleEmptyCart} />}
     </div>
   );
 };

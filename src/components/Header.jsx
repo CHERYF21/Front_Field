@@ -1,123 +1,61 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { ventaMercado } from '../service/mercadopago';
 
-export const Header = ({
-    allProducts,
-    setAllProducts,
-    total,
-    countProducts,
-    setCountProducts,
-    setTotal,
-  }) => {
-    const [active, setActive] = useState(false);
-  
-    const onDeleteProduct = (product) => {
-        console.log('Eliminando producto:', product);
-      const results = allProducts.filter((item) => item.id !== product.id);
-      
-      setTotal(total - product.price * product.quantity);
-      setCountProducts(countProducts - product.quantity);
-      setAllProducts(results);
-      console.log('Cantidad de productos en el carrito después de eliminar:', results.length);
+
+export const Header = ({ cart, onClose, handleEmptyCart }) => {
+    
+    const [producto, setProducto]= useState([]);
+
+    const processPayment = async () => {
+        try {
+          if (cart.length > 0) {
+            const response = await ventaMercado(cart[0]);
+            window.location.href = response.data; // Redirecciona a la página de pago de Mercado Pago
+          } else {
+            console.error('Error: El carrito está vacío');
+          }
+        } catch (error) {
+          console.error('Error procesando el pago:', error);
+        }
     };
-  
-    const onCleanCart = () => {
-      setAllProducts([]);
-      setTotal(0);
-      setCountProducts(0);
-    };
+
+    const calcularTotal = () =>{
+       if(!cart || cart.length === 0){
+        return 0;
+       }
+       let total = 0;
+       cart.forEach((product) => {
+        total += product.price *  product.quantity;
+       });
+       return total.toFixed(2);
+    }
 
     return (
-        <header>
-            <div className='container-icon'>
-                <div
-                    className='container-cart-icon'
-                    onClick={() => setActive(!active)}
-                >
-                    <svg
-                        xmlns='http://www.w3.org/2000/svg'
-                        fill='none'
-                        viewBox='0 0 24 24'
-                        strokeWidth='1.5'
-                        stroke='none'  // Corrige aquí, debe ser 'none'
-                        className='icon-cart'
-                    >
-                        <path
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                            d='M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z'
-                        />
-                    </svg>
-                    <div className='count-products'>
-                        <span id='contador-productos'>{countProducts}</span>
-                    </div>
-                </div>
-
-                <div
-                    className={`container-cart-products ${
-                        active ? '' : 'hidden-cart'
-                    }`}
-                >
-                    {allProducts.length ? (
-                        <>
-                            <div className='row-product'>
-                                {allProducts.map(product => (
-                                    <div className='cart-product' key={product.id}>
-                                        <div className='info-cart-product'>
-                                            <figure>
-                                                {product.img && (
-                                                    <img
-                                                        src={`data:image/jpeg;base64,${product.base64Image}`}
-                                                        alt={product.title}
-                                                        data-product-id={product.id}
-                                                        style={{ maxWidth: '100%', maxHeight: '100%', width: '70px', height: 'auto' }}
-                                                    />
-                                                )}
-                                            </figure>
-                                            <span className='cantidad-producto-carrito'>
-                                                {product.quantity}
-                                            </span>
-                                            <p className='titulo-producto-carrito'>
-                                                {product.nameProduct}
-                                            </p>
-                                            <span className='precio-producto-carrito'>
-                                                ${product.price}
-                                            </span>
-                                        </div>
-                                        <svg
-                                            xmlns='http://www.w3.org/2000/svg'
-                                            fill='none'
-                                            viewBox='0 0 24 24'
-                                            strokeWidth='1.5'
-                                            stroke='currentColor'
-                                            className='icon-close'
-                                            onClick={() => onDeleteProduct(product)}
-                                        >
-                                            <path
-                                                strokeLinecap='round'
-                                                strokeLinejoin='round'
-                                                d='M6 18L18 6M6 6l12 12'
-                                            />
-                                        </svg>
-                                    </div>
-                                ))}
+        <div className="container-icon">
+            <div className="cart-items">
+                    <h2>Carrito de Compras</h2>
+                    <button onClick={onClose}>Cerrar</button>
+                    <button onClick={handleEmptyCart}>Vaciar carrito</button>
+                {cart && cart.length > 0 ? (
+                    cart.map((product) => (
+                        <div key={product.id_product} className="cart-item">
+                            {/* <img src={`data:image/jpeg;base64,${product.img}`} alt={product.title} /> */}
+                            <div className="item-details">
+                                <p>{product.id_product}</p>
+                                <p>{product.title}</p>
+                                <p>{product.id_category}</p>
+                                <p>Cantidad: {product.quantity}</p>
+                                <p>Precio: ${product.price}</p> 
                             </div>
-                            <div className='cart-total'>
-                                <h3>Total:</h3>
-                                <span className='total-pagar'>${total}</span>
-                            </div>
-                            <button className='btn-clear-all' onClick={onCleanCart}>
-                                Vaciar Carrito
-                            </button>
-
-                            <Link to="/metodopago" className="btn-pagar">Ir a Pagar</Link> {/* Agrega el enlace al método de pago */}
-                        </>
-                    ) : (
-                        <p className='cart-empty'>El carrito está vacío</p>
-                    )}
-                </div>
+                        </div>
+                    ))
+                ) : (
+                    <p>No hay productos en el carrito</p>
+                )}
             </div>
-        </header>
+            <div> Total: ${calcularTotal()} </div>
+            <button onClick={processPayment}>Pagar</button>
+        </div>
     );
 };
 
