@@ -15,7 +15,7 @@ export const updateProducts = async (id_product, updatedProduct) => {
     
 
 // Corregir la función deleteProducts
-export const deleteProducts = (id_product) => axios.delete(`${PRODUCT_BACK}/user/${id_product}/delete`,{headers: authHeader()});
+export const deleteProducts = (id_product) => axios.delete(`${PRODUCT_BACK}/auth/${id_product}/delete`,{headers: authHeader()});
 
 // Corregir la función getProductById
-export const getProductById = (id_product) => axios.get(`${PRODUCT_BACK}/user/${id_product}/get`,{headers: authHeader()});
+export const getProductById = (id_product) => axios.get(`${PRODUCT_BACK}/auth/${id_product}/get`,{headers: authHeader()});

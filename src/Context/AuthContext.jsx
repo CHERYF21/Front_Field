@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
             }
             try {
                 const res = await verityTokenRequest(cookies.token)
-                //console.log(res);
+                console.log(res);
                 if (res.status !== 200) {
                     setIsAuthen(false);
                     return;

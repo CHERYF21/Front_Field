@@ -29,7 +29,7 @@ const AddProduct = () => {
     title: '',
     descripcion: '',
     id_saleUnit: '',
-    id:'040600b9-6f0e-4259-922e-5b17ea97d6ad'
+    id: user?.id
   });
 
   
@@ -80,7 +80,7 @@ const AddProduct = () => {
     formData.append('title', producto.title);
     formData.append('descripcion', producto.descripcion);
     formData.append('id_saleUnit',producto.id_saleUnit);
-    formData.append('id', '040600b9-6f0e-4259-922e-5b17ea97d6ad');
+    formData.append('id', user?.id);
 
     try{
       const response = await createProducts(formData);
@@ -94,7 +94,7 @@ const AddProduct = () => {
         img: '',
         title: '',
         descripcion: '',
-        id:'040600b9-6f0e-4259-922e-5b17ea97d6ad'
+        id: user?.id
       });
     } catch (error){
       console.error('Error al crear producto: ',error);
@@ -117,15 +117,15 @@ const AddProduct = () => {
             ))}
           </Select>
         </FormGroup>
-              <FormGroup>
-                <Label htmlForm="tipoUnit">Unidad de venta</Label>
-                <Select id="id_saleUnit" name="id_saleUnit" value={producto.id_saleUnit} onChange={handleChange}>
-                  <opinion value="">Unidad de venta</opinion>
-                  {unidades.map(unidades =>(
-                    <option key={unidades.id_saleUnit} value={unidades.id_saleUnit}>{unidades.unidad}</option>
-                  ))}
-                </Select>
-              </FormGroup>
+        <FormGroup>
+          <Label htmlFor="tipo">Categoria</Label>
+          <Select id="id_category" name="id_category" value={producto.id_category} onChange={handleChange}>
+            <option value="">Seleccione unidad de venta</option>
+            {unidades.map(unidades => (
+              <option key={unidades.id_saleUnit} value={unidades.id_saleUnit}>{unidades.unidad}</option>
+            ))}
+          </Select>
+        </FormGroup>
         <FormGroup>
           <Label htmlFor="cantidad">Cantidad:</Label>
           <Input type="number" id="quantity" name="quantity" value={producto.quantity} onChange={handleChange} required />
