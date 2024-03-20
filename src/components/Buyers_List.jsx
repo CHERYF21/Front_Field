@@ -1,14 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+
 const BuyersList = () => {
-  
-    const buyersData = [
-        { producto: 'Producto 1', monto: '$100', fecha: '2024-03-16' },
-        { producto: 'Producto 2', monto: '$150', fecha: '2024-03-17' },
-        { producto: 'Producto 3', monto: '$80', fecha: '2024-03-18' },
-        { producto: 'Producto 4', monto: '$200', fecha: '2024-03-19' },
-      ];
+  const [paginaActual, setPaginaActual] = useState(1);
+  const compradoresPorPagina = 5;
+
+  const buyersData = [
+    { producto: 'Producto 1', monto: '$100', fecha: '2024-03-16' },
+    { producto: 'Producto 2', monto: '$150', fecha: '2024-03-17' },
+    { producto: 'Producto 3', monto: '$80', fecha: '2024-03-18' },
+    { producto: 'Producto 4', monto: '$200', fecha: '2024-03-19' },
+  ];
+
+  const indicePrimerComprador = (paginaActual - 1) * compradoresPorPagina;
+  const indiceUltimoComprador = paginaActual * compradoresPorPagina;
+  const compradoresActuales = buyersData.slice(indicePrimerComprador, indiceUltimoComprador);
+
+  const cambiarPagina = (numeroPagina) => {
+    setPaginaActual(numeroPagina);
+  };
 
   return (
     <Container>
@@ -24,18 +35,27 @@ const BuyersList = () => {
           </tr>
         </thead>
         <tbody>
-          {buyersData.map((buyer, index) => (
-            <tr key={index}>
-              <td>{buyer.producto}</td>
-              <td>{buyer.monto}</td>
-              <td>{buyer.fecha}</td>
+          {compradoresActuales.map((comprador, index) => (
+            <tr key={indicePrimerComprador + index}>
+              <TableCell>{comprador.producto}</TableCell>
+              <TableCell>{comprador.monto}</TableCell>
+              <TableCell>{comprador.fecha}</TableCell>
             </tr>
           ))}
         </tbody>
       </Table>
-      <Button bgColor="#ee2738">
-           <Link to="/contact" style={{ textDecoration: 'none', color: 'white' }}>Quiero hacer un reclamo!</Link>
-         </Button>
+      <Pagination>
+        <PageButton onClick={() => cambiarPagina(paginaActual - 1)} disabled={paginaActual === 1}>&laquo; Anterior</PageButton>
+        {Array.from({ length: Math.ceil(buyersData.length / compradoresPorPagina) }, (_, index) => (
+          <PageButton key={index + 1} onClick={() => cambiarPagina(index + 1)} active={index + 1 === paginaActual}>
+            {index + 1}
+          </PageButton>
+        ))}
+        <PageButton onClick={() => cambiarPagina(paginaActual + 1)} disabled={paginaActual === Math.ceil(buyersData.length / compradoresPorPagina)}>Siguiente &raquo;</PageButton>
+      </Pagination>
+      <Button bgColor="#1e6340">
+        <Link to="/contact" style={{ textDecoration: 'none', color: 'white' }}>Quiero hacer un reclamo!</Link>
+      </Button>
     </Container>
   );
 };
@@ -49,7 +69,6 @@ const Container = styled.div`
   margin-top: 50px;
 `;
 
-
 const Title = styled.h2`
   color: #fff;
   font-family: inherit;
@@ -60,6 +79,7 @@ const Title = styled.h2`
 const Span = styled.span`
   color: #1fc271;
 `;
+
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
@@ -77,7 +97,6 @@ const Table = styled.table`
   }
 `;
 
-
 const TableCell = styled.td`
   padding: 10px;
   border-bottom: 1px solid #ddd;
@@ -94,4 +113,25 @@ const Button = styled.button`
   margin-right: 100px;
   box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.5);
   margin-top: 10px;
+`;
+
+const Pagination = styled.div`
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+`;
+
+const PageButton = styled.button`
+  background-color: ${({ active }) => active ? '#004d00' : '#006400'};
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
+  box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.5);
+
+  &:hover {
+    background-color: ${({ active }) => active ? '#004d00' : '#004d00'};
+  }
 `;
