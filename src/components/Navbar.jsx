@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import {  NavLink as RouterNavLink } from 'react-router-dom';  
 import imagenes from '../assets/imagenes';
-import { useAuth } from '../Context/AuthContext';
+import { AuthProvider, useAuth } from '../Context/AuthContext';
 
 
 function Navbar() {
@@ -14,34 +14,37 @@ function Navbar() {
 
   return (
     
-
-      <NavContainer>
-        <ImageNavbar>
-          <img src={imagenes.logo} alt="Logo" />
-        </ImageNavbar>
-        <Title>
-          Field <Span>Market</Span>
-        </Title>
-        <MenuIcon onClick={toggleMenu}>
-          <div />
-          <div />
-          <div />
-        </MenuIcon>
-        <NavLinks open={isMenuOpen}>
-          <StyledNavLink to="/inicio">Inicio</StyledNavLink>
-  
-          { isAuthen && 
-            <>
-              <StyledNavLink to="/contact">Contacto</StyledNavLink>
-             <StyledNavLink to="/productos">Productos</StyledNavLink>
-             <StyledNavLink to="/funciones">Mi cuenta</StyledNavLink>
-             <StyledNavLink to="/perfil">Mi Perfil</StyledNavLink>
-              <StyledNavLink to="/admin">Admin</StyledNavLink>
-     
-            </>
-          } 
-        </NavLinks>
-      </NavContainer>
+    <AuthProvider>
+        <NavContainer>
+          <ImageNavbar>
+            <img src={imagenes.logo} alt="Logo" />
+          </ImageNavbar>
+          <Title>
+            Field <Span>Market</Span>
+          </Title>
+          <MenuIcon onClick={toggleMenu}>
+            <div />
+            <div />
+            <div />
+          </MenuIcon>
+          <NavLinks open={isMenuOpen}>
+            <StyledNavLink to="/inicio">Inicio</StyledNavLink>
+    
+            { isAuthen && 
+              <>
+                <StyledNavLink to="/contact">Contacto</StyledNavLink>
+              <StyledNavLink to="/productos">Productos</StyledNavLink>
+              <StyledNavLink to="/funciones">Mi cuenta</StyledNavLink>
+              <StyledNavLink to="/perfil">Mi Perfil</StyledNavLink>
+                {(user?.rol === 'Admin' ) &&  (
+                  <StyledNavLink to="/admin">Admin</StyledNavLink> 
+                  )}
+      
+              </>
+            } 
+          </NavLinks>
+        </NavContainer>
+      </AuthProvider>
 
     
   );

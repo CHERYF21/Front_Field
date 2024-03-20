@@ -134,6 +134,7 @@ function UserFormModal() {
                             <FormGroup>
                                 <Label for="role">Rol:</Label>
                                 <Select id="role" name="role" onChange={handleRoleChange}>
+                                    <option value="rol">Seleccione un rol</option>
                                     <option value="Agricultor">Agricultor</option>
                                     <option value="Comprador">Comprador</option>
                                 </Select>
