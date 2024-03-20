@@ -6,12 +6,13 @@ import AddCategory from './AddCategory';
 import EditarProducto from './Editar_Producto';
 import { deleteProducts, listProducts } from '../service/productService';
 
-
 const ListProduct = () => {
   const [productos, setProductos] = useState([]);
   const [filtroNombre, setFiltroNombre] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
+  const [paginaActual, setPaginaActual] = useState(1);
+  const productosPorPagina = 5;
 
   useEffect(() => {
     fetchProductos();
@@ -36,25 +37,21 @@ const ListProduct = () => {
   };
 
   const abrirModalEditar = (producto) => {
-    console.log('Producto:', producto);
-  
-    axios.get(`http://localhost:8080/user/${producto.id}`)
-      .then(response => {
-        console.log('Producto obtenido:', response.data);
-  
-        response.data.base64Image = btoa(String.fromCharCode.apply(null, new Uint8Array(response.data.img)));
-        
-        // Añade logs para asegurarte de que los datos están listos antes de abrir el modal
-        console.log('Datos preparados, abriendo modal...');
-        
-        setProductoSeleccionado(response.data);
-        setModalOpen(true);
-      })
-      .catch(error => {
-        console.error('Error al obtener el producto:', error);
-      });
+    setProductoSeleccionado(producto);
+    setModalOpen(true);
   };
-  
+
+  const cerrarModal = () => {
+    setModalOpen(false);
+  };
+
+  const cambiarPagina = (numeroPagina) => {
+    setPaginaActual(numeroPagina);
+  };
+
+  const indicePrimerProducto = (paginaActual - 1) * productosPorPagina;
+  const indiceUltimoProducto = paginaActual * productosPorPagina;
+  const productosActuales = productos.slice(indicePrimerProducto, indiceUltimoProducto);
 
   return (
     <TableContainer>
@@ -81,45 +78,51 @@ const ListProduct = () => {
             <TableHeader>Nombre</TableHeader>
             <TableHeader>Categoría</TableHeader>
             <TableHeader>Cantidad</TableHeader>
-            <TableHeader> description</TableHeader>
+            <TableHeader>Descripción</TableHeader>
             <TableHeader>Precio</TableHeader>
             <TableHeader>Imagen</TableHeader>
             <TableHeader>Acciones</TableHeader>
           </tr>
         </thead>
         <tbody>
-          {productos.map((producto) => (
-            <TableRow key={producto.id_product}>
+          {productosActuales.map((producto, index) => (
+            <TableRow key={indicePrimerProducto + index}>
               <TableCell>{producto.id_product}</TableCell>
               <TableCell>{producto.title}</TableCell>
               <TableCell>{producto.category.category}</TableCell>
               <TableCell>{producto.quantity}</TableCell>
               <TableCell>{producto.descripcion}</TableCell>
               <TableCell>{producto.price}</TableCell>
-
               <TableCell>
                 <img src={`data:image/jpeg;base64,${producto.img}`} style={{ width: '300px', height: '70px' }} />
               </TableCell>
               <TableCell>
-              <ButtonContainer>
-              <Button className='editar' bgColor="#2dafeb" onClick={() => abrirModalEditar(producto)}>Editar</Button>
+                <ButtonContainer>
+                  <Button className='editar' bgColor="#2dafeb" onClick={() => abrirModalEditar(producto)}>Editar</Button>
                   <Button bgColor="#ee2738" onClick={() => eliminarProducto(producto.id)}>Eliminar</Button>
-              </ButtonContainer>
+                </ButtonContainer>
               </TableCell>
             </TableRow>
           ))}
         </tbody>
       </StyledTable>
-      {console.log('productoSeleccionado:', productoSeleccionado)}
-      
+      <Pagination>
+        <PageButton onClick={() => cambiarPagina(paginaActual - 1)} disabled={paginaActual === 1}>&laquo; Anterior</PageButton>
+        {Array.from({ length: Math.ceil(productos.length / productosPorPagina) }, (_, index) => (
+          <PageButton key={index + 1} onClick={() => cambiarPagina(index + 1)} active={index + 1 === paginaActual}>
+            {index + 1}
+          </PageButton>
+        ))}
+        <PageButton onClick={() => cambiarPagina(paginaActual + 1)} disabled={paginaActual === Math.ceil(productos.length / productosPorPagina)}>Siguiente &raquo;</PageButton>
+      </Pagination>
       {productoSeleccionado && (
-    <EditProductModal
-      isOpen={modalOpen}
-      onClose={() => setModalOpen(false)}
-      product={productoSeleccionado}
-      reloadProductList={fetchProductos} // Pasa la función correcta
-    />
-  )}
+        <EditProductModal
+          isOpen={modalOpen}
+          onClose={cerrarModal}
+          product={productoSeleccionado}
+          reloadProductList={fetchProductos}
+        />
+      )}
     </TableContainer>
   );
 }
@@ -145,21 +148,18 @@ const Span = styled.span`
 `;
 
 const StyledTable = styled.table`
-
   border-collapse: collapse;
   width: 100%;
   text-align: center;
 `;
 
 const TableHeader = styled.th`
-
   padding: 8px;
   border-bottom: 1px solid #ddd;
   background-color: #f2f2f2;
 `;
 
 const TableRow = styled.tr`
-
   &:hover {
     background-color: #f5f5f5;
   }
@@ -171,6 +171,7 @@ const TableCell = styled.td`
   background-color: white;
   width: 150px;
 `;
+
 const Button = styled.button`
   background-color: ${({ bgColor }) => bgColor};
   color: white;
@@ -205,7 +206,28 @@ const AddContainer = styled.div`
 `;
 
 const ButtonContainer = styled.div`
-  display: flex; /* Hace que los botones estén en línea horizontalmente */
-  justify-content: flex-start; /* Alinea los botones a la izquierda */
-  align-items: center; /* Alinea los botones verticalmente al centro */
-  `;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+`;
+
+const Pagination = styled.div`
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+`;
+
+const PageButton = styled.button`
+  background-color: ${({ active }) => active ? '#004d00' : '#006400'};
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
+  box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.5);
+
+  &:hover {
+    background-color: ${({ active }) => active ? '#004d00' : '#004d00'};
+  }
+`;
