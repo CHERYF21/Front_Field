@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styled, { keyframes } from 'styled-components';
+import styled  from 'styled-components';
 import { crearUsuario, saveUser } from "../service/userService";
 import Cookies from "js-cookie";
 import { useAuth } from "../Context/AuthContext";
@@ -20,7 +20,6 @@ function UserFormModal() {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        console.log(value)
         if (name === "password") {
             setNewUser({
                 ...newUser,
@@ -36,7 +35,6 @@ function UserFormModal() {
 
     const handleRoleChange = (e) => {
         const { value } = e.target;
-        console.log(value);
         setNewUser({
             ...newUser,
             rol: value
@@ -47,7 +45,6 @@ function UserFormModal() {
         e.preventDefault();
         try {
             const res = await crearUsuario(newUser);
-            console.log(res);
             Cookies.set('token', res.data?.token);
             setIsAuthen(true);
             setUser(res.data?.usuario);
@@ -58,231 +55,197 @@ function UserFormModal() {
         };
     };
 
-    
-  
-
-
     return (
-        <> <div class="ModalBackground" style={{ display: showModal ? 'block' : 'none' }}>
-        <div class="ModalContent">
-            <div class="ModalHeader">
-                <button class="CloseButton" onClick={() => setShowModal(false)}>X</button>
-            </div>
-            <div class="ModalBody">
-                <form class="FormContainer" onSubmit={handleSubmit}>
-                    <h2 class="Title">Registrarme</h2>
-                    <div>
-                        <label for="nombre" class="Label">Nombre:</label>
-                        <input
-                            type="text"
-                            id="nombre"
-                            name="nombre"
-                            value={newUser.nombre}
-                            onChange={handleInputChange}
-                            required
-                            class="Input"
-                        />
+        <>
+            <ModalBackground style={{ display: showModal ? 'block' : 'none' }}>
+                <ModalContent>
+                    <div class="ModalHeader">
+                        <CloseButton onClick={() => setShowModal(false)}>X</CloseButton>
                     </div>
-                    <div class="">
-                        <label for="apellido" class="Label">Apellido:</label>
-                        <input
-                            type="text"
-                            id="apellido"
-                            name="apellido"
-                            value={newUser.apellido}
-                            onChange={handleInputChange}
-                            required
-                            class="Input"
-                        />
+                    <div class="ModalBody">
+                        <FormContainer onSubmit={handleSubmit}>
+                            <Title>Registrarme</Title>
+                            <FormGroup>
+                                <Label for="nombre">Nombre:</Label>
+                                <Input
+                                    type="text"
+                                    id="nombre"
+                                    name="nombre"
+                                    value={newUser.nombre}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="apellido">Apellido:</Label>
+                                <Input
+                                    type="text"
+                                    id="apellido"
+                                    name="apellido"
+                                    value={newUser.apellido}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="email">Email:</Label>
+                                <Input
+                                    type="email"
+                                    id="username"
+                                    name="username"
+                                    value={newUser.username}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="telefono">Telefono:</Label>
+                                <Input
+                                    type="telefono"
+                                    id="telefono"
+                                    name="telefono"
+                                    value={newUser.telefono}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="direccion">Direccion:</Label>
+                                <Input
+                                    type="text"
+                                    id="direccion"
+                                    name="direccion"
+                                    value={newUser.direccion}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="password">Contraseña:</Label>
+                                <Input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    value={newUser.password}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="role">Rol:</Label>
+                                <Select id="role" name="role" onChange={handleRoleChange}>
+                                    <option value="Agricultor">Agricultor</option>
+                                    <option value="Comprador">Comprador</option>
+                                </Select>
+                            </FormGroup>
+                            <Button type="submit">Registrarme</Button>
+                        </FormContainer>
                     </div>
-                    <div>
-                        <label for="email" class="Label">Email:</label>
-                        <input
-                            type="email"
-                            id="username"
-                            name="username"
-                            value={newUser.username}
-                            onChange={handleInputChange}
-                            required
-                            class="Input"
-                        />
-                    </div>
-                    <div>
-                        <label for="telefono" class="Label">Telefono:</label>
-                        <input
-                            type="telefono"
-                            id="telefono"
-                            name="telefono"
-                            value={newUser.telefono}
-                            onChange={handleInputChange}
-                            required
-                            class="Input"
-                        />
-                    </div>
-                    <div>
-                        <label for="direccion" class="Label">Direccion:</label>
-                        <input
-                            type="text"
-                            id="direccion"
-                            name="direccion"
-                            value={newUser.direccion}
-                            onChange={handleInputChange}
-                            required
-                            class="Input"
-                        />
-                    </div>
-                    <div>
-                        <label for="password" class="Label">Contraseña:</label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            value={newUser.password}
-                            onChange={handleInputChange}
-                            required
-                            class="Input"
-                        />
-                    </div>  
-                    <div>
-                        <label for="role" class="Label">Rol:</label>
-                        <select id="role" name="role" onChange={handleInputChange} class="Select">
-                            <option value="Agricultor">Agricultor</option>
-                            <option value="Comprador">Comprador</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="Button">Registrarme</button>
-                </form>
-            </div>
-        </div>
-    </div>
-    <button onClick={() => setShowModal(true)} class="OpenModalButton">¡Quiero registrarme YA!</button>
-</>
-);
+                </ModalContent>
+            </ModalBackground>
+            <OpenModalButton onClick={() => setShowModal(true)}>¡Quiero registrarme YA!</OpenModalButton>
+        </>
+    );
 }
 
- 
 export default UserFormModal;
 
+const ModalBackground = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  display: none;
+`;
 
+const ModalContent = styled.div`
+  background-color: white;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  border-radius: 8px;
+  max-height: 90%;
+  height: auto;
+  width: 60%;
+  max-width: 400px;
+  overflow-y: auto;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+`;
 
-// const ModalBackground = styled.div`
-//   position: fixed;
-//   top: 0;
-//   left: 0;
-//   width: 100%;
-//   height: 100%;
-//   background-color: rgba(0, 0, 0, 0.5);
-//   display: ${({ show }) => (show ? 'block' : 'none')};
- 
-// `;
-// const ModalContent = styled.div`
-// background-color: white;
-//   position: fixed;
-//   left: 45%; 
-//   transform: translate(-40%, -50%); 
-//   padding: 20px;
-//   border-radius: 8px;
-//   max-height: 60%; 
-//   top: 220px;
-//  overflow: auto;
+const CloseButton = styled.button`
+  background-color: #006400;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+`;
 
-// `;
+const OpenModalButton = styled.button`
+  background-color: #006400;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 250px;
+  margin-left: 90px;
+  box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.5);
+`;
 
-// const ModalHeader = styled.div`
-//   display: flex;
-//   justify-content: flex-end;
-// `;
+const FormContainer = styled.form`
+  background-color: #f0f8f0;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 100%;
+  margin: 0 auto;
+  max-height: calc(100% - 40px); /* Resta el espacio para el padding y el botón de cerrar */
+  overflow-y: auto; /* Añade scroll si el contenido excede la altura máxima */
+`;
 
-// const ModalBody = styled.div`
-//   margin-top: 5px;
-// `;
+const Title = styled.h2`
+  color: #006400;
+  text-align: center;
+`;
 
-// const CloseButton = styled.button`
-//   background-color: #006400; 
-//   color: white;
-//   border: none;
-//   padding: 8px 12px;
-//   border-radius: 4px;
-//   cursor: pointer;
-// `;
-// const zoomAnimation = keyframes`
-//   0% {
-//     transform: scale(1);
-//   }
-//   50% {
-//     transform: scale(1.1);
-//   }
-//   100% {
-//     transform: scale(1);
-//   }
-// `;
+const FormGroup = styled.div`
+  margin-bottom: 15px;
+`;
 
+const Label = styled.label`
+  display: block;
+  margin-bottom: 5px;
+  color: #006400;
+`;
 
-// const OpenModalButton = styled.button`
-//   background-color: #006400; 
-//   color: white;
-//   border: none;
-//   padding: 8px 12px;
-//   border-radius: 4px;
-//   cursor: pointer;
-//   margin-top: 250px;
-//   margin-left: 90px;
-//   box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.5);
-//   animation: ${zoomAnimation} 2s infinite alternate;
+const Input = styled.input`
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;
 
+const Select = styled.select`
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;
 
-// `;
+const Button = styled.button`
+  width: 100%;
+  padding: 10px;
+  background-color: #006400;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 
-// const FormContainer = styled.form`
-//   background-color: #f0f8f0; 
-//   padding: 20px;
-//   border-radius: 8px;
-//   max-width: 300px;
-//   margin: 0 auto;
-  
-
-// `;
-
-// const Title = styled.h2`
-//   color: #006400; 
-//   text-align: center;
-// `;
-
-// const FormGroup = styled.div`
-//   margin-bottom: 15px;
-// `;
-
-// const Label = styled.label`
-//   display: block;
-//   margin-bottom: 5px;
-//   color: #006400; 
-// `;
-
-// const Input = styled.input`
-//   width: 100%;
-//   padding: 8px;
-//   border: 1px solid #ccc;
-//   border-radius: 4px;
-// `;
-
-// const Select = styled.select`
-//   width: 100%;
-//   padding: 8px;
-//   border: 1px solid #ccc;
-//   border-radius: 4px;
-// `;
-
-// const Button = styled.button`
-//   width: 100%;
-//   padding: 10px;
-//   background-color: #006400; 
-//   color: #fff;
-//   border: none;
-//   border-radius: 4px;
-//   cursor: pointer;
-//   transition: background-color 0.3s;
-  
-//   &:hover {
-//     background-color: #004d00; 
-//   }
-// `;
+  &:hover {
+    background-color: #004d00;
+  }
+`;

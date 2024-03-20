@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ventaMercado } from '../service/mercadopago';
-
+import { FaShoppingCart } from 'react-icons/fa'; // Importar el icono de carrito
 
 export const Header = ({ cart, onClose, handleEmptyCart }) => {
     
@@ -32,14 +32,12 @@ export const Header = ({ cart, onClose, handleEmptyCart }) => {
 
     return (
         <div className="container-icon">
-            <div className="cart-items">
-                    <h2>Carrito de Compras</h2>
-                    <button onClick={onClose}>Cerrar</button>
+            <FaShoppingCart className="icon-cart" onClick={onClose} />
+            {cart && cart.length > 0 && (
+                <div className="cart-items">
                     <button onClick={handleEmptyCart}>Vaciar carrito</button>
-                {cart && cart.length > 0 ? (
-                    cart.map((product) => (
+                    {cart.map((product) => (
                         <div key={product.id_product} className="cart-item">
-                            {/* <img src={`data:image/jpeg;base64,${product.img}`} alt={product.title} /> */}
                             <div className="item-details">
                                 <p>{product.id_product}</p>
                                 <p>{product.title}</p>
@@ -48,13 +46,11 @@ export const Header = ({ cart, onClose, handleEmptyCart }) => {
                                 <p>Precio: ${product.price}</p> 
                             </div>
                         </div>
-                    ))
-                ) : (
-                    <p>No hay productos en el carrito</p>
-                )}
-            </div>
-            <div> Total: ${calcularTotal()} </div>
-            <button onClick={processPayment}>Pagar</button>
+                    ))}
+                    <div> Total: ${calcularTotal()} </div>
+                    <button onClick={processPayment}>Pagar</button>
+                </div>
+            )}
         </div>
     );
 };
