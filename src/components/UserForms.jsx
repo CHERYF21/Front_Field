@@ -52,41 +52,98 @@ function UserFormModal() {
     }
   };
 
-  return (
-    <>
-      <ModalBackground style={{ display: showModal ? "block" : "none" }}>
-        <ModalContent>
-          <div className="ModalHeader">
-            <CloseButton onClick={() => setShowModal(false)}>X</CloseButton>
-          </div>
-          <div className="ModalBody">
-            {alertMessage && (
-              <AlertMessage type={alertType}>{alertMessage}</AlertMessage>
-            )}
-            <FormContainer onSubmit={handleSubmit}>
-              <Title>Registrarme</Title>
-              <FormGroup>
-                <Label htmlFor="nombre">Nombre:</Label>
-                <Input
-                  type="text"
-                  id="nombre"
-                  name="nombre"
-                  value={newUser.nombre}
-                  onChange={handleInputChange}
-                  required
-                />
-              </FormGroup>
-              {/* Otros campos del formulario */}
-              <Button type="submit">Registrarme</Button>
-            </FormContainer>
-          </div>
-        </ModalContent>
-      </ModalBackground>
-      <OpenModalButton onClick={() => setShowModal(true)}>
-        ¡Quiero registrarme YA!
-      </OpenModalButton>
-    </>
-  );
+    return (
+        <>
+            <ModalBackground style={{ display: showModal ? 'block' : 'none' }}>
+                <ModalContent>
+                    <div class="ModalHeader">
+                        <CloseButton onClick={() => setShowModal(false)}>X</CloseButton>
+                    </div>
+                    <div class="ModalBody">
+                        <FormContainer onSubmit={handleSubmit}>
+                            <Title>Registrarme</Title>
+                            <FormGroup>
+                                <Label for="nombre">Nombre:</Label>
+                                <Input
+                                    type="text"
+                                    id="nombre"
+                                    name="nombre"
+                                    value={newUser.nombre}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="apellido">Apellido:</Label>
+                                <Input
+                                    type="text"
+                                    id="apellido"
+                                    name="apellido"
+                                    value={newUser.apellido}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="email">Email:</Label>
+                                <Input
+                                    type="email"
+                                    id="username"
+                                    name="username"
+                                    value={newUser.username}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="telefono">Telefono:</Label>
+                                <Input
+                                    type="telefono"
+                                    id="telefono"
+                                    name="telefono"
+                                    value={newUser.telefono}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="direccion">Direccion:</Label>
+                                <Input
+                                    type="text"
+                                    id="direccion"
+                                    name="direccion"
+                                    value={newUser.direccion}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="password">Contraseña:</Label>
+                                <Input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    value={newUser.password}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="role">Rol:</Label>
+                                <Select id="role" name="role" onChange={handleRoleChange}>
+                                    <option value="rol">Seleccione un rol</option>
+                                    <option value="Agricultor">Agricultor</option>
+                                    <option value="Comprador">Comprador</option>
+                                </Select>
+                            </FormGroup>
+                            <Button type="submit">Registrarme</Button>
+                        </FormContainer>
+                    </div>
+                </ModalContent>
+            </ModalBackground>
+            <OpenModalButton onClick={() => setShowModal(true)}>¡Quiero registrarme YA!</OpenModalButton>
+        </>
+    );
 }
 
 export default UserFormModal;
@@ -96,10 +153,10 @@ const ModalBackground = styled.div`
   top: 0;
   left: 0;
   width: 100%;
-  height: 40%;
-  display: none;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: ${({ show }) => (show ? "block" : "none")};
 `;
-
 const ModalContent = styled.div`
   background-color: white;
   position: fixed;
