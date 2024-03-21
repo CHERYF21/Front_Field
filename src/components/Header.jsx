@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { ventaMercado } from '../service/mercadopago';
 import styled from 'styled-components';
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import OrderPDF from './OrderPDF';
 
 
 export const Header = ({ cart, onClose, handleEmptyCart }) => {
@@ -68,6 +70,22 @@ export const Header = ({ cart, onClose, handleEmptyCart }) => {
                     <h3> Total: ${calcularTotal()} </h3>
                     <button onClick={handleEmptyCart}>Vaciar carrito</button>
                     <button onClick={processPayment}>Pagar</button>
+                    <PDFDownloadLink
+                        document={<OrderPDF cart={cart}/>}
+                        fileName="carrito.pdf"
+                      >
+                        {({ loading, url, error, blob }) =>
+                          loading ? (
+                            <button className="pdf-download bg-morado2">
+                              Carrito ...
+                            </button>
+                          ) : (
+                            <button className="pdf-download bg-morado2">
+                              Mostrar productos en pdf
+                            </button>
+                          )
+                        }
+                    </PDFDownloadLink>
                 </div>
             )}
         </>

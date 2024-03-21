@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { createCategory } from '../service/categoryService';
 
 const Modal = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
@@ -22,11 +23,17 @@ const AddCategory= () => {
     setNombreCategoria(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Nombre de la categoría:', nombreCategoria);
-    setNombreCategoria('');
-    setModalAbierto(false);
+    try{
+      const res = await createCategory({category: nombreCategoria});
+      setNombreCategoria(res.data);
+      alert('Categoria creada');
+    } catch (error){
+      console.log("Error al registrar: ", error);
+      alert(error.message);
+    };
+
   };
 
   return (

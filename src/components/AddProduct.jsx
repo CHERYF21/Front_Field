@@ -118,8 +118,8 @@ const AddProduct = () => {
           </Select>
         </FormGroup>
         <FormGroup>
-          <Label htmlFor="tipo">Categoria</Label>
-          <Select id="id_category" name="id_category" value={producto.id_category} onChange={handleChange}>
+          <Label htmlFor="tipo">Unidad de venta</Label>
+          <Select id="id_saleUnit" name="id_saleUnit" value={producto.id_saleUnit} onChange={handleChange}>
             <option value="">Seleccione unidad de venta</option>
             {unidades.map(unidades => (
               <option key={unidades.id_saleUnit} value={unidades.id_saleUnit}>{unidades.unidad}</option>

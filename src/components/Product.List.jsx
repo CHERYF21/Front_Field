@@ -86,6 +86,21 @@ const ProductList = () => {
                       <p>Teléfono: {product.agricultor.telefono}</p>
                     </div>
                   )}
+                   {(user.rol === 'Admin' || user.rol === 'Agricultor') && (
+                  <button onClick={() => abrirModalUpdateProduct(product)}>
+                    Actualizar
+                  </button>
+                )}
+                {(user.rol === 'Admin' || user.rol === 'Agricultor') && (
+                  <button onClick={() => handleEliminarProduct(product.id_product)}>
+                    Eliminar
+                  </button>
+                )}
+                {(user.rol === 'Admin' || user.rol === 'Agricultor') && (
+                  <button onClick={() => handleAddToCard(product)}>
+                    Añadir al carrito
+                  </button>
+                )}
                   {/* Botón dentro de la tarjeta del producto */}
                   <button onClick={() => openAgricultorModal(product.agricultor)}>
                     Información de Agricultor

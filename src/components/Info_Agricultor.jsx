@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { listUser } from '../service/userService';
+import { useAuth } from '../Context/AuthContext';
 
 const Info_Agricultor = ({ agricultor }) => {
+    const {isAuthen, user} = useAuth();
     const [showModal, setShowModal] = useState(false);
+    
 
     const toggleModal = () => {
         setShowModal(!showModal);
     };
+
+    
 
     return (
         <>
@@ -22,8 +28,8 @@ const Info_Agricultor = ({ agricultor }) => {
                             <CardsContainer>
                                 <StyledCard>
                                     <div className="contact-info">
-                                        <p>Nombre: {agricultor.nombre}</p>
-                                        <p>Teléfono: {agricultor.telefono}</p>
+                                        <p>Nombre: {user?.nombre} {user?.apellido}</p>
+                                        <p>Teléfono: {user?.telefono}</p>
                                     </div>
                                 </StyledCard>
                             </CardsContainer>
