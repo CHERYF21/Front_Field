@@ -3,15 +3,16 @@ import { deleteProducts, listProducts, updateProducts } from '../service/product
 import { useAuth } from '../Context/AuthContext';
 import UpdateProduct from './UpdateProduct';
 import Header from './Header';
+import Info_Agricultor from './Info_Agricultor'; 
 
 const ProductList = () => {
-
   const [products, setProducts] = useState([]);
-  const {isAuthen, user} = useAuth();
+  const { isAuthen, user } = useAuth();
   const [modalOpen, setModalOpen] = useState(false);
-  const [productoSeleccionado, setProductoSeleccionado] = useState(null);//para el actualizar
+  const [productoSeleccionado, setProductoSeleccionado] = useState(null);
   const [cart, setCart] = useState([]);
-//listar products
+  const [selectedAgricultor, setSelectedAgricultor] = useState(null); 
+
   useEffect(() => {
     async function fetchProducts(){
       try{
@@ -23,7 +24,7 @@ const ProductList = () => {
     }
     fetchProducts();
   }, []);
-//eliminar product
+
   const handleEliminarProduct = (id_product) => {
     deleteProducts(id_product)
     .then(response => {
@@ -34,81 +35,62 @@ const ProductList = () => {
       console.log('Error al eliminar producto', error);
     })
   };
-//actualizar product
-  const actualizarProduct = async(productoActualizado) =>{
-    try{
-      const response = await updateProducts(productoActualizado.id_product, {
-        title: productoActualizado.title,
-        descripcion: productoActualizado.descripcion,
-        price: productoActualizado.price,
-        quantity: productoActualizado.quantity,
-        img: productoActualizado.img
-      });
-      console.log('Producto actualizado', response.data);
-
-      const updateProducts = products.map(product => {
-        if(product.id_product === productoActualizado.id_product){
-          return response.data;
-        }
-        return product;
-      });
-      setProducts(updateProducts);
-      setModalOpen(false);
-    } catch (error) {
-      console.log('Error al actualizar producto', error);
-    }
-  }
 
   const abrirModalUpdateProduct = (producto) =>{
     setProductoSeleccionado(producto);
     setModalOpen(true);
   }
+
   const cerrarModal = () =>{
     setModalOpen(false);
   }
 
-  //agregar card al carrito
   const handleAddToCard = (product) =>{
     const productToAdd = {...product, quantity: 1};
     setCart([...cart, productToAdd]);
     setModalOpen(true);
   }
-  //vaciar carrito
+
   const handleEmptyCart = () =>{
     setCart([]);
   }
 
+  const openAgricultorModal = (agricultor) => {
+    setSelectedAgricultor(agricultor);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedAgricultor(null);
+    setModalOpen(false);
+  };
 
   return (
-
     <div className='container-items'>
       {products.map((product) => (
         <div key={product.id_product} className='item'>
-          <figure>
+          <figure className="image-container">
             <img src={`data:image/jpeg;base64,${product.img}`} alt={product.title} />
             <figcaption>
               <div className='info-product'>
                 <h1 className='price'> ${product.price.toFixed(3)}</h1>
                 <h4>Producto: {product.title}</h4>
-                <p className='description'>Descripcion:{product.descripcion}</p>
-                <p className='unidad'>Unidad:{product.sales_unit.unidad}</p>
+                <p className='description'>Descripcion: {product.descripcion}</p>
+                <p className='unidad'>Unidad: {product.sales_unit.unidad}</p>
                 <p className='category'>Categoria: {product.category.category}</p>
-                {(user?.rol === 'Admin' || user?.rol === 'Agricultor') && (
-                  <button onClick={() => abrirModalUpdateProduct(product)}>
-                    Actualizar
+                <div className="overlay">
+                  {product.agricultor && (
+                    <div>
+                      <p>Información de agricultor:</p>
+                      <p>Nombre: {product.agricultor.nombre}</p>
+                      <p>Teléfono: {product.agricultor.telefono}</p>
+                    </div>
+                  )}
+                  {/* Botón dentro de la tarjeta del producto */}
+                  <button onClick={() => openAgricultorModal(product.agricultor)}>
+                    Información de Agricultor
                   </button>
-                )}
-                {(user?.rol === 'Admin' || user?.rol === 'Agricultor') &&  (
-                  <button onClick={() => handleEliminarProduct(product.id_product)}>
-                    Eliminar
-                  </button>
-                )}
-               {(user?.rol === 'Admin' || user?.rol === 'Agricultor') && (
-                  <button onClick={() => handleAddToCard(product)}>
-                    Añadir al carrito
-                  </button>
-                )}
-                
+                </div>
               </div>
             </figcaption>
           </figure>
@@ -116,6 +98,7 @@ const ProductList = () => {
         </div>
       ))}
       {modalOpen && <Header cart={cart} onClose={() => setModalOpen(false)} handleEmptyCart={handleEmptyCart} />}
+      {modalOpen && <Info_Agricultor agricultor={selectedAgricultor} onClose={closeModal} />}
     </div>
   );
 };

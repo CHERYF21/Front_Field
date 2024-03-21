@@ -1,17 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from 'styled-components';
 import { loginUser } from "../service/userService";
 import Cookies from "js-cookie";
 import { useAuth } from "../Context/AuthContext";
 
 function Login() {
-  const {setIsAuthen, setUser} = useAuth();
+  const { setIsAuthen, setUser } = useAuth();
   const [credentials, setCredentials] = useState({
     username: '',
     password: ''
   });
-
   const [showModal, setShowModal] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState(""); // "success" or "error"
+  const [showAlert, setShowAlert] = useState(false);
+
+  useEffect(() => {
+    if (showAlert) {
+      const timeout = setTimeout(() => {
+        setShowAlert(false);
+      }, 2000); // Oculta la alerta después de 2 segundos
+
+      return () => clearTimeout(timeout);
+    }
+  }, [showAlert]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,9 +37,17 @@ function Login() {
       Cookies.set("token", resp.data?.token);
       setIsAuthen(true);
       setUser(resp.data?.user);
+      setAlertMessage("Inicio de sesión exitoso");
+      setAlertType("success");
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowModal(false);
+      }, 2000); // Cierra el modal después de 2 segundos
     } catch (error) {
       console.log('Error al Loguar: ', error);
-      alert(error.message);
+      setAlertMessage(error.message);
+      setAlertType("error");
+      setShowAlert(true);
     }
   };
 
@@ -49,6 +69,9 @@ function Login() {
           <ModalBody>
             <FormContainer onSubmit={handleSubmit}>
               <Title>Inicio de Sesión</Title>
+              {showAlert && (
+                <AlertMessage type={alertType}>{alertMessage}</AlertMessage>
+              )}
               <FormGroup>
                 <Label htmlFor="email">Email:</Label>
                 <Input
@@ -80,7 +103,6 @@ function Login() {
     </>
   );
 }
-
 
 export default Login;
 
@@ -179,4 +201,13 @@ const Button = styled.button`
   &:hover {
     background-color: #004d00; 
   }
+`;
+
+const AlertMessage = styled.div`
+  background-color: ${({ type }) => (type === "success" ? "#4caf50" : "#f44336")};
+  color: white;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  text-align: center;
 `;

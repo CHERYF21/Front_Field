@@ -1,151 +1,92 @@
-import React, { useEffect, useState } from "react";
-import styled  from 'styled-components';
-import { crearUsuario, saveUser } from "../service/userService";
+import React, { useState } from "react";
+import styled from "styled-components";
+import { crearUsuario } from "../service/userService";
 import Cookies from "js-cookie";
 import { useAuth } from "../Context/AuthContext";
 
 function UserFormModal() {
-    const {setIsAuthen, setUser} = useAuth();
-    const [newUser, setNewUser] = useState({
-        nombre: '',
-        apellido: '',
-        username: '',
-        telefono: '',
-        direccion: '',
-        password: '',
-        rol: ''
+  const { setIsAuthen, setUser } = useAuth();
+  const [newUser, setNewUser] = useState({
+    nombre: "",
+    apellido: "",
+    username: "",
+    telefono: "",
+    direccion: "",
+    password: "",
+    rol: "",
+  });
+  const [showModal, setShowModal] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState(""); // "success" or "error"
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewUser({
+      ...newUser,
+      [name]: value,
     });
+  };
 
-    const [showModal, setShowModal] = useState(false);
+  const handleRoleChange = (e) => {
+    const { value } = e.target;
+    setNewUser({
+      ...newUser,
+      rol: value,
+    });
+  };
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        if (name === "password") {
-            setNewUser({
-                ...newUser,
-                [name]: value
-            });
-        } else {
-            setNewUser({
-                ...newUser,
-                [name]: value
-            });
-        }
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await crearUsuario(newUser);
+      Cookies.set("token", res.data?.token);
+      setIsAuthen(true);
+      setUser(res.data?.usuario);
+      setAlertMessage("Usuario registrado con éxito");
+      setAlertType("success");
+      setShowModal(false);
+    } catch (error) {
+      console.log("Error al Registrar: ", error);
+      setAlertMessage(error.message);
+      setAlertType("error");
+    }
+  };
 
-    const handleRoleChange = (e) => {
-        const { value } = e.target;
-        setNewUser({
-            ...newUser,
-            rol: value
-        });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const res = await crearUsuario(newUser);
-            Cookies.set('token', res.data?.token);
-            setIsAuthen(true);
-            setUser(res.data?.usuario);
-            alert('Usuario Registrado');
-        } catch (error) {
-            console.log('Error al Registrar: ', error);
-            alert(error.message);
-        };
-    };
-
-    return (
-        <>
-            <ModalBackground style={{ display: showModal ? 'block' : 'none' }}>
-                <ModalContent>
-                    <div class="ModalHeader">
-                        <CloseButton onClick={() => setShowModal(false)}>X</CloseButton>
-                    </div>
-                    <div class="ModalBody">
-                        <FormContainer onSubmit={handleSubmit}>
-                            <Title>Registrarme</Title>
-                            <FormGroup>
-                                <Label for="nombre">Nombre:</Label>
-                                <Input
-                                    type="text"
-                                    id="nombre"
-                                    name="nombre"
-                                    value={newUser.nombre}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="apellido">Apellido:</Label>
-                                <Input
-                                    type="text"
-                                    id="apellido"
-                                    name="apellido"
-                                    value={newUser.apellido}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="email">Email:</Label>
-                                <Input
-                                    type="email"
-                                    id="username"
-                                    name="username"
-                                    value={newUser.username}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="telefono">Telefono:</Label>
-                                <Input
-                                    type="telefono"
-                                    id="telefono"
-                                    name="telefono"
-                                    value={newUser.telefono}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="direccion">Direccion:</Label>
-                                <Input
-                                    type="text"
-                                    id="direccion"
-                                    name="direccion"
-                                    value={newUser.direccion}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="password">Contraseña:</Label>
-                                <Input
-                                    type="password"
-                                    id="password"
-                                    name="password"
-                                    value={newUser.password}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="role">Rol:</Label>
-                                <Select id="role" name="role" onChange={handleRoleChange}>
-                                    <option value="Agricultor">Agricultor</option>
-                                    <option value="Comprador">Comprador</option>
-                                </Select>
-                            </FormGroup>
-                            <Button type="submit">Registrarme</Button>
-                        </FormContainer>
-                    </div>
-                </ModalContent>
-            </ModalBackground>
-            <OpenModalButton onClick={() => setShowModal(true)}>¡Quiero registrarme YA!</OpenModalButton>
-        </>
-    );
+  return (
+    <>
+      <ModalBackground style={{ display: showModal ? "block" : "none" }}>
+        <ModalContent>
+          <div className="ModalHeader">
+            <CloseButton onClick={() => setShowModal(false)}>X</CloseButton>
+          </div>
+          <div className="ModalBody">
+            {alertMessage && (
+              <AlertMessage type={alertType}>{alertMessage}</AlertMessage>
+            )}
+            <FormContainer onSubmit={handleSubmit}>
+              <Title>Registrarme</Title>
+              <FormGroup>
+                <Label htmlFor="nombre">Nombre:</Label>
+                <Input
+                  type="text"
+                  id="nombre"
+                  name="nombre"
+                  value={newUser.nombre}
+                  onChange={handleInputChange}
+                  required
+                />
+              </FormGroup>
+              {/* Otros campos del formulario */}
+              <Button type="submit">Registrarme</Button>
+            </FormContainer>
+          </div>
+        </ModalContent>
+      </ModalBackground>
+      <OpenModalButton onClick={() => setShowModal(true)}>
+        ¡Quiero registrarme YA!
+      </OpenModalButton>
+    </>
+  );
 }
 
 export default UserFormModal;
@@ -248,4 +189,18 @@ const Button = styled.button`
   &:hover {
     background-color: #004d00;
   }
+`;
+
+const AlertMessage = styled.div`
+  background-color: ${({ type }) => (type === "success" ? "#4caf50" : "#f44336")};
+  color: white;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  text-align: center;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
 `;
