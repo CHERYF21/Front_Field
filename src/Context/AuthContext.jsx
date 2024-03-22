@@ -18,6 +18,9 @@ export const AuthProvider = ({ children }) => {
 
     const [isAuthen, setIsAuthen] = useState(false);
     const [user, setUser] = useState(null);
+
+    
+    
     useEffect(() => {
         async function checkLogin() {
             const cookies = Cookies.get()
@@ -27,13 +30,14 @@ export const AuthProvider = ({ children }) => {
             }
             try {
                 const res = await verityTokenRequest(cookies.token)
-                console.log(res);
+                //console.log(res);
                 if (res.status !== 200) {
                     setIsAuthen(false);
                     return;
                 }
                 setIsAuthen(true);
                 setUser(res.data?.usuario);
+                //console.log(res.data?.usuario);
             } catch (error) {
                 setIsAuthen(false);
                 return;

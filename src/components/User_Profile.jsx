@@ -1,17 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock, faMapMarkerAlt, faPhone } from '@fortawesome/free-solid-svg-icons';
 import { FaQuestionCircle } from 'react-icons/fa'
 import styled, { keyframes } from 'styled-components';
 import imagenes from '../assets/imagenes';
+import { updateUser } from './../service/userService';
+import { useAuth } from '../Context/AuthContext';
+
 
 const User_Profile = () => {
+
+  const {isAuthen, user} = useAuth();
+  const [usuario, setUsuario] = useState({
+    id: user?.id, 
+    telefono: '',
+    password: '',
+    direccion: ''
+  });
+
+  const updateUsuario = async () => {
+    try {
+      const response = await updateUser(usuario.id, usuario);
+      console.log(response);
+    } catch (error) {
+      console.error("Error al actualizar", error)
+    }
+  }
+  const usuarioActualizado = {
+    id: user?.id,
+    telefono: usuario.telefono,
+    password: usuario.password,
+    direccion: usuario.direccion
+  }
+
   return (
     <Container>
-    <HelpCard>
-        <HelpTitle>  <FaQuestionCircle /> Ayuda y Soporte</HelpTitle>
+      <HelpCard>
+        <HelpTitle><FaQuestionCircle /> Ayuda y Soporte</HelpTitle>
         <HelpContent>
-          "¡Bienvenido! En esta vista, tienes la capacidad de modificar tus datos personales para mantener tu información actualizada y precisa.
+          ¡Bienvenido! En esta vista, tienes la capacidad de modificar tus datos personales para mantener tu información actualizada y precisa.
           Para facilitar la administración de tu perfil, hemos diseñado un formulario donde puedes realizar cambios en tus datos personales, como tu dirección, número de teléfono y contraseña.
         </HelpContent>
         <ImagePerfil>
@@ -26,21 +53,20 @@ const User_Profile = () => {
         </FormGroup>
         <FormGroup>
           <Label htmlFor="address"><FontAwesomeIcon icon={faMapMarkerAlt} /> Modificar Dirección:</Label>
-          <Input type="text" id="address" name="address" required />
+          <Input type="text" id="address" name="direccion" required />
         </FormGroup>
         <FormGroup>
           <Label htmlFor="phone"><FontAwesomeIcon icon={faPhone} /> Modificar Teléfono:</Label>
-          <Input type="tel" id="phone" name="phone" required />
+          <Input type="tel" id="phone" name="telefono" required />
         </FormGroup>
         <ButtonContainer>
-          <UpdateButton>Actualizar perfil</UpdateButton>
+          <UpdateButton onClick={() => updateUsuario(usuarioActualizado)}>Actualizar perfil</UpdateButton>
           <DeleteButton>Eliminar cuenta</DeleteButton>
         </ButtonContainer>
       </FormContainer>
     </Container>
   );
 };
-
 
 export default User_Profile;
 

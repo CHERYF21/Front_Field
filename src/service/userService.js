@@ -13,6 +13,8 @@ const USER_BACK = "http://localhost:8080";
 
     export const deleteUser = (id) => axios.delete(`${USER_BACK}/auth/${id}/deleteuser`,{headers: authHeader()});
 
+    export const updateUser = (id, usuarioActualizado) => axios.put(`${USER_BACK}/auth/${id}/updateUser`,usuarioActualizado,{headers: authHeader()});
+
     export const verityTokenRequest = () => axios.get("/auth/verify",{headers: authHeader()});
 
     

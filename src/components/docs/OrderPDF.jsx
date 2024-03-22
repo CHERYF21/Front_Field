@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     padding: 5,
     fontSize: 10,
     textAlign: "center",
-  },
+  },    
 });
 
 const OrderPDF = ({ cart }) => (

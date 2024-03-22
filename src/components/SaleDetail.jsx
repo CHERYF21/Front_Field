@@ -86,6 +86,7 @@ const SaleDetail = () => {
             <th>Cantidad</th>
             <th>Total de Productos (Precio)</th>
             <th>Id Venta</th>
+            <th>img</th>
             <th>Nombre del Producto</th>
             <th>Acciones</th>
           </tr>
@@ -97,6 +98,7 @@ const SaleDetail = () => {
               <td>{detaill.quantity}</td>
               <td>${detaill.unit_value.toFixed(2)}</td>
               <td>{detaill.sale.id_sale}</td>
+              <th><img src={`data:image/jpeg;base64,${detaill.product.img}`} alt={detaill.product.title} /></th>
               <td>{detaill.product.title}</td>
               <td>
                 <Button bgColor="#2dafeb" onClick={() => abrirModalEditarVenta(detaill)}>Editar</Button>

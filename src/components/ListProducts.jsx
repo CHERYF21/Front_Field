@@ -13,6 +13,7 @@ const ListProduct = () => {
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
   const [paginaActual, setPaginaActual] = useState(1);
   const productosPorPagina = 5;
+  
 
   useEffect(() => {
     fetchProductos();
@@ -48,7 +49,17 @@ const ListProduct = () => {
   const cambiarPagina = (numeroPagina) => {
     setPaginaActual(numeroPagina);
   };
+  //buscardor personalizada
+  const filtrarProductos = (productos, filtroNombre) =>{
+    return productos.filter(product => {
+        const nombreProducto = product.title.toLowerCase();
+        const filtro = filtroNombre.toLowerCase();
 
+        return nombreProducto.includes(filtro);
+    });
+  };
+  const productosFiltrados = filtrarProductos(productos, filtroNombre);
+  //paginado
   const indicePrimerProducto = (paginaActual - 1) * productosPorPagina;
   const indiceUltimoProducto = paginaActual * productosPorPagina;
   const productosActuales = productos.slice(indicePrimerProducto, indiceUltimoProducto);
@@ -84,27 +95,53 @@ const ListProduct = () => {
             <TableHeader>Acciones</TableHeader>
           </tr>
         </thead>
-        <tbody>
-          {productosActuales.map((producto, index) => (
-            <TableRow key={indicePrimerProducto + index}>
-              <TableCell>{producto.id_product}</TableCell>
-              <TableCell>{producto.title}</TableCell>
-              <TableCell>{producto.category.category}</TableCell>
-              <TableCell>{producto.quantity}</TableCell>
-              <TableCell>{producto.descripcion}</TableCell>
-              <TableCell>{producto.price}</TableCell>
-              <TableCell>
-                <img src={`data:image/jpeg;base64,${producto.img}`} style={{ width: '300px', height: '70px' }} />
-              </TableCell>
-              <TableCell>
-                <ButtonContainer>
-                  <Button className='editar' bgColor="#2dafeb" onClick={() => abrirModalEditar(producto)}>Editar</Button>
-                  <Button bgColor="#ee2738" onClick={() => eliminarProducto(producto.id)}>Eliminar</Button>
-                </ButtonContainer>
-              </TableCell>
-            </TableRow>
-          ))}
-        </tbody>
+        {/* inicio tbody */}
+                  <tbody>
+                  {filtroNombre !== '' ? (
+                    // Renderizar solo los productos filtrados si hay un filtro aplicado
+                    productosFiltrados.map((producto, index) => (
+                <TableRow key={indicePrimerProducto + index}>
+                  <TableCell>{producto.id_product}</TableCell>
+                  <TableCell>{producto.title}</TableCell>
+                  <TableCell>{producto.category.category}</TableCell>
+                  <TableCell>{producto.quantity}</TableCell>
+                  <TableCell>{producto.descripcion}</TableCell>
+                  <TableCell>{producto.price}</TableCell>
+                  <TableCell>
+                    <img src={`data:image/jpeg;base64,${producto.img}`} style={{ width: '300px', height: '70px' }} />
+                  </TableCell>
+                  <TableCell>
+                    <ButtonContainer>
+                      <Button className='editar' bgColor="#2dafeb" onClick={() => abrirModalEditar(producto)}>Editar</Button>
+                      <Button bgColor="#ee2738" onClick={() => eliminarProducto(producto.id)}>Eliminar</Button>
+                    </ButtonContainer>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              // Si no hay filtro aplicado, renderizar todos los productos actuales
+              productosActuales.map((producto, index) => (
+                <TableRow key={indicePrimerProducto + index}>
+                  <TableCell>{producto.id_product}</TableCell>
+                  <TableCell>{producto.title}</TableCell>
+                  <TableCell>{producto.category.category}</TableCell>
+                  <TableCell>{producto.quantity}</TableCell>
+                  <TableCell>{producto.descripcion}</TableCell>
+                  <TableCell>{producto.price}</TableCell>
+                  <TableCell>
+                    <img src={`data:image/jpeg;base64,${producto.img}`} style={{ width: '300px', height: '70px' }} />
+                  </TableCell>
+                  <TableCell>
+                    <ButtonContainer>
+                      <Button className='editar' bgColor="#2dafeb" onClick={() => abrirModalEditar(producto)}>Editar</Button>
+                      <Button bgColor="#ee2738" onClick={() => eliminarProducto(producto.id)}>Eliminar</Button>
+                    </ButtonContainer>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </tbody>
+        {/* fin tbody */}
       </StyledTable>
       <Pagination>
         <PageButton onClick={() => cambiarPagina(paginaActual - 1)} disabled={paginaActual === 1}>&laquo; Anterior</PageButton>

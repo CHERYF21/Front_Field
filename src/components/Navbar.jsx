@@ -1,16 +1,35 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import {  NavLink as RouterNavLink } from 'react-router-dom';  
+import { useNavigate } from 'react-router-dom';
 import imagenes from '../assets/imagenes';
 import { AuthProvider, useAuth } from '../Context/AuthContext';
+import { NavLink } from 'react-router-dom';
 
 
 function Navbar() {
   const [isMenuOpen, setMenuOpen] = useState(false);
-  const {isAuthen, user} = useAuth();
+  const {isAuthen, user, logout, removeAuthToken} = useAuth();
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
   };
+ // Obtén el método removeAuthToken del contexto
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        removeAuthToken(); // Llama al método removeAuthToken
+        logout();
+        navigate('/Home');
+    };
+
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
 
   return (
     
@@ -32,14 +51,17 @@ function Navbar() {
     
             { isAuthen && 
               <>
-                <StyledNavLink to="/contact">Contacto</StyledNavLink>
+              <StyledNavLink to="/contact">Contacto</StyledNavLink>
               <StyledNavLink to="/productos">Productos</StyledNavLink>
               <StyledNavLink to="/funciones">Mi cuenta</StyledNavLink>
               <StyledNavLink to="/perfil">Mi Perfil</StyledNavLink>
-                {(user?.rol === 'Admin' ) &&  (
-                  <StyledNavLink to="/admin">Admin</StyledNavLink> 
-                  )}
-      
+              <StyledNavLink to="/" onClick={() => removeAuthToken()}>Cerrar sesión</StyledNavLink>
+              {(user?.rol === 'Admin' ) &&  (
+              <StyledNavLink to="/admin">Admin</StyledNavLink> 
+              )}
+                
+                    
+                
               </>
             } 
           </NavLinks>

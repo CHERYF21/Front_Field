@@ -111,18 +111,18 @@ const AddProduct = () => {
           <FormGroup>
           <Label htmlFor="tipo">Categoria</Label>
           <Select id="id_category" name="id_category" value={producto.id_category} onChange={handleChange}>
-            <option value="">Seleccione una categoria</option>
+            <option value="" required>Seleccione una categoria</option>
             {categorias.map(categorias => (
-              <option key={categorias.id_category} value={categorias.id_category}>{categorias.category}</option>
+              <option key={categorias.id_category} value={categorias.id_category} required>{categorias.category}</option>
             ))}
           </Select>
         </FormGroup>
         <FormGroup>
           <Label htmlFor="tipo">Unidad de venta</Label>
           <Select id="id_saleUnit" name="id_saleUnit" value={producto.id_saleUnit} onChange={handleChange}>
-            <option value="">Seleccione unidad de venta</option>
+            <option value="" required>Seleccione unidad de venta</option>
             {unidades.map(unidades => (
-              <option key={unidades.id_saleUnit} value={unidades.id_saleUnit}>{unidades.unidad}</option>
+              <option key={unidades.id_saleUnit} value={unidades.id_saleUnit} required>{unidades.unidad}</option>
             ))}
           </Select>
         </FormGroup>
@@ -144,7 +144,7 @@ const AddProduct = () => {
         </FormGroup>
         <FormGroup>
           <Label htmlFor="descripcion">Descripción:</Label>
-          <Input type="text" id="descripcion" name="descripcion" value={producto.descripcion} onChange={handleChange} />
+          <Input type="text" id="descripcion" name="descripcion" value={producto.descripcion} onChange={handleChange} required/>
         </FormGroup>
         <SubmitButton type="submit">Agregar</SubmitButton>
         </FormContainer>

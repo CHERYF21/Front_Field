@@ -36,8 +36,8 @@ function App() {
           <Route path="/perfil" element={<User_Profile/>} />
           <Route path="/Admin" element={<Admin/>} />
           <Route path="/usuario" element={<UserList/>} />
-          <Route path="*" element={<Default />} />
-          <Route element={<Inicio />} /> {/* Ruta predeterminada */}
+          <Route path="*" element={<Inicio />} />
+          
 
         </Routes>
       </AuthProvider>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ventaMercado } from '../service/mercadopago';
 import styled from 'styled-components';
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import OrderPDF from './OrderPDF';
+import OrderPDF from './docs/OrderPDF';
 
 
 export const Header = ({ cart, onClose, handleEmptyCart }) => {

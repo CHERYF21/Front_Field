@@ -251,3 +251,21 @@ header {
 	max-width: 100%;
 	margin-right: 10px;
 }
+.cerrar-session ul li{
+	color: #fff;
+  text-decoration: none;
+  margin-left: 1rem;
+
+  &:hover {
+    color: #1fc271;
+  }
+
+  &.active {
+    font-weight: bold;
+  }
+
+  @media screen and (max-width: 768px) {
+    margin-left: 0;
+    margin-bottom: 0.5rem;
+  }
+}

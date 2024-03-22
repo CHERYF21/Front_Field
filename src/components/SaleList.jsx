@@ -73,7 +73,7 @@ const SaleList = () => {
 
   return (
     <Container>
-      <Title>Lista de Detalle de Ventas Field <Span>Market</Span></Title>
+      <Title>Lista de Ventas Field <Span>Market</Span></Title>
 
       <Table>
         <thead>
@@ -81,7 +81,7 @@ const SaleList = () => {
             <th>Id</th>
             <th>Cantidad</th>
             <th>Total de Productos (Precio)</th>
-            <th>Id Venta</th>
+            <th>Comprador</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -91,7 +91,7 @@ const SaleList = () => {
               <td>{sale.id_sale}</td>
               <td>{sale.date_sale}</td>
               <td>{sale.total_paid}</td>
-              <td>{sale.usuario?.nombre}</td>
+              <td>{sale.usuario?.nombre} {sale.usuario?.apellido}</td>
               <td>
                 <Button bgColor="#2dafeb" onClick={() => abrirModalEditarVenta(sale)}>Editar</Button>
                 <Button bgColor="#ee2738" onClick={() => handleEliminarVenta(sale.id_sale)}>Eliminar</Button>
